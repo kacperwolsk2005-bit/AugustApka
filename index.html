@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AugustApka - Platforma Rocznika św. Augustyna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            augGreen: '#2B4F45',
+            augRed: '#C2573D',
+            augBg: '#F7F3F4'
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-augBg text-gray-800 font-sans min-h-screen flex flex-col antialiased selection:bg-augRed selection:text-white">
+
+  <!-- GŁÓWNY KONTENER APLIKACJI -->
+  <div class="flex-1 flex flex-col lg:flex-row min-h-screen">
+
+    <!-- PANEL BOCZNY (DESKTOP) -->
+    <aside class="hidden lg:flex flex-col w-72 bg-augGreen text-white p-6 border-r border-augGreen/20 shadow-xl shrink-0 justify-between">
+      <div class="space-y-6">
+        <!-- Logo i nazwa rocznika -->
+        <div class="flex items-center gap-3.5 pb-5 border-b border-white/10">
+          <div class="w-12 h-12 bg-white/10 rounded-2xl p-1.5 flex items-center justify-center border border-white/20 shadow-inner">
+            <svg viewBox="0 0 200 220" class="w-full h-full">
+              <path d="M100 8 C92 22, 76 28, 80 46 C72 38, 66 48, 72 60 C78 72, 92 78, 100 86 C108 78, 122 72, 128 60 C134 48, 128 38, 120 46 C124 28, 108 22, 100 8 Z" fill="#C2573D"/>
+              <circle cx="100" cy="135" r="52" fill="none" stroke="#C2573D" stroke-width="5"/>
+              <path d="M100 88 L76 118 L82 142 L118 142 L124 118 Z" fill="#F7F3F4"/>
+              <path d="M100 98 L100 124 M90 108 L110 108" stroke="#2B4F45" stroke-width="5" stroke-linecap="round"/>
+              <path d="M55 190 C62 162, 138 162, 145 190 Z" fill="#F7F3F4"/>
+              <rect x="85" y="168" width="30" height="22" rx="2" fill="#C2573D"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-lg tracking-tight leading-none text-white">AugustApka</h1>
+            <span class="text-[11px] text-gray-300 font-medium tracking-wide">Rocznik św. Augustyna</span>
+          </div>
+        </div>
+
+        <!-- Nawigacja -->
+        <nav class="space-y-1.5 text-xs font-bold">
+          <button onclick="navigateTo('dashboard')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>🏠</span> Pulpit Główny
+          </button>
+          <button onclick="navigateTo('filozofia-czlowieka')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>👤</span> Filozofia Człowieka
+          </button>
+          <button onclick="navigateTo('filozofia-przyrody')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>🌌</span> Filozofia Przyrody
+          </button>
+          <button onclick="navigateTo('historia-kosciola')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>🏛️</span> Historia Kościoła
+          </button>
+          <button onclick="navigateTo('wloski')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>🇮🇹</span> Język Włoski
+          </button>
+          <button onclick="navigateTo('lacina')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>📜</span> Łacina (23 Czasowniki)
+          </button>
+          <button onclick="navigateTo('kompendium')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition text-left">
+            <span>📚</span> Antyk, Psychologia & Logika
+          </button>
+          <button onclick="navigateTo('quiz')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-augRed/30 border border-augRed/50 hover:bg-augRed/50 transition text-left text-white mt-4">
+            <span>⚡</span> Trening Egzaminacyjny (Quiz)
+          </button>
+        </nav>
+      </div>
+
+      <!-- Stopka panelu -->
+      <aside class="p-4 rounded-xl border border-white/10 bg-augGreen-dark/40 text-[11px] italic text-gray-300 leading-relaxed">
+        „Niespokojne jest serce nasze, dopóki nie spocznie w Tobie.”
+        <span class="block not-italic font-bold text-augRed mt-0.5">- św. Augustyn, Wyznania</span>
+      </aside>
+    </aside>
+
+    <!-- GŁÓWNY OBSZAR ROBOCZY -->
+    <div class="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
+
+      <!-- GÓRNY PASEK -->
+      <header class="bg-white border-b border-gray-200 sticky top-0 z-30 px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('dashboard')">
+          <div class="lg:hidden w-10 h-10 bg-augGreen rounded-xl p-1 flex items-center justify-center shadow-sm">
+            <svg viewBox="0 0 200 220" class="w-full h-full">
+              <path d="M100 8 C92 22, 76 28, 80 46 C72 38, 66 48, 72 60 C78 72, 92 78, 100 86 C108 78, 122 72, 128 60 C134 48, 128 38, 120 46 C124 28, 108 22, 100 8 Z" fill="#C2573D"/>
+              <circle cx="100" cy="135" r="52" fill="none" stroke="#C2573D" stroke-width="5"/>
+              <path d="M100 88 L76 118 L82 142 L118 142 L124 118 Z" fill="#F7F3F4"/>
+              <path d="M100 98 L100 124 M90 108 L110 108" stroke="#2B4F45" stroke-width="5" stroke-linecap="round"/>
+              <path d="M55 190 C62 162, 138 162, 145 190 Z" fill="#F7F3F4"/>
+              <rect x="85" y="168" width="30" height="22" rx="2" fill="#C2573D"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-base lg:text-lg text-augGreen tracking-tight leading-none">AugustApka</h1>
+            <span class="text-[11px] text-gray-500 font-medium">Rocznik św. Augustyna • Baza Wiedzy</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+          <div class="relative hidden sm:block">
+            <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Szukaj pojęcia, filozofa..." class="pl-3 pr-8 py-1.5 text-xs rounded-lg border border-gray-300 focus:outline-none focus:border-augGreen w-48 lg:w-64">
+          </div>
+
+          <div class="bg-augBg border border-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-augGreen">
+            <span>Postęp:</span>
+            <span id="progress-badge" class="bg-augRed text-white px-2 py-0.5 rounded text-[11px]">0%</span>
+          </div>
+
+          <button id="auth-btn" onclick="toggleAuthModal()" class="bg-augGreen hover:opacity-90 text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-sm">
+            Konto Rocznika
+          </button>
+        </div>
+      </header>
+
+      <!-- PASEK NAWIGACJI PRZEDMIOTOWEJ -->
+      <nav class="bg-white/80 backdrop-blur border-b border-gray-200 px-4 lg:px-8 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs font-bold">
+        <button onclick="navigateTo('dashboard')" data-nav="dashboard" class="top-nav-btn px-3 py-1.5 rounded-lg bg-augGreen text-white whitespace-nowrap transition">Pulpit</button>
+        <button onclick="navigateTo('filozofia-czlowieka')" data-nav="filozofia-czlowieka" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Filozofia Człowieka</button>
+        <button onclick="navigateTo('filozofia-przyrody')" data-nav="filozofia-przyrody" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Filozofia Przyrody</button>
+        <button onclick="navigateTo('historia-kosciola')" data-nav="historia-kosciola" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Historia Kościoła</button>
+        <button onclick="navigateTo('wloski')" data-nav="wloski" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Język Włoski</button>
+        <button onclick="navigateTo('lacina')" data-nav="lacina" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Łacina</button>
+        <button onclick="navigateTo('kompendium')" data-nav="kompendium" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Antyk / Psychologia / Logika</button>
+        <button onclick="navigateTo('quiz')" data-nav="quiz" class="top-nav-btn px-3 py-1.5 rounded-lg text-augRed border border-augRed/30 hover:bg-augRed hover:text-white whitespace-nowrap transition">Fiszki & Quiz</button>
+      </nav>
+
+      <!-- DYNAMICZNA ZAWARTOŚĆ WIDOKÓW -->
+      <main id="app-viewport" class="flex-1 p-4 lg:p-8 max-w-6xl w-full mx-auto space-y-6"></main>
+
+      <!-- STOPKA -->
+      <footer class="px-4 lg:px-8 py-4 border-t border-gray-200 text-center text-xs text-gray-500 bg-white">
+        AugustApka • Rocznik św. Augustyna (2026/2027) • Zapis postępów: LocalStorage & Netlify Identity
+      </footer>
+    </div>
+  </div>
+
+  <!-- DOLNY PASEK NAWIGACJI MOBILNEJ -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex justify-around items-center py-2 px-1 text-[10px] font-bold text-gray-600 shadow-lg">
+    <button onclick="navigateTo('dashboard')" class="flex flex-col items-center gap-0.5 text-augGreen">
+      <span>🏠</span><span>Pulpit</span>
+    </button>
+    <button onclick="navigateTo('filozofia-czlowieka')" class="flex flex-col items-center gap-0.5">
+      <span>👤</span><span>Antropologia</span>
+    </button>
+    <button onclick="navigateTo('filozofia-przyrody')" class="flex flex-col items-center gap-0.5">
+      <span>🌌</span><span>Przyroda</span>
+    </button>
+    <button onclick="navigateTo('historia-kosciola')" class="flex flex-col items-center gap-0.5">
+      <span>🏛️</span><span>Kościół</span>
+    </button>
+    <button onclick="navigateTo('wloski')" class="flex flex-col items-center gap-0.5">
+      <span>🇮🇹</span><span>Włoski</span>
+    </button>
+    <button onclick="navigateTo('quiz')" class="flex flex-col items-center gap-0.5 text-augRed">
+      <span>⚡</span><span>Trening</span>
+    </button>
+  </div>
+
+  <!-- MODAL AUTORYZACJI -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-t-4 border-augGreen space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-extrabold text-lg text-augGreen">Strefa Rocznika św. Augustyna</h3>
+        <button onclick="toggleAuthModal()" class="text-gray-400 hover:text-gray-700 font-bold text-lg">&times;</button>
+      </div>
+      <p class="text-xs text-gray-600 leading-relaxed">
+        Podaj swoje imię, aby trwale zapisywać postępy nauki w pamięci tego urządzenia (LocalStorage).
+      </p>
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-gray-700">Twoje imię / profil studenta:</label>
+        <input type="text" id="student-name-input" placeholder="np. Kacper" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-augGreen">
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveStudentProfile()" class="flex-1 bg-augGreen text-white font-bold text-xs py-2.5 rounded-lg hover:opacity-95 transition">
+          Zapisz profil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKRYPT GŁÓWNY -->
+  <script>
+    const STUDY_DB = {
+      "filozofia-czlowieka": {
+        title: "Filozofia Człowieka i Personalizm",
+        subtitle: "Perspektywy antropologiczne, filozofia dramatu ks. J. Tischnera i horyzont agatologiczny",
+        blocks: [
+          {
+            id: "fc-1",
+            heading: "1. Sposoby rozumienia człowieka i 3 perspektywy antropologiczne",
+            items: [
+              "Podejścia badawcze: obiektywizujące (statystyczno-biologiczne), hermeneutyczne (kołowe pogłębianie przedrozumienia) oraz maieutyczne (sokratejskie „akuszerstwo” prawdy w dialogu).",
+              "Perspektywa „od góry” (św. Augustyn): człowiek jako obraz Boży (imago Dei). Punkt wyjścia to Bóg; w człowieku szukamy śladów Stwórcy, a ludzkie serce pozostaje niespokojne, dopóki nie odnajdzie ukojenia w Bogu.",
+              "Perspektywa „od dołu” (Filozofowie podejrzeń): redukcjonizm i ateizm antropologiczny, odcinający wymiar wertykalny (transcendencję). Karol Marks redukuje człowieka do materii i ekonomii, Zygmunt Freud do gry popędów (libido i sublimacji), a Fryderyk Nietzsche do czystej woli mocy (Wille zur Macht).",
+              "Perspektywa „wprost” (Personalizm chrześcijański i filozofia dramatu): ujmuje człowieka jako osobę konstytuującą się w relacji Ja–Ty oraz Ja–Bóg (myśl rozwijana w środowisku krakowskim m.in. przez Karola Wojtyłę, Józefa Tischnera i Mariana Jaworskiego)."
+            ]
+          },
+          {
+            id: "fc-2",
+            heading: "2. Filozofia Dramatu: Czas dramatyczny i Świadomość osoby",
+            items: [
+              "Człowiek jako uczestnik dramatu: nie jest biernym obserwatorem, lecz podmiotem zaangażowanym w dramat stworzenia, upadku i zbawienia.",
+              "Czas dramatyczny vs czas fizykalny: czas przyrodoznawstwa to jednorodny pomiar zegarowy. Czas dramatyczny dzieje się między osobami, jest nieodwracalny, ciągły i radykalnie wychylony ku przyszłości.",
+              "Świadomość bytu (rzeczy) vs Świadomość osoby: stosunek intencjonalnej obiektywizacji traktuje otoczenie jako przedmioty. W relacji personalnej drugi człowiek staje jako roszczenie moralne – budzi odpowiedzialność."
+            ]
+          },
+          {
+            id: "fc-3",
+            heading: "3. Filozofia Dialogu i Horyzont Agatologiczny (Zło a Nieszczęście)",
+            items: [
+              "Dialog dialektyczny (platoński): wewnętrzny ruch myśli, ścieranie się pojęć i racji w obrębie jednego umysłu.",
+              "Dialog interpersonalny (biblijny): spotkanie dwóch wolnych podmiotów oparte na wzajemnym wyborze i uznaniu godności (wzorzec: powołanie Abrahama oraz pytanie skierowane do Adama „Gdzie jesteś?”).",
+              "Horyzont agatologiczny (od gr. agathon – dobro): przestrzeń napięcia między dobrem a złem. Zło nie jest tylko brakiem (privatio boni), lecz realną, agresywną siłą niszczącą człowieka.",
+              "Zło a Nieszczęście: zło ma charakter dialogiczny, świadomy i intencjonalny. Nieszczęście należy do poziomu natury i sceny (katastrofy, choroby, niezawinione wypadki) i nie zawiera winy moralnej."
+            ]
+          }
+        ]
+      },
+      "filozofia-przyrody": {
+        title: "Filozofia Przyrody i Kosmologia",
+        subtitle: "Wykłady 1–2 (dr hab. R. Krzanowski): Czas, przestrzeń, ruch i czasoprzestrzeń",
+        blocks: [
+          {
+            id: "fp-1",
+            heading: "1. Zasady zaliczenia i status metodologiczny",
+            items: [
+              "Wymagania kursowe: dwa eseje po 500 słów (30.11 i 31.12), praca 1500 słów (28.01.2027), quiz 10 pytań i obecność. Podręcznik: M. Heller, T. Pabjan.",
+              "Filozofia przyrody (ontologia) pyta: „Jaki jest świat?”. Filozofia nauki (epistemologia) pyta: „Jak poznajemy świat?”."
+            ]
+          },
+          {
+            id: "fp-2",
+            heading: "2. Czas i Przestrzeń od Starożytności do Kartezjusza",
+            items: [
+              "Platon (Timajos): Świat Form istnieje w wieczności. Czas to ruchomy obraz wieczności, wyznaczany regularnym ruchem ciał niebieskich. Przestrzeń to bezkształtna matryca (chōra).",
+              "Arystoteles: Ruch to aktualizacja potencjalności. Czas to miara ruchu ze względu na „przed” i „po”. Przestrzeń to miejsce (topos); próżnia nie istnieje (horror vacui).",
+              "Kartezjusz: res cogitans i res extensa. Utożsamia przestrzeń z materią (świat jako wypełnione plenum bez próżni)."
+            ]
+          },
+          {
+            id: "fp-3",
+            heading: "3. Przełom Newtona, Koyré i Spór z Leibnizem",
+            items: [
+              "Mechanika klasyczna (1687): I. Newton wprowadza definicje operacyjne i 3 zasady dynamiki. Zasada względności Galileusza.",
+              "Analiza Alexandre'a Koyrégo: rewolucja ontologiczna, geometryzacja przestrzeni, odrzucenie teleologii, idealizacja matematyczna.",
+              "Absolutyzm Newtona: czas i przestrzeń absolutna istnieją niezależnie od materii. Dowód: eksperyment z wiadrem wody.",
+              "Relacjonizm Leibniza: czas i przestrzeń to porządki relacji (ordo coexistendi / ordo successionis). Argument zasady racji dostatecznej."
+            ]
+          },
+          {
+            id: "fp-4",
+            heading: "4. Czasoprzestrzeń, Termodynamika i Spór o Trwanie",
+            items: [
+              "Czasoprzestrzeń Minkowskiego i ogólna teoria względności (zakrzywienie przestrzeni przez masę, soczewkowanie grawitacyjne).",
+              "Endurantyzm vs Perdurantyzm: spór o to, czy obiekt trwa w całości, czy jest czterowymiarową linią świata.",
+              "Termodynamiczna strzałka czasu: wzrost entropii w układach izolowanych (L. Boltzmann) wyznacza kierunek czasu.",
+              "Teoria A (prezentyzm) vs Teoria B (eternalizm) czasu."
+            ]
+          }
+        ]
+      },
+      "historia-kosciola": {
+        title: "Historia Kościoła i Patrologia",
+        subtitle: "Kanon Pisma Świętego, Ojcowie Apostolscy, wczesne herezje i sukcesja apostolska",
+        blocks: [
+          {
+            id: "hk-1",
+            heading: "1. Kanon Biblijny i Ojcowie Apostolscy",
+            items: [
+              "Kryterium kanoniczności: apostolskość. Trzy rodzaje kanonów (krótki, średni, rozszerzony).",
+              "Klemens Rzymski (List do Koryntian), Ignacy Antiocheński (7 listów, jedność wokół biskupa), Polikarp ze Smyrny.",
+              "Didache (Nauka 12 Apostołów, ok. 50 r.) oraz Pasterz Hermasa (pokuta kanoniczna)."
+            ]
+          },
+          {
+            id: "hk-2",
+            heading: "2. Apokryfy, Gnoza i Herezje II wieku",
+            items: [
+              "Pseudoepigrafia i apokryfy (ks. M. Starowieyski).",
+              "Ebionici i judeochrześcijaństwo: odrzucenie bóstwa Chrystusa (adopcjanizm), używanie wody zamiast wina w Eucharystii.",
+              "Gnoza i gnostycyzm: dualizm, Pleroma, błąd Sofii, zła materia jako zmaterializowana niewiedza, zbawienie przez wiedzę (gnosis).",
+              "Marcjonizm: odrzucenie Starego Testamentu. Montanizm: ruch charyzmatyczny, surowy rygoryzm."
+            ]
+          },
+          {
+            id: "hk-3",
+            heading: "3. Sukcesja Apostolska i Prymat",
+            items: [
+              "Sukcesja apostolska jako gwarant wierności nauce. Urząd biskupi jako służba Słowu.",
+              "Rozwój synodów i stolic patriarchatów (pentarchia).",
+              "Prymat biskupa Rzymu: primatus honoris vs primatus iurisdictionis."
+            ]
+          }
+        ]
+      },
+      "wloski": {
+        title: "Język Włoski (Poziom A1)",
+        subtitle: "Wymowa, rodzajniki, odmiana czasowników (essere, avere, -are) i słownictwo",
+        blocks: [
+          {
+            id: "it-1",
+            heading: "1. Wymowa i Zwroty Podstawowe",
+            items: [
+              "Wymowa: ci/ce [czi/cze], gi/ge [dżi/dże], ch/gh [k/g], gn [ń], gli [lji], sc [sz], h jest niemówione.",
+              "Zwroty: Come ti chiami? Mi chiamo... Di dove sei? Sono di Cieszyn. Sono polacco/a."
+            ]
+          },
+          {
+            id: "it-2",
+            heading: "2. Rodzajniki i Liczba Mnoga",
+            items: [
+              "Rodzaj męski: il -> i, l' -> gli, lo (s+spółgł., z, ps, gn) -> gli.",
+              "Rodzaj żeński: la -> le, l' -> le. Końcówka -e w l.mn. zawsze zmienia się na -i."
+            ]
+          },
+          {
+            id: "it-3",
+            heading: "3. Czasowniki: Essere, Avere i Koniugacja na -are",
+            items: [
+              "Essere (być): sono, sei, è, siamo, siete, sono. (stanco, felice, triste).",
+              "Avere (mieć): ho, hai, ha, abbiamo, avete, hanno. (fame, sete, freddo, caldo, anni).",
+              "Koniugacja -are (np. lavorare): -o, -i, -a, -iamo, -ate, -ano."
+            ]
+          },
+          {
+            id: "it-4",
+            heading: "4. Liczebniki i Słownictwo",
+            items: [
+              "Liczebniki 1–30 (uno, due... venti, ventuno... trenta).",
+              "Słownictwo z pracy: allora, pronto, oggi, domani, dove, il collega, l'ufficio, prendere la metro."
+            ]
+          }
+        ]
+      },
+      "kompendium": {
+        title: "Antyk, Psychologia i Logika",
+        subtitle: "Synteza wykładów i lektur",
+        blocks: [
+          {
+            id: "ko-1",
+            heading: "1. Filozofia Starożytna",
+            items: [
+              "Heraklit (panta rhei), Parmenides (byt niezmienny), Demokryt (atomy i próżnia), Platon (Uczta, Eros, Świat Idei)."
+            ]
+          },
+          {
+            id: "ko-2",
+            heading: "2. Psychologia Głębi",
+            items: [
+              "C. G. Jung (nieświadomość zbiorowa, archetypy), A. Adler (poczucie niższości, dążenie do mocy), K. Horney (lęk podstawowy)."
+            ]
+          }
+        ]
+      }
+    };
+
+    const LATIN_VERBS = [
+      { pres: "amo", inf: "amare", perf: "amavi", sup: "amatum", conj: "I", pl: "kochać, miłować" },
+      { pres: "laudo", inf: "laudare", perf: "laudavi", sup: "laudatum", conj: "I", pl: "chwalić" },
+      { pres: "laboro", inf: "laborare", perf: "laboravi", sup: "laboratum", conj: "I", pl: "pracować" },
+      { pres: "voco", inf: "vocare", perf: "vocavi", sup: "vocatum", conj: "I", pl: "wołać, nazywać" },
+      { pres: "habeo", inf: "habere", perf: "habui", sup: "habitum", conj: "II", pl: "mieć, posiadać" },
+      { pres: "video", inf: "videre", perf: "vidi", sup: "visum", conj: "II", pl: "widzieć" },
+      { pres: "lego", inf: "legere", perf: "legi", sup: "lectum", conj: "III", pl: "czytać" },
+      { pres: "scribo", inf: "scribere", perf: "scripsi", sup: "scriptum", conj: "III", pl: "pisać" },
+      { pres: "dico", inf: "dicere", perf: "dixi", sup: "dictum", conj: "III", pl: "mówić" },
+      { pres: "audio", inf: "audire", perf: "audivi", sup: "auditum", conj: "IV", pl: "słuchać" },
+      { pres: "venio", inf: "venire", perf: "veni", sup: "ventum", conj: "IV", pl: "przychodzić" }
+    ];
+
+    const QUIZ_BANK = [
+      {
+        q: "Czym według Filozofii Dramatu ks. J. Tischnera różni się zło od nieszczęścia?",
+        options: [
+          "Zło ma charakter dialogiczny i intencjonalny (między osobami), a nieszczęście leży na poziomie natury/sceny bez złej woli",
+          "Zło dotyczy tylko ciała, a nieszczęście wyłącznie duszy",
+          "Nie ma między nimi żadnej różnicy ontologicznej",
+          "Nieszczęście jest zawsze zamierzone przez człowieka"
+        ],
+        correct: 0,
+        subject: "Filozofia Człowieka"
+      },
+      {
+        q: "Jak Arystoteles w IV księdze Fizyki definiuje czas?",
+        options: [
+          "Jako nieruchomą przestrzeń absolutną",
+          "Jako ilość (miarę) ruchu ze względu na „przed” i „po”",
+          "Jako zmaterializowaną niewiedzę eonów",
+          "Jako porządek współistnienia rzeczy"
+        ],
+        correct: 1,
+        subject: "Filozofia Przyrody"
+      },
+      {
+        q: "Jakie stanowisko w sporze o czas i przestrzeń zajmował G. W. Leibniz?",
+        options: [
+          "Absolutyzm – przestrzeń to nieruchomy pojemnik",
+          "Kartezjanizm",
+          "Relacjonizm – przestrzeń to porządek współistnienia rzeczy (ordo coexistendi), a czas to porządek następstwa zdarzeń (ordo successionis)",
+          "Solipsyzm"
+        ],
+        correct: 2,
+        subject: "Filozofia Przyrody"
+      },
+      {
+        q: "Jakie było podstawowe kryterium włączenia księgi do kanonu Pisma Świętego w Kościele pierwotnym?",
+        options: ["Długość tekstu", "Apostolskość (pochodzenie od apostołów lub ich kręgu)", "Obecność wątków gnostyckich", "Język łaciński"],
+        correct: 1,
+        subject: "Historia Kościoła"
+      },
+      {
+        q: "Jak po włosku powiesz poprawnie: „Jest mi zimno i jestem głodny”?",
+        options: [
+          "Sono freddo e sono fame",
+          "Ho freddo e ho fame",
+          "Sto freddo e abito fame",
+          "Hai freddo e hai sete"
+        ],
+        correct: 1,
+        subject: "Język Włoski"
+      }
+    ];
+
+    let currentView = "dashboard";
+    let completedBlocks = JSON.parse(localStorage.getItem("aug_completed_blocks") || "[]");
+    let quizScore = parseInt(localStorage.getItem("aug_quiz_best") || "0", 10);
+    let studentName = localStorage.getItem("aug_student_name") || "Student Rocznika";
+    let currentFlashcardIdx = 0;
+
+    function saveProgress() {
+      localStorage.setItem("aug_completed_blocks", JSON.stringify(completedBlocks));
+      updateProgressUI();
+    }
+
+    function toggleBlockCompletion(blockId) {
+      if (completedBlocks.includes(blockId)) {
+        completedBlocks = completedBlocks.filter(id => id !== blockId);
+      } else {
+        completedBlocks.push(blockId);
+      }
+      saveProgress();
+      renderCurrentView();
+    }
+
+    function getTotalBlocksCount() {
+      return Object.values(STUDY_DB).reduce((acc, subj) => acc + subj.blocks.length, 0);
+    }
+
+    function updateProgressUI() {
+      const total = getTotalBlocksCount();
+      const pct = total > 0 ? Math.round((completedBlocks.length / total) * 100) : 0;
+      const badge = document.getElementById("progress-badge");
+      if (badge) badge.textContent = pct + "%";
+      const authBtn = document.getElementById("auth-btn");
+      if (authBtn && studentName) authBtn.textContent = "👤 " + studentName;
+    }
+
+    function navigateTo(rawTarget) {
+      const t = (rawTarget || "dashboard").toLowerCase();
+      if (t.includes("dash") || t.includes("pulpit")) currentView = "dashboard";
+      else if (t.includes("czlowiek") || t.includes("antrop")) currentView = "filozofia-czlowieka";
+      else if (t.includes("przyrod") || t.includes("fizyk")) currentView = "filozofia-przyrody";
+      else if (t.includes("kosciol") || t.includes("patrol")) currentView = "historia-kosciola";
+      else if (t.includes("wlosk") || t.includes("ital")) currentView = "wloski";
+      else if (t.includes("lacin") || t.includes("latin")) currentView = "lacina";
+      else if (t.includes("quiz") || t.includes("fisz")) currentView = "quiz";
+      else currentView = "kompendium";
+
+      document.querySelectorAll(".top-nav-btn").forEach(btn => {
+        if (btn.dataset.nav === currentView) {
+          btn.className = "top-nav-btn px-3 py-1.5 rounded-lg bg-augGreen text-white whitespace-nowrap transition";
+        } else {
+          btn.className = "top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition";
+        }
+      });
+
+      renderCurrentView();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderCurrentView() {
+      const container = document.getElementById("app-viewport");
+      if (!container) return;
+
+      if (currentView === "dashboard") {
+        const total = getTotalBlocksCount();
+        const done = completedBlocks.length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        container.innerHTML = `
+          <div class="bg-augGreen text-white rounded-2xl p-6 lg:p-8 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div class="space-y-2">
+              <span class="inline-block bg-augRed text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded">Semestr Zimowy 2026/2027</span>
+              <h2 class="text-2xl lg:text-3xl font-extrabold">Witaj w AugustApce, ${studentName}!</h2>
+              <p class="text-xs lg:text-sm text-gray-200 max-w-2xl leading-relaxed">
+                Zintegrowana platforma naukowa Rocznika św. Augustyna. Wszystkie materiały, transkrypcje i notatki w jednym miejscu.
+              </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur rounded-xl p-4 min-w-[200px] text-center border border-white/15">
+              <div class="text-3xl font-extrabold text-white">${pct}%</div>
+              <div class="text-xs text-gray-200 mt-1">Opanowane moduły (${done}/${total})</div>
+              <div class="text-[11px] text-augRed font-bold mt-2 bg-white px-2 py-1 rounded">Rekord Quizu: ${quizScore}/${QUIZ_BANK.length}</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div onclick="navigateTo('filozofia-czlowieka')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+              <div class="text-xs font-bold text-augRed uppercase">Wykład 1–2</div>
+              <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Filozofia Człowieka</h4>
+              <p class="text-xs text-gray-600 mt-2">Personalizm chrześcijański, filozofia dramatu, zło a nieszczęście.</p>
+            </div>
+            <div onclick="navigateTo('filozofia-przyrody')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+              <div class="text-xs font-bold text-augRed uppercase">Wykład 1–2</div>
+              <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Filozofia Przyrody</h4>
+              <p class="text-xs text-gray-600 mt-2">Platon, Arystoteles, Newton, Leibniz, czasoprzestrzeń.</p>
+            </div>
+            <div onclick="navigateTo('historia-kosciola')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+              <div class="text-xs font-bold text-augRed uppercase">Wykład 4 & Ćwiczenia</div>
+              <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Historia Kościoła i Patrologia</h4>
+              <p class="text-xs text-gray-600 mt-2">Kanon Biblii, Ojcowie Apostolscy, gnoza, sukcesja.</p>
+            </div>
+            <div onclick="navigateTo('wloski')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+              <div class="text-xs font-bold text-augRed uppercase">Język Włoski</div>
+              <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Język Włoski (A1)</h4>
+              <p class="text-xs text-gray-600 mt-2">Rodzajniki, essere/avere, koniugacja na -are, liczebniki 1–30.</p>
+            </div>
+            <div onclick="navigateTo('lacina')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+              <div class="text-xs font-bold text-augRed uppercase">Łacina</div>
+              <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Język Łaciński</h4>
+              <p class="text-xs text-gray-600 mt-2">Baza 23 czasowników i koniugacje.</p>
+            </div>
+            <div onclick="navigateTo('quiz')" class="bg-augRed text-white p-5 rounded-xl cursor-pointer shadow-sm hover:opacity-95 transition">
+              <div class="text-xs font-bold uppercase opacity-90">Active Recall</div>
+              <h4 class="font-extrabold text-base mt-1">Trener Egzaminacyjny & Fiszki</h4>
+              <p class="text-xs opacity-90 mt-2">Interaktywny quiz z zapisem postępów.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentView === "lacina") {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+            <h2 class="text-xl font-extrabold text-augGreen">Język Łaciński – Baza Czasowników</h2>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto p-4">
+            <table class="w-full text-left text-xs lg:text-sm">
+              <tr class="bg-augGreen text-white">
+                <th class="p-2">Praesens</th><th class="p-2">Infinitivus</th><th class="p-2">Perfectum</th><th class="p-2">Kon.</th><th class="p-2">Znaczenie</th>
+              </tr>
+              ${LATIN_VERBS.map(v => `<tr class="border-b"><td class="p-2 font-bold text-augGreen">${v.pres}</td><td class="p-2">${v.inf}</td><td class="p-2">${v.perf}</td><td class="p-2">${v.conj}</td><td class="p-2">${v.pl}</td></tr>`).join("")}
+            </table>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentView === "quiz") {
+        const card = QUIZ_BANK[currentFlashcardIdx];
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-4">
+            <span class="text-xs font-bold text-augRed">${card.subject} • Pytanie ${currentFlashcardIdx + 1}/${QUIZ_BANK.length}</span>
+            <h3 class="font-extrabold text-base text-augGreen">${card.q}</h3>
+            <div class="space-y-2">
+              ${card.options.map((opt, idx) => `<button onclick="checkQuizAnswer(${idx})" class="w-full text-left p-3 rounded-lg border hover:border-augGreen text-xs transition">${opt}</button>`).join("")}
+            </div>
+            <div id="quiz-feedback" class="text-xs font-bold hidden p-3 rounded-lg"></div>
+            <button onclick="nextFlashcard()" class="bg-augRed text-white text-xs font-bold px-4 py-2 rounded-lg mt-2">Następne pytanie →</button>
+          </div>
+        `;
+        return;
+      }
+
+      const subject = STUDY_DB[currentView] || STUDY_DB["filozofia-czlowieka"];
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+          <h2 class="text-xl font-extrabold text-augGreen">${subject.title}</h2>
+          <p class="text-xs text-gray-600 mt-1">${subject.subtitle}</p>
+        </div>
+        <div class="space-y-4">
+          ${subject.blocks.map(b => {
+            const isDone = completedBlocks.includes(b.id);
+            return `
+              <div class="bg-white rounded-xl p-5 border ${isDone ? 'border-augGreen bg-green-50/20' : 'border-gray-200'} shadow-sm transition">
+                <div class="flex items-start justify-between gap-4 mb-3">
+                  <h3 class="font-extrabold text-base text-augGreen">${b.heading}</h3>
+                  <button onclick="toggleBlockCompletion('${b.id}')" class="px-3 py-1 rounded-lg text-xs font-bold ${isDone ? 'bg-augGreen text-white' : 'bg-gray-100 text-gray-700'}">
+                    ${isDone ? '✓ Opanowane' : 'Oznacz jako opanowane'}
+                  </button>
+                </div>
+                <ul class="space-y-2 text-xs text-gray-700 list-disc pl-5">
+                  ${b.items.map(item => `<li>${item}</li>`).join("")}
+                </ul>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function nextFlashcard() {
+      currentFlashcardIdx = (currentFlashcardIdx + 1) % QUIZ_BANK.length;
+      renderCurrentView();
+    }
+
+    function checkQuizAnswer(idx) {
+      const card = QUIZ_BANK[currentFlashcardIdx];
+      const fb = document.getElementById("quiz-feedback");
+      if (!fb) return;
+      fb.classList.remove("hidden");
+      if (idx === card.correct) {
+        fb.className = "text-xs font-bold p-3 rounded-lg bg-green-100 text-green-800";
+        fb.textContent = "✓ Brawo! Poprawna odpowiedź.";
+      } else {
+        fb.className = "text-xs font-bold p-3 rounded-lg bg-red-100 text-red-800";
+        fb.textContent = "✗ Błędnie. Poprawna to: " + card.options[card.correct];
+      }
+    }
+
+    function toggleAuthModal() {
+      document.getElementById("auth-modal").classList.toggle("hidden");
+      document.getElementById("auth-modal").classList.toggle("flex");
+    }
+
+    function saveStudentProfile() {
+      const val = document.getElementById("student-name-input").value.trim();
+      if (val) {
+        studentName = val;
+        localStorage.setItem("aug_student_name", studentName);
+        updateProgressUI();
+        renderCurrentView();
+      }
+      toggleAuthModal();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateProgressUI();
+      renderCurrentView();
+    });
+  </script>
+</body>
+</html>
