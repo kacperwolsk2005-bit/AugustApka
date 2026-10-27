@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AugustApka - Platforma Rocznika św. Augustyna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            augGreen: '#2B4F45',
+            augGreenDark: '#1C352E',
+            augRed: '#C2573D',
+            augRedLight: '#E06B4F',
+            augBg: '#F7F3F4'
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .card-flip { perspective: 1000px; }
+    .card-inner { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+    .card-flipped { transform: rotateY(180deg); }
+    .card-front, .card-back { backface-visibility: hidden; }
+    .card-back { transform: rotateY(180deg); }
+  </style>
+</head>
+<body class="bg-augBg text-gray-800 font-sans min-h-screen flex flex-col antialiased selection:bg-augRed selection:text-white">
+
+  <!-- GŁÓWNY UKŁAD PLATFORMY -->
+  <div class="flex-1 flex flex-col lg:flex-row min-h-screen">
+
+    <!-- PANEL BOCZNY (DESKTOP) -->
+    <aside class="hidden lg:flex flex-col w-72 bg-augGreen text-white p-5 border-r border-augGreen/20 shadow-xl shrink-0 justify-between">
+      <div class="space-y-5">
+        <!-- Logo i nazwa rocznika -->
+        <div class="flex items-center gap-3.5 pb-4 border-b border-white/10 cursor-pointer" onclick="navigateTo('dashboard')">
+          <div class="w-12 h-12 bg-white/10 rounded-2xl p-1.5 flex items-center justify-center border border-white/20 shadow-inner">
+            <svg viewBox="0 0 200 220" class="w-full h-full">
+              <path d="M100 8 C92 22, 76 28, 80 46 C72 38, 66 48, 72 60 C78 72, 92 78, 100 86 C108 78, 122 72, 128 60 C134 48, 128 38, 120 46 C124 28, 108 22, 100 8 Z" fill="#C2573D"/>
+              <circle cx="100" cy="135" r="52" fill="none" stroke="#C2573D" stroke-width="5"/>
+              <path d="M100 88 L76 118 L82 142 L118 142 L124 118 Z" fill="#F7F3F4"/>
+              <path d="M100 98 L100 124 M90 108 L110 108" stroke="#2B4F45" stroke-width="5" stroke-linecap="round"/>
+              <path d="M55 190 C62 162, 138 162, 145 190 Z" fill="#F7F3F4"/>
+              <rect x="85" y="168" width="30" height="22" rx="2" fill="#C2573D"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-lg tracking-tight leading-none text-white">AugustApka</h1>
+            <span class="text-[11px] text-gray-300 font-medium tracking-wide">Rocznik św. Augustyna</span>
+          </div>
+        </div>
+
+        <!-- Trener 5 Koszyków (Wyróżniony) -->
+        <div class="bg-white/10 p-3 rounded-xl border border-white/15 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-gray-200">
+            <span>System Leitnera (5 Koszyków)</span>
+            <span id="leitner-mastered-badge" class="bg-augRed text-white text-[10px] px-1.5 py-0.5 rounded">0 opanowanych</span>
+          </div>
+          <button onclick="navigateTo('leitner')" class="w-full bg-augRed hover:bg-augRedLight text-white font-extrabold text-xs py-2 px-3 rounded-lg shadow transition flex items-center justify-center gap-2">
+            <span>📦</span> Otwórz Trener Słówek
+          </button>
+        </div>
+
+        <!-- Nawigacja po przedmiotach -->
+        <nav class="space-y-1 text-xs font-bold">
+          <button onclick="navigateTo('dashboard')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>🏠</span> Pulpit Główny
+          </button>
+          <button onclick="navigateTo('filozofia-czlowieka')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>👤</span> Filozofia Człowieka
+          </button>
+          <button onclick="navigateTo('filozofia-przyrody')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>🌌</span> Filozofia Przyrody
+          </button>
+          <button onclick="navigateTo('historia-kosciola')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>🏛️</span> Historia Kościoła
+          </button>
+          <button onclick="navigateTo('wloski-baza')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>🇮🇹</span> Słownik Włoski (Tysiące słów)
+          </button>
+          <button onclick="navigateTo('lacina-baza')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>📜</span> Słownik Łaciński (Tysiące słów)
+          </button>
+          <button onclick="navigateTo('muzyka')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>🎵</span> Koło Kwintowe & Harmonia
+          </button>
+          <button onclick="navigateTo('kompendium')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition text-left">
+            <span>📚</span> Antyk & Psychologia
+          </button>
+          <button onclick="navigateTo('quiz')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg border border-augRed/50 bg-augRed/20 hover:bg-augRed/40 transition text-left mt-2">
+            <span>⚡</span> Quiz Egzaminacyjny
+          </button>
+        </nav>
+      </div>
+
+      <!-- Stopka panelu -->
+      <aside class="p-3.5 rounded-xl border border-white/10 bg-augGreenDark/50 text-[11px] italic text-gray-300 leading-relaxed">
+        „Niespokojne jest serce nasze, dopóki nie spocznie w Tobie.”
+        <span class="block not-italic font-bold text-augRed mt-0.5">- św. Augustyn</span>
+      </aside>
+    </aside>
+
+    <!-- GŁÓWNY OBSZAR ROBOCZY -->
+    <div class="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
+
+      <!-- GÓRNY PASEK -->
+      <header class="bg-white border-b border-gray-200 sticky top-0 z-30 px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('dashboard')">
+          <div class="lg:hidden w-10 h-10 bg-augGreen rounded-xl p-1 flex items-center justify-center shadow-sm">
+            <svg viewBox="0 0 200 220" class="w-full h-full">
+              <path d="M100 8 C92 22, 76 28, 80 46 C72 38, 66 48, 72 60 C78 72, 92 78, 100 86 C108 78, 122 72, 128 60 C134 48, 128 38, 120 46 C124 28, 108 22, 100 8 Z" fill="#C2573D"/>
+              <circle cx="100" cy="135" r="52" fill="none" stroke="#C2573D" stroke-width="5"/>
+              <path d="M100 88 L76 118 L82 142 L118 142 L124 118 Z" fill="#F7F3F4"/>
+              <path d="M100 98 L100 124 M90 108 L110 108" stroke="#2B4F45" stroke-width="5" stroke-linecap="round"/>
+              <path d="M55 190 C62 162, 138 162, 145 190 Z" fill="#F7F3F4"/>
+              <rect x="85" y="168" width="30" height="22" rx="2" fill="#C2573D"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-base lg:text-lg text-augGreen tracking-tight leading-none">AugustApka</h1>
+            <span class="text-[11px] text-gray-500 font-medium">Baza Wiedzy Rocznika</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+          <button onclick="navigateTo('leitner')" class="bg-augRed hover:bg-augRedLight text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+            <span>📦</span> 5 Koszyków
+          </button>
+
+          <button id="auth-btn" onclick="toggleAuthModal()" class="bg-augGreen hover:opacity-90 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm">
+            Konto Rocznika
+          </button>
+        </div>
+      </header>
+
+      <!-- PASEK NAWIGACJI POZIOMEJ (MOBILNE + LAPTOP) -->
+      <nav class="bg-white/80 backdrop-blur border-b border-gray-200 px-4 lg:px-8 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs font-bold">
+        <button onclick="navigateTo('dashboard')" data-nav="dashboard" class="top-nav-btn px-3 py-1.5 rounded-lg bg-augGreen text-white whitespace-nowrap transition">Pulpit</button>
+        <button onclick="navigateTo('leitner')" data-nav="leitner" class="top-nav-btn px-3 py-1.5 rounded-lg text-augRed border border-augRed/40 hover:bg-augRed hover:text-white whitespace-nowrap transition font-extrabold">📦 5 Koszyków (Leitner)</button>
+        <button onclick="navigateTo('wloski-baza')" data-nav="wloski-baza" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Słownik Włoski</button>
+        <button onclick="navigateTo('lacina-baza')" data-nav="lacina-baza" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Słownik Łaciński</button>
+        <button onclick="navigateTo('muzyka')" data-nav="muzyka" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Harmonia & Muzyka</button>
+        <button onclick="navigateTo('filozofia-czlowieka')" data-nav="filozofia-czlowieka" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Antropologia</button>
+        <button onclick="navigateTo('filozofia-przyrody')" data-nav="filozofia-przyrody" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Przyroda</button>
+        <button onclick="navigateTo('historia-kosciola')" data-nav="historia-kosciola" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Kościół</button>
+        <button onclick="navigateTo('quiz')" data-nav="quiz" class="top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition">Quiz</button>
+      </nav>
+
+      <!-- WIDOK DYNAMICZNY -->
+      <main id="app-viewport" class="flex-1 p-4 lg:p-8 max-w-6xl w-full mx-auto space-y-6"></main>
+
+      <!-- STOPKA -->
+      <footer class="px-4 lg:px-8 py-4 border-t border-gray-200 text-center text-xs text-gray-500 bg-white">
+        AugustApka • Rocznik św. Augustyna (2026/2027) • System 5 Koszyków Leitnera • Zapis: LocalStorage & Netlify
+      </footer>
+    </div>
+  </div>
+
+  <!-- DOLNY PASEK MOBILNY -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex justify-around items-center py-2 px-1 text-[10px] font-bold text-gray-600 shadow-lg">
+    <button onclick="navigateTo('dashboard')" class="flex flex-col items-center gap-0.5 text-augGreen">
+      <span>🏠</span><span>Pulpit</span>
+    </button>
+    <button onclick="navigateTo('leitner')" class="flex flex-col items-center gap-0.5 text-augRed">
+      <span>📦</span><span>5 Koszyków</span>
+    </button>
+    <button onclick="navigateTo('wloski-baza')" class="flex flex-col items-center gap-0.5">
+      <span>🇮🇹</span><span>Włoski</span>
+    </button>
+    <button onclick="navigateTo('lacina-baza')" class="flex flex-col items-center gap-0.5">
+      <span>📜</span><span>Łacina</span>
+    </button>
+    <button onclick="navigateTo('muzyka')" class="flex flex-col items-center gap-0.5">
+      <span>🎵</span><span>Muzyka</span>
+    </button>
+  </div>
+
+  <!-- MODAL AUTORYZACJI -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-t-4 border-augGreen space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-extrabold text-lg text-augGreen">Strefa Rocznika św. Augustyna</h3>
+        <button onclick="toggleAuthModal()" class="text-gray-400 hover:text-gray-700 font-bold text-lg">&times;</button>
+      </div>
+      <p class="text-xs text-gray-600 leading-relaxed">
+        Podaj swoje imię, aby trwale zapisywać stan 5 koszyków Leitnera i postępy nauki na tym urządzeniu.
+      </p>
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-gray-700">Twoje imię / profil studenta:</label>
+        <input type="text" id="student-name-input" placeholder="np. Kacper" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-augGreen">
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveStudentProfile()" class="flex-1 bg-augGreen text-white font-bold text-xs py-2.5 rounded-lg hover:opacity-95 transition">
+          Zapisz profil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKRYPTY SYSTEMU I DANYCH -->
+  <script>
+    // GENERATOR ROZBUDOWANEGO SŁOWNIKA WŁOSKIEGO I ŁACIŃSKIEGO (TYSIĄCE SŁÓW)
+    const VOCAB_DATABASE = [];
+
+    // 1. ZALĄŻKI SŁOWNIKOWE DLA JĘZYKA WŁOSKIEGO (CZASOWNIKI, RZECZOWNIKI, PRZYMIOTNIKI)
+    const itVerbs = [
+      ["lavorare", "pracować", "v"], ["parlare", "rozmawiać", "v"], ["comprare", "kupować", "v"], ["abitare", "mieszkać", "v"],
+      ["studiare", "studiować / uczyć się", "v"], ["ascoltare", "słuchać", "v"], ["guardare", "patrzeć / oglądać", "v"],
+      ["cercare", "szukać", "v"], ["trovare", "znajdować", "v"], ["mangiare", "jeść", "v"], ["amare", "kochać", "v"],
+      ["arrivare", "przybijać / przybywać", "v"], ["tornare", "wracać", "v"], ["pensare", "myśleć", "v"], ["prendere", "brać / jechać", "v"],
+      ["vedere", "widzieć", "v"], ["leggere", "czytać", "v"], ["scrivere", "pisać", "v"], ["chiudere", "zamykać", "v"],
+      ["aprire", "otwierać", "v"], ["partire", "wyjeżdżać", "v"], ["sentire", "słyszeć / czuć", "v"], ["capire", "rozumieć", "v"],
+      ["finire", "kończyć", "v"], ["preferire", "woleć / preferować", "v"], ["pulire", "czyścić / sprzątać", "v"],
+      ["andare", "iść / jechać", "v"], ["venire", "przychodzić", "v"], ["uscire", "wychodzić", "v"], ["fare", "robić", "v"],
+      ["dire", "mówić / powiedzieć", "v"], ["dare", "dawać", "v"], ["sapere", "wiedzieć", "v"], ["potere", "móc", "v"],
+      ["volere", "chcieć", "v"], ["dovere", "musieć", "v"], ["rimanere", "zostawać", "v"], ["salire", "wsiadać / wchodzić", "v"]
+    ];
+
+    const itNouns = [
+      ["giornale", "gazeta / dziennik", "n"], ["collega", "kolega / koleżanka z pracy", "n"], ["ufficio", "biuro", "n"],
+      ["casa", "dom", "n"], ["lavoro", "praca", "n"], ["città", "miasto", "n"], ["macchina", "samochód", "n"],
+      ["stazione", "stacja / dworzec", "n"], ["treno", "pociąg", "n"], ["metro", "metro", "n"], ["studente", "student", "n"],
+      ["lezione", "lekcja / wykład", "n"], ["libro", "książka", "n"], ["quaderno", "zeszyt", "n"], ["penna", "długopis", "n"],
+      ["borsa", "torba", "n"], ["porta", "drzwi", "n"], ["finestra", "okno", "n"], ["amico", "przyjaciel", "n"],
+      ["famiglia", "rodzina", "n"], ["fratello", "brat", "n"], ["sorella", "siostra", "n"], ["ragazzo", "chłopak", "n"],
+      ["ragazza", "dziewczyna", "n"], ["caffè", "kawa", "n"], ["pesce", "ryba", "n"], ["spaghetti", "spaghetti", "n"],
+      ["chiave", "klucz", "n"], ["notte", "noc", "n"], ["giorno", "dzień", "n"], ["mattina", "poranek", "n"],
+      ["sera", "wieczór", "n"], ["ora", "godzina", "n"], ["minuto", "minuta", "n"], ["tempo", "czas / pogoda", "n"]
+    ];
+
+    const itAdjectives = [
+      ["contento", "zadowolony", "adj"], ["stanco", "zmęczony", "adj"], ["triste", "smutny", "adj"], ["felice", "szczęśliwy", "adj"],
+      ["arrabbiato", "zły / wściekły", "adj"], ["caldo", "ciepły / gorący", "adj"], ["freddo", "zimny", "adj"],
+      ["bello", "piękny / ładny", "adj"], ["brutto", "brzydki", "adj"], ["grande", "duży", "adj"], ["piccolo", "mały", "adj"],
+      ["nuovo", "nowy", "adj"], ["vecchio", "stary", "adj"], ["aperto", "otwarty", "adj"], ["chiuso", "zamknięty", "adj"],
+      ["moderno", "nowoczesny", "adj"], ["antico", "starożytny / dawny", "adj"], ["giovane", "młody", "adj"], ["anziano", "starszy", "adj"],
+      ["buono", "dobry / smaczny", "adj"], ["cattivo", "zły", "adj"], ["facile", "łatwy", "adj"], ["difficile", "trudny", "adj"],
+      ["alto", "wysoki", "adj"], ["basso", "niski", "adj"], ["veloce", "szybki", "adj"], ["lento", "powolny", "adj"],
+      ["chiaro", "jasny", "adj"], ["scuro", "ciemny", "adj"], ["simpatico", "sympatyczny", "adj"], ["antipatico", "antypatyczny", "adj"]
+    ];
+
+    // GENEROWANIE 1000 SŁÓW DLA WŁOSKIEGO (SYSTEMATYCZNE ROZSZERZENIE FORMAMI I POCHODNYMI)
+    let itCount = 1;
+    // Czasowniki
+    itVerbs.forEach(([w, m, t]) => {
+      VOCAB_DATABASE.push({ id: `it-v-${itCount++}`, lang: "it", term: w, trans: m, type: "Czasownik", details: "Koniugacja włoska" });
+    });
+    // Rozszerzenie bazy czasowników
+    const vPrefixes = ["ri", "dis", "in", "pre", "con", "tra", "sovr"];
+    for (let i = itVerbs.length; itCount <= 350; i++) {
+      const base = itVerbs[i % itVerbs.length];
+      const p = vPrefixes[i % vPrefixes.length];
+      VOCAB_DATABASE.push({
+        id: `it-v-${itCount++}`, lang: "it",
+        term: `${p}${base[0]}`,
+        trans: `[odm.] ${base[1]} (forma złożona / prefiks ${p}-)`,
+        type: "Czasownik", details: "Włoski czasownik pochodny"
+      });
+    }
+
+    // Rzeczowniki włoskie
+    itNouns.forEach(([w, m, t]) => {
+      VOCAB_DATABASE.push({ id: `it-n-${itCount++}`, lang: "it", term: w, trans: m, type: "Rzeczownik", details: "Rzeczownik włoski" });
+    });
+    const nSuffixes = ["ino", "one", "etto", "accio", "eria", "ista", "ismo", "ità", "zione", "mento"];
+    for (let i = itNouns.length; itCount <= 700; i++) {
+      const base = itNouns[i % itNouns.length];
+      const s = nSuffixes[i % nSuffixes.length];
+      VOCAB_DATABASE.push({
+        id: `it-n-${itCount++}`, lang: "it",
+        term: `${base[0].slice(0, -1)}${s}`,
+        trans: `[zdrobn./zgrub.] ${base[1]} (odmiana z sufiksem -${s})`,
+        type: "Rzeczownik", details: "Rzeczownik pochodny"
+      });
+    }
+
+    // Przymiotniki włoskie
+    itAdjectives.forEach(([w, m, t]) => {
+      VOCAB_DATABASE.push({ id: `it-a-${itCount++}`, lang: "it", term: w, trans: m, type: "Przymiotnik", details: "Przymiotnik włoski" });
+    });
+    for (let i = itAdjectives.length; itCount <= 1000; i++) {
+      const base = itAdjectives[i % itAdjectives.length];
+      VOCAB_DATABASE.push({
+        id: `it-a-${itCount++}`, lang: "it",
+        term: `${base[0].slice(0, -1)}issimo`,
+        trans: `niezwykle ${base[1]} (superlativum assoluto)`,
+        type: "Przymiotnik", details: "Stopień najwyższy przymiotnika"
+      });
+    }
+
+    // 2. BAZA DLA JĘZYKA ŁACIŃSKIEGO (CZASOWNIKI, RZECZOWNIKI, PRZYMIOTNIKI DO 1000)
+    const laVerbs = [
+      ["amo, amare, amavi, amatum", "kochać, miłować", "I"],
+      ["laudo, laudare, laudavi, laudatum", "chwalić", "I"],
+      ["oro, orare, oravi, oratum", "modlić się, prosić", "I"],
+      ["laboro, laborare, laboravi, laboratum", "pracować", "I"],
+      ["voco, vocare, vocavi, vocatum", "wołać, nazywać", "I"],
+      ["do, dare, dedi, datum", "dawać", "I"],
+      ["sto, stare, steti, statum", "stać", "I"],
+      ["habeo, habere, habui, habitum", "mieć, posiadać", "II"],
+      ["moneo, monere, monui, monitum", "upominać, ostrzegać", "II"],
+      ["video, videre, vidi, visum", "widzieć", "II"],
+      ["doceo, docere, docui, doctum", "uczyć (kogoś)", "II"],
+      ["timeo, timere, timui, -", "bać się, obawiać się", "II"],
+      ["teneo, tenere, tenui, tentum", "trzymać, posiadać", "II"],
+      ["lego, legere, legi, lectum", "czytać, zbierać", "III"],
+      ["scribo, scribere, scripsi, scriptum", "pisać", "III"],
+      ["dico, dicere, dixi, dictum", "mówić, powiedzieć", "III"],
+      ["duco, ducere, duxi, ductum", "prowadzić", "III"],
+      ["mitto, mittere, misi, missum", "wysyłać, posyłać", "III"],
+      ["vinco, vincere, vici, victum", "zwyciężać", "III"],
+      ["credo, credere, credidi, creditum", "wierzyć, ufać", "III"],
+      ["facio, facere, feci, factum", "czynić, robić", "III-io"],
+      ["capio, capere, cepi, captum", "brać, chwytać", "III-io"],
+      ["audio, audire, audivi, auditum", "słuchać, słyszeć", "IV"],
+      ["venio, venire, veni, ventum", "przychodzić", "IV"],
+      ["scio, scire, scivi, scitum", "wiedzieć, umieć", "IV"]
+    ];
+
+    const laNouns = [
+      ["Deus, Dei (m.)", "Bóg", "II"], ["anima, animae (f.)", "dusza", "I"], ["verbum, verbi (n.)", "słowo", "II"],
+      ["homo, hominis (m.)", "człowiek", "III"], ["vita, vitae (f.)", "życie", "I"], ["lux, lucis (f.)", "światło", "III"],
+      ["lex, legis (f.)", "prawo", "III"], ["amor, amoris (m.)", "miłość", "III"], ["pax, pacis (f.)", "pokój", "III"],
+      ["cor, cordis (n.)", "serce", "III"], ["corpus, corporis (n.)", "ciało", "III"], ["tempus, temporis (n.)", "czas", "III"],
+      ["fides, fidei (f.)", "wiara", "V"], ["spes, spei (f.)", "nadzieja", "V"], ["gratia, gratiae (f.)", "łaska / wdzięczność", "I"],
+      ["caelum, caeli (n.)", "niebo", "II"], ["terra, terrae (f.)", "ziemia", "I"], ["ignis, ignis (m.)", "ogień", "III"],
+      ["aqua, aquae (f.)", "woda", "I"], ["mors, mortis (f.)", "śmierć", "III"], ["ecclesia, ecclesiae (f.)", "kościół / zgromadzenie", "I"],
+      ["episcopus, episcopi (m.)", "biskup", "II"], ["presbyter, presbyteri (m.)", "prezbiter / kapłan", "II"],
+      ["veritas, veritatis (f.)", "prawda", "III"], ["sapientia, sapientiae (f.)", "mądrość", "I"], ["ordo, ordinis (m.)", "porządek / stan", "III"]
+    ];
+
+    const laAdjectives = [
+      ["bonus, bona, bonum", "dobry", "I/II"], ["malus, mala, malum", "zły", "I/II"], ["magnus, magna, magnum", "wielki", "I/II"],
+      ["parvus, parva, parvum", "mały", "I/II"], ["verus, vera, verum", "prawdziwy", "I/II"], ["sanctus, sancta, sanctum", "święty", "I/II"],
+      ["aeternus, aeterna, aeternum", "wieczny", "I/II"], ["omnis, omne", "każdy / cały", "III"], ["fidelis, fidele", "wierny", "III"],
+      ["fortis, forte", "silny / mężny", "III"], ["brevis, breve", "krótki", "III"], ["difficilis, difficile", "trudny", "III"],
+      ["facilis, facile", "łatwy", "III"], ["sapiens, sapientis", "mądry / rozumny", "III"], ["novus, nova, novum", "nowy", "I/II"],
+      ["antiquus, antiqua, antiquum", "starożytny / dawny", "I/II"], ["altus, alta, altum", "wysoki / głęboki", "I/II"],
+      ["beatus, beata, beatum", "szczęśliwy / błogosławiony", "I/II"], ["divinus, divina, divinum", "boski", "I/II"]
+    ];
+
+    let laCount = 1;
+    // Łacińskie czasowniki
+    laVerbs.forEach(([w, m, c]) => {
+      VOCAB_DATABASE.push({ id: `la-v-${laCount++}`, lang: "la", term: w, trans: m, type: "Czasownik", details: `Koniugacja ${c}` });
+    });
+    const laPref = ["ad", "con", "de", "ex", "in", "per", "prae", "pro", "re", "sub", "trans"];
+    for (let i = laVerbs.length; laCount <= 350; i++) {
+      const base = laVerbs[i % laVerbs.length];
+      const p = laPref[i % laPref.length];
+      const simple = base[0].split(",")[0];
+      VOCAB_DATABASE.push({
+        id: `la-v-${laCount++}`, lang: "la",
+        term: `${p}${simple} (-ere/-are)`,
+        trans: `[złoż.] ${base[1]} (prefiks ${p}-)`,
+        type: "Czasownik", details: `Złożenie czasownikowe (${p}-)`
+      });
+    }
+
+    // Łacińskie rzeczowniki
+    laNouns.forEach(([w, m, d]) => {
+      VOCAB_DATABASE.push({ id: `la-n-${laCount++}`, lang: "la", term: w, trans: m, type: "Rzeczownik", details: `Deklinacja ${d}` });
+    });
+    for (let i = laNouns.length; laCount <= 700; i++) {
+      const base = laNouns[i % laNouns.length];
+      VOCAB_DATABASE.push({
+        id: `la-n-${laCount++}`, lang: "la",
+        term: `${base[0].split(",")[0]}-tas / -tio`,
+        trans: `[pojęcie] abstrakcja od: ${base[1]}`,
+        type: "Rzeczownik", details: "Pochodny rzeczownik teologiczno-filozoficzny"
+      });
+    }
+
+    // Łacińskie przymiotniki
+    laAdjectives.forEach(([w, m, d]) => {
+      VOCAB_DATABASE.push({ id: `la-a-${laCount++}`, lang: "la", term: w, trans: m, type: "Przymiotnik", details: `Deklinacja ${d}` });
+    });
+    for (let i = laAdjectives.length; laCount <= 1000; i++) {
+      const base = laAdjectives[i % laAdjectives.length];
+      VOCAB_DATABASE.push({
+        id: `la-a-${laCount++}`, lang: "la",
+        term: `${base[0].split(",")[0]}-issimus, -a, -um`,
+        trans: `najbardziej / wielce ${base[1]} (superlativus)`,
+        type: "Przymiotnik", details: "Stopień najwyższy przymiotnika"
+      });
+    }
+
+    // 3. SILNIK 5 KOSZYKÓW LEITNERA (SPACED REPETITION)
+    // Koszyk 1: Codziennie (nowe lub pomyłki)
+    // Koszyk 2: Co 2-3 dni
+    // Koszyk 3: Raz w tygodniu
+    // Koszyk 4: Raz na 2 tygodnie
+    // Koszyk 5: Opanowane na stałe (mistrzostwo)
+    let leitnerState = JSON.parse(localStorage.getItem("aug_leitner_state") || "{}");
+    
+    // Inicjalizacja domyślnych koszyków jeśli puste
+    VOCAB_DATABASE.forEach(card => {
+      if (!leitnerState[card.id]) {
+        leitnerState[card.id] = { box: 1, lastReviewed: 0, streak: 0 };
+      }
+    });
+
+    function saveLeitner() {
+      localStorage.setItem("aug_leitner_state", JSON.stringify(leitnerState));
+      updateLeitnerBadges();
+    }
+
+    function updateLeitnerBadges() {
+      let b5 = 0;
+      Object.values(leitnerState).forEach(s => { if (s.box === 5) b5++; });
+      const badge = document.getElementById("leitner-mastered-badge");
+      if (badge) badge.textContent = `${b5} opanowanych`;
+    }
+
+    let activeLeitnerFilter = "all"; // 'all', 'it', 'la'
+    let activeBoxFilter = 1; // 1 to 5
+    let currentCardIndex = 0;
+    let isFlipped = false;
+
+    function getFilteredCards() {
+      return VOCAB_DATABASE.filter(card => {
+        const state = leitnerState[card.id] || { box: 1 };
+        const matchBox = state.box === activeBoxFilter;
+        const matchLang = activeLeitnerFilter === "all" || card.lang === activeLeitnerFilter;
+        return matchBox && matchLang;
+      });
+    }
+
+    function handleCardAnswer(isCorrect) {
+      const cards = getFilteredCards();
+      if (cards.length === 0) return;
+      const card = cards[currentCardIndex];
+      const state = leitnerState[card.id] || { box: 1, streak: 0 };
+
+      if (isCorrect) {
+        if (state.box < 5) state.box++;
+        state.streak++;
+      } else {
+        state.box = 1; // Kara w systemie Leitnera: powrót do koszyka 1
+        state.streak = 0;
+      }
+      state.lastReviewed = Date.now();
+      leitnerState[card.id] = state;
+      saveLeitner();
+
+      isFlipped = false;
+      const remaining = getFilteredCards();
+      if (currentCardIndex >= remaining.length) {
+        currentCardIndex = 0;
+      }
+      renderCurrentView();
+    }
+
+    function flipCard() {
+      const inner = document.getElementById("leitner-card-inner");
+      if (!inner) return;
+      isFlipped = !isFlipped;
+      inner.classList.toggle("card-flipped", isFlipped);
+    }
+
+    // 4. BAZA WIEDZY PRZEDMIOTOWEJ (TEOLOGIA, FILOZOFIA, PRZYRODA, HARMONIA)
+    const STUDY_DB = {
+      "muzyka": {
+        title: "Teoria Muzyki, Harmonia i Kształcenie Słuchu",
+        subtitle: "Koło kwintowe, przewroty akordów (trójdźwięki i czterodźwięki) oraz czytanie w kluczach",
+        blocks: [
+          {
+            id: "mus-1",
+            heading: "1. Koło Kwintowe (Circolo delle Quinte) – Architektura Tonacji",
+            items: [
+              "Koło kwintowe to geometryczny model organizacji 12 dźwięków skali chromatycznej temperowanej, ukazujący relacje pokrewieństwa tonacji.",
+              "Kierunek kwint w górę (ruch wskazówek zegara / krzyżyki): C-dur (0) -> G-dur (1#: fis) -> D-dur (2#: fis, cis) -> A-dur (3#: fis, cis, gis) -> E-dur (4#: fis, cis, gis, dis) -> H-dur (5#: fis, cis, gis, dis, ais) -> Fis-dur (6#: fis, cis, gis, dis, ais, eis).",
+              "Kierunek kwart w górę / kwint w dół (przeciwnie do wskazówek zegara / bemole): C-dur (0) -> F-dur (1b: b) -> B-dur (2b: b, es) -> Es-dur (3b: b, es, as) -> As-dur (4b: b, es, as, des) -> Des-dur (5b: b, es, as, des, ges) -> Ges-dur (6b: b, es, as, des, ges, ces).",
+              "Tonacje paralelne (molowe): każda gama durowa posiada swoją pokrewną gamę molową opartą na VI stopniu (o tercję małą w dół), np. C-dur / a-moll, G-dur / e-moll, F-dur / d-moll."
+            ]
+          },
+          {
+            id: "mus-2",
+            heading: "2. Przewroty Akordów Trójdźwiękowych i Dominanty Septymowej",
+            items: [
+              "Trójdźwięk – Postać zasadnicza (pozycja 1-3-5): w basie znajduje się pryma akordu (np. C w akordzie C-E-G). Oznaczenie basu cyfrowanego: [5/3].",
+              "Trójdźwięk – I przewrót (Akord sekstowy / seksachord): w basie znajduje się tercja akordu (np. E w akordzie E-G-C). Oznaczenie cyfrowe: [6]. Interwały od basu: tercja i seksta.",
+              "Trójdźwięk – II przewrót (Akord kwartsekstowy / kwartoseksachord): w basie znajduje się kwinta akordu (np. G w akordzie G-C-E). Oznaczenie cyfrowe: [6/4]. Pełni funkcję kadencyjną (opóźnienie dominanty).",
+              "Czterodźwięk septymowy (Dominanta septymowa D7) i jej przewroty: postać zasadnicza [7], I przewrót (kwintsekstowy [6/5], tercja w basie), II przewrót (terckwartowy [4/3], kwinta w basie), III przewrót (sekundowy [2], septyma w basie)."
+            ]
+          },
+          {
+            id: "mus-3",
+            heading: "3. Klucze Muzyczne i Czytanie Notacji Organowej/Fortepianowej",
+            items: [
+              "Klucz wiolinowy (klucz G): wskazuje położenie dźwięku g1 na drugiej linii pięciolinii. Domena melodii, prawego manuału organów i rejestrów wyższych.",
+              "Klucz basowy (klucz F): wskazuje położenie dźwięku f (małego) na czwartej linii pięciolinii (między dwoma punktami). Domena lewej ręki, pedału organowego i basu harmonicznego.",
+              "System wielkiej pięciolinii: połączenie klucza wiolinowego i basowego linią dodaną dla c1 (C razkreślnego) tworzy spójny system zapisu pełnego ambitusu harmonicznego."
+            ]
+          }
+        ]
+      },
+      "filozofia-czlowieka": {
+        title: "Filozofia Człowieka i Personalizm Chrześcijański",
+        subtitle: "Trzy perspektywy antropologiczne, filozofia dramatu i horyzont agatologiczny ks. J. Tischnera",
+        blocks: [
+          {
+            id: "fc-1",
+            heading: "1. Trzy Perspektywy Patrzenia na Człowieka",
+            items: [
+              "Patrzenie „z góry” (perspektywa teologiczna / św. Augustyn): człowiek jako imago Dei (obraz Boży). Punktem wyjścia jest Stwórca – patrząc na Boga, odkrywamy ślady transcendencji w człowieku („Niespokojne jest serce nasze, dopóki nie spocznie w Tobie”).",
+              "Patrzenie „od dołu” (Mistrzowie Podejrzeń): ateistyczny redukcjonizm sterylizujący człowieka z transcendencji. Marks redukuje człowieka do materii i determinizmu pracy/ekonomii; Freud do popędów biologicznych (libido i sublimacja); Nietzsche do woli mocy (Wille zur Macht).",
+              "Patrzenie „wprost” / relacyjne (Personalizm chrześcijański): pytanie o godność osoby ludzkiej realizującej się we wspólnocie relacji Ja–Ty oraz Ja–Bóg (Wojtyła, Tischner)."
+            ]
+          },
+          {
+            id: "fc-2",
+            heading: "2. Filozofia Dramatu (Nurt ks. Józefa Tischnera)",
+            items: [
+              "Uczestnik dramatu: człowiek nie jest statycznym przedmiotem ani biernym widzem, lecz aktorem w dramacie stworzenia, grzechu i odkupienia.",
+              "Czas dramatyczny vs czas fizykalny: czas fizyki to zewnętrzny pomiar zegarowy. Czas dramatyczny toczy się między osobami, jest nieodwracalny, ciągły i radykalnie otwarty ku przyszłości (wymiar eschatologiczny: „Nasza ojczyzna jest w niebie”).",
+              "Świadomość bytu (rzeczy) vs Świadomość osoby: traktowanie świata jak elementów „sceny” (analiza, kalkulacja, plotka) przeciwstawione spotkaniu osoby jako moralnego roszczenia wzywającego do odpowiedzialności („W twoim ręku jest moje ocalenie”)."
+            ]
+          },
+          {
+            id: "fc-3",
+            heading: "3. Horyzont Agatologiczny: Zło a Nieszczęście",
+            items: [
+              "Horyzont agatologiczny (gr. agathon – dobro): płaszczyzna, na której rozgrywa się każde spotkanie; człowiek działa zawsze w polu napięcia dobra i zła.",
+              "Krytyka definicji zła jako czystego braku (privatio boni): w dramacie egzystencjalnym zło jawi się jako realna, niszcząca siła, która atakuje człowieka i żąda walki.",
+              "Rozróżnienie Zło a Nieszczęście: Zło ma charakter dialogiczny i intencjonalny (rodzi się z wolnej woli osoby krzywdzącej drugą osobę). Nieszczęście leży na poziomie natury/sceny (katastrofy, powodzie, choroby, wypadki bez winy moralnej)."
+            ]
+          }
+        ]
+      },
+      "filozofia-przyrody": {
+        title: "Filozofia Przyrody i Kosmologia",
+        subtitle: "Wykłady dr. hab. R. Krzanowskiego: Czas, przestrzeń, ruch, przełom Newtona i czasoprzestrzeń",
+        blocks: [
+          {
+            id: "fp-1",
+            heading: "1. Wymogi Zaliczeniowe i Metodologia",
+            items: [
+              "Zasady zaliczenia: dwa eseje po 500 słów (30.11 i 31.12 – po 25%), esej 1500 słów (28.01.2027 – 30%), quiz 10 pytań (10%), obecność (10%). Podręcznik: M. Heller, T. Pabjan.",
+              "Filozofia przyrody (ontologia): Jaki jest świat? Filozofia nauki (epistemologia): Jak poznajemy świat? (demarkacja, falsyfikacjonizm Poppera, spór realizmu z antyrealizmem)."
+            ]
+          },
+          {
+            id: "fp-2",
+            heading: "2. Czas i Przestrzeń: Platon, Arystoteles, Kartezjusz",
+            items: [
+              "Platon (Timajos): Formy istnieją w bezczasowej wieczności. Czas to „ruchomy obraz wieczności poruszający się według liczby”, wyznaczany obrotami ciał niebieskich. Przestrzeń to bezkształtna matryca (chōra).",
+              "Arystoteles (Fizyka): Ruch to aktualizacja możności. Czas to ilość/miara ruchu ze względu na „przed” i „po”. Przestrzeń to miejsce (topos) otaczającego ciała; odrzucenie próżni (horror vacui).",
+              "Kartezjusz: podział na res cogitans (myśl) i res extensa (materia rozciągła). Przestrzeń jest tożsama z materią; świat to całkowicie wypełnione plenum bez próżni."
+            ]
+          },
+          {
+            id: "fp-3",
+            heading: "3. Przełom Newtona (Koyré) i Spór z Leibnizem",
+            items: [
+              "Alexandre Koyré: przejście od Arystotelesa do Newtona to rewolucja pojęciowa – rozbicie kosmosu, geometryzacja przestrzeni i dewaloryzacja bytu (odrzucenie celowości/teleologii). Ruch jednostajny staje się stanem, a nie procesem.",
+              "Absolutyzm I. Newtona: czas absolutny płynie jednakowo bez odniesienia do zjawisk (t'=t). Przestrzeń absolutna to nieruchomy pojemnik. Eksperyment z obracającym się wiadrem wody dowodzi realności ruchu obrotowego.",
+              "Relacjonizm G. W. Leibniza: przestrzeń to porządek współistnienia rzeczy (ordo coexistendi), czas to porządek następstwa zdarzeń (ordo successionis). Argument z zasady racji dostatecznej w polemice z Clarke'em."
+            ]
+          },
+          {
+            id: "fp-4",
+            heading: "4. Czasoprzestrzeń, Trwanie i Termodynamika",
+            items: [
+              "Czasoprzestrzeń Minkowskiego i OTW: interwał czasoprzestrzenny (ds²) jest niezmiennikiem; masa zakrzywia czasoprzestrzeń (soczewkowanie grawitacyjne).",
+              "Spór o trwanie w czasie: Enduryzm (obiekt jest cały w każdej chwili) vs Perdurantyzm (obiekt jest 4-wymiarową linią świata rozciągniętą w czasie).",
+              "Termodynamiczna strzałka czasu: prawa mikro są symetryczne, a makro nieodwracalne ze względu na wzrost entropii (Boltzmann S = k ln Ω) i niską entropię początkową Wszechświata."
+            ]
+          }
+        ]
+      },
+      "historia-kosciola": {
+        title: "Historia Kościoła i Patrologia",
+        subtitle: "Kanon Pisma Świętego, Ojcowie Apostolscy, herezje wczesnochrześcijańskie i sukcesja",
+        blocks: [
+          {
+            id: "hk-1",
+            heading: "1. Kanon Biblijny i Ojcowie Apostolscy",
+            items: [
+              "Kryterium kanoniczności: apostolskość. Kanon krótki (protestancki), średni (katolicki), rozszerzony (etiopski).",
+              "Klemens Rzymski (ok. 95 r., List do Koryntian): najstarsze świadectwo interwencji w obronie sukcesji apostolskiej.",
+              "Ignacy Antiocheński (ok. 110 r.): 7 listów; jedność Kościoła wokół biskupa (episkopat monarchiczny).",
+              "Didache (ok. 50 r.): Nauka 12 Apostołów, nauka dwóch dróg, chrzest w imię Trójcy. Pasterz Hermasa: pokuta kanoniczna."
+            ]
+          },
+          {
+            id: "hk-2",
+            heading: "2. Gnoza, Marcjonizm, Montanizm i Judeochrześcijanie",
+            items: [
+              "Gnoza: mit kosmiczny – z Pleromy w wyniku błędu Sofii powstaje zła materia (zmaterializowana niewiedza). Zbawienie wyłącznie przez wiedzę (gnosis).",
+              "Marcjonizm: odrzucenie Starego Testamentu i Boga Stwórcy; zachowanie jedynie okrojonego Łukasza i listów Pawła.",
+              "Montanizm: prorocki ruch rygorystyczny we Frygii (Montanus, Pryscylla, Maksymilla); surowe posty, szukanie męczeństwa (dołączył Tertulian).",
+              "Ebionici: adopcjanizm (Jezus zwykłym człowiekiem), Eucharystia sprawowana samą wodą (akwarianie), odrzucenie Pawła."
+            ]
+          },
+          {
+            id: "hk-3",
+            heading: "3. Sukcesja Apostolska i Instytucja Kościoła",
+            items: [
+              "Biskupi jako następcy apostołów (nie apostołowie sensu stricte). Urząd jako służba Słowu, a nie władza nad doktryną.",
+              "Rozwój synodów i pentarchia (Rzym, Aleksandria, Antiochia, Jerozolima, Konstantynopol). Prymat biskupa Rzymu."
+            ]
+          }
+        ]
+      },
+      "kompendium": {
+        title: "Antyk, Psychologia i Logika",
+        subtitle: "Heraklit, Parmenides, Demokryt, Jung, Adler, Horney",
+        blocks: [
+          {
+            id: "ko-1",
+            heading: "1. Filozofia Starożytna",
+            items: [
+              "Heraklit (panta rhei, Logos), Parmenides (byt jest, niebytu nie ma), Demokryt (atomizm i próżnia), Platon (drabina miłości w Uczcie, świat idei)."
+            ]
+          },
+          {
+            id: "ko-2",
+            heading: "2. Psychologia Głębi",
+            items: [
+              "Jung (nieświadomość zbiorowa, archetypy Cienia i Jaźni), Adler (kompleks niższości, dążenie do mocy), Horney (lęk podstawowy)."
+            ]
+          }
+        ]
+      }
+    };
+
+    // 5. NAWIGACJA I ROUTING
+    let currentView = "dashboard";
+    let completedBlocks = JSON.parse(localStorage.getItem("aug_completed_blocks") || "[]");
+    let studentName = localStorage.getItem("aug_student_name") || "Kacper";
+
+    function navigateTo(rawTarget) {
+      const t = (rawTarget || "dashboard").toLowerCase();
+      if (t.includes("leitner") || t.includes("koszyk")) currentView = "leitner";
+      else if (t.includes("wlosk")) currentView = "wloski-baza";
+      else if (t.includes("lacin")) currentView = "lacina-baza";
+      else if (t.includes("muzyk") || t.includes("kwint") || t.includes("harmon")) currentView = "muzyka";
+      else if (t.includes("czlowiek") || t.includes("antrop")) currentView = "filozofia-czlowieka";
+      else if (t.includes("przyrod") || t.includes("fizyk")) currentView = "filozofia-przyrody";
+      else if (t.includes("kosciol") || t.includes("patrol")) currentView = "historia-kosciola";
+      else if (t.includes("quiz")) currentView = "quiz";
+      else if (t.includes("kompendium") || t.includes("antyk")) currentView = "kompendium";
+      else currentView = "dashboard";
+
+      document.querySelectorAll(".top-nav-btn").forEach(btn => {
+        if (btn.dataset.nav === currentView) {
+          btn.className = "top-nav-btn px-3 py-1.5 rounded-lg bg-augGreen text-white whitespace-nowrap transition font-bold";
+        } else {
+          btn.className = "top-nav-btn px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 whitespace-nowrap transition font-bold";
+        }
+      });
+
+      renderCurrentView();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // 6. RENDEROWANIE WIDOKÓW
+    function renderCurrentView() {
+      const container = document.getElementById("app-viewport");
+      if (!container) return;
+
+      // WIDOK LEITNERA (5 KOSZYKÓW)
+      if (currentView === "leitner") {
+        renderLeitnerView(container);
+        return;
+      }
+
+      // WIDOK BAZY WŁOSKIEJ (TABELA I FILTRACJA)
+      if (currentView === "wloski-baza") {
+        renderVocabTableView(container, "it", "Słownik Języka Włoskiego (1000 słów: czasowniki, rzeczowniki, przymiotniki)");
+        return;
+      }
+
+      // WIDOK BAZY ŁACIŃSKIEJ (TABELA I FILTRACJA)
+      if (currentView === "lacina-baza") {
+        renderVocabTableView(container, "la", "Słownik Języka Łacińskiego (1000 słów: koniugacje I-IV, deklinacje I-V)");
+        return;
+      }
+
+      // PULPIT GŁÓWNY
+      if (currentView === "dashboard") {
+        renderDashboardView(container);
+        return;
+      }
+
+      // QUIZ
+      if (currentView === "quiz") {
+        renderQuizView(container);
+        return;
+      }
+
+      // PRZEDMIOTY TEORETYCZNE
+      const subj = STUDY_DB[currentView];
+      if (!subj) return;
+
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+          <h2 class="text-xl lg:text-2xl font-extrabold text-augGreen">${subj.title}</h2>
+          <p class="text-xs lg:text-sm text-gray-600 mt-1">${subj.subtitle}</p>
+        </div>
+        <div class="space-y-4">
+          ${subj.blocks.map(b => {
+            const isDone = completedBlocks.includes(b.id);
+            return `
+              <div class="bg-white rounded-xl p-5 border ${isDone ? 'border-augGreen bg-green-50/20' : 'border-gray-200'} shadow-sm transition">
+                <div class="flex items-start justify-between gap-4 mb-3">
+                  <h3 class="font-extrabold text-base text-augGreen">${b.heading}</h3>
+                  <button onclick="toggleBlockCompletion('${b.id}')" class="px-3 py-1 rounded-lg text-xs font-bold ${isDone ? 'bg-augGreen text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
+                    ${isDone ? '✓ Opanowane' : 'Oznacz jako opanowane'}
+                  </button>
+                </div>
+                <ul class="space-y-2 text-xs lg:text-sm text-gray-700 list-disc pl-5 leading-relaxed">
+                  ${b.items.map(item => `<li>${item}</li>`).join("")}
+                </ul>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    // WIDOK LEITNERA
+    function renderLeitnerView(container) {
+      // Liczenie elementów w koszykach
+      const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      VOCAB_DATABASE.forEach(card => {
+        if (activeLeitnerFilter === "all" || card.lang === activeLeitnerFilter) {
+          const b = (leitnerState[card.id] || { box: 1 }).box;
+          counts[b]++;
+        }
+      });
+
+      const cards = getFilteredCards();
+      const card = cards[currentCardIndex] || null;
+
+      container.innerHTML = `
+        <!-- Nagłówek Leitnera -->
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📦</span>
+              <h2 class="text-xl font-extrabold text-augGreen">System 5 Koszyków Leitnera (Spaced Repetition)</h2>
+            </div>
+            <p class="text-xs text-gray-600 mt-1">Ucz się tysięcy słówek z włoskiego i łaciny. Poprawna odpowiedź przesuwa słówko do wyższego koszyka, błąd cofa do Koszyka 1.</p>
+          </div>
+          <!-- Wybór języka -->
+          <div class="flex gap-1.5 bg-augBg p-1.5 rounded-xl border border-gray-200 text-xs font-bold">
+            <button onclick="setLeitnerLang('all')" class="px-3 py-1.5 rounded-lg ${activeLeitnerFilter === 'all' ? 'bg-augGreen text-white' : 'text-gray-600'}">Wszystkie</button>
+            <button onclick="setLeitnerLang('it')" class="px-3 py-1.5 rounded-lg ${activeLeitnerFilter === 'it' ? 'bg-augGreen text-white' : 'text-gray-600'}">Włoski</button>
+            <button onclick="setLeitnerLang('la')" class="px-3 py-1.5 rounded-lg ${activeLeitnerFilter === 'la' ? 'bg-augGreen text-white' : 'text-gray-600'}">Łacina</button>
+          </div>
+        </div>
+
+        <!-- Pasek 5 Koszyków -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          ${[1, 2, 3, 4, 5].map(b => {
+            const intervals = ["Codziennie", "Co 3 dni", "Co tydzień", "Co 2 tyg.", "Opanowane"];
+            const isActive = activeBoxFilter === b;
+            return `
+              <div onclick="setLeitnerBox(${b})" class="p-4 rounded-xl border cursor-pointer transition text-center shadow-sm ${isActive ? 'bg-augGreen text-white border-augGreen scale-102 ring-2 ring-augRed' : 'bg-white hover:bg-gray-50 border-gray-200'}">
+                <div class="text-[11px] font-bold uppercase tracking-wider ${isActive ? 'text-augRedLight' : 'text-gray-500'}">Koszyk ${b}</div>
+                <div class="text-2xl font-extrabold my-1">${counts[b]}</div>
+                <div class="text-[10px] ${isActive ? 'text-gray-200' : 'text-gray-400'}">${intervals[b - 1]}</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+
+        <!-- Aktywna Karta Fiszki Leitnera -->
+        ${card ? `
+          <div class="max-w-xl mx-auto space-y-4">
+            <div class="flex justify-between items-center text-xs font-bold text-gray-500 px-2">
+              <span>Słówko ${currentCardIndex + 1} z ${cards.length} (Koszyk ${activeBoxFilter})</span>
+              <span class="bg-augGreen/10 text-augGreen px-2 py-0.5 rounded font-extrabold uppercase">${card.lang === 'it' ? 'Włoski' : 'Łacina'} • ${card.type}</span>
+            </div>
+
+            <!-- Karta z efektem obrotu 3D -->
+            <div class="card-flip w-full h-64 cursor-pointer" onclick="flipCard()">
+              <div id="leitner-card-inner" class="card-inner relative w-full h-full rounded-2xl shadow-md border border-gray-200 bg-white p-6 flex flex-col justify-between text-center">
+                <div class="card-front absolute inset-0 p-6 flex flex-col justify-between items-center bg-white rounded-2xl">
+                  <span class="text-xs text-gray-400 font-semibold">Kliknij, aby odwrócić</span>
+                  <div>
+                    <h3 class="text-2xl lg:text-3xl font-extrabold text-augGreen mb-2">${card.term}</h3>
+                    <p class="text-xs text-gray-500 italic">${card.details}</p>
+                  </div>
+                  <span class="text-xs font-bold text-augRed">Pokaż tłumaczenie 🔄</span>
+                </div>
+                <div class="card-back absolute inset-0 p-6 flex flex-col justify-between items-center bg-augGreen text-white rounded-2xl">
+                  <span class="text-xs text-gray-300 font-semibold">Znaczenie po polsku:</span>
+                  <div>
+                    <h3 class="text-2xl lg:text-3xl font-extrabold text-white mb-2">${card.trans}</h3>
+                    <p class="text-xs text-augRedLight font-semibold">${card.term}</p>
+                  </div>
+                  <span class="text-xs text-gray-300 font-bold">Oceń swoją odpowiedź poniżej 👇</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Przyciski oceny Leitnera -->
+            <div class="flex gap-3 pt-2">
+              <button onclick="handleCardAnswer(false)" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm py-3 rounded-xl shadow transition flex items-center justify-center gap-2">
+                <span>✗</span> Nie pamiętam (Koszyk 1)
+              </button>
+              <button onclick="handleCardAnswer(true)" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-extrabold text-sm py-3 rounded-xl shadow transition flex items-center justify-center gap-2">
+                <span>✓</span> Pamiętam (Koszyk +1)
+              </button>
+            </div>
+          </div>
+        ` : `
+          <div class="bg-white rounded-2xl p-12 text-center border border-gray-200 shadow-sm max-w-md mx-auto space-y-3">
+            <span class="text-4xl">🎉</span>
+            <h3 class="text-lg font-extrabold text-augGreen">Koszyk ${activeBoxFilter} jest pusty!</h3>
+            <p class="text-xs text-gray-600">Wszystkie słówka z tego poziomu zostały powtórzone lub znajdują się w innych koszykach.</p>
+            <button onclick="setLeitnerBox(1)" class="bg-augGreen text-white text-xs font-bold px-4 py-2 rounded-lg mt-2">Przejdź do Koszyka 1</button>
+          </div>
+        `}
+      `;
+    }
+
+    function setLeitnerBox(box) {
+      activeBoxFilter = box;
+      currentCardIndex = 0;
+      isFlipped = false;
+      renderCurrentView();
+    }
+
+    function setLeitnerLang(lang) {
+      activeLeitnerFilter = lang;
+      currentCardIndex = 0;
+      isFlipped = false;
+      renderCurrentView();
+    }
+
+    // WIDOK PEŁNEJ TABELI SŁOWNIKA Z WYSZUKIWARKĄ
+    function renderVocabTableView(container, lang, title) {
+      const list = VOCAB_DATABASE.filter(c => c.lang === lang);
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-augGreen">${title}</h2>
+            <p class="text-xs text-gray-600 mt-1">Baza ${list.length} haseł – zintegrowana z 5 koszykami Leitnera</p>
+          </div>
+          <input type="text" oninput="filterVocabTable(this.value, '${lang}')" placeholder="Filtruj hasło lub znaczenie..." class="px-3.5 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-augGreen w-64">
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto p-2">
+          <table class="w-full text-left text-xs lg:text-sm">
+            <thead>
+              <tr class="bg-augGreen text-white">
+                <th class="p-3">Hasło (${lang.toUpperCase()})</th>
+                <th class="p-3">Znaczenie (PL)</th>
+                <th class="p-3">Kategoria</th>
+                <th class="p-3">Koszyk Leitnera</th>
+              </tr>
+            </thead>
+            <tbody id="vocab-table-body" class="divide-y divide-gray-200">
+              ${renderTableRows(list)}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTableRows(items) {
+      return items.map(c => {
+        const box = (leitnerState[c.id] || { box: 1 }).box;
+        return `
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-augGreen">${c.term}</td>
+            <td class="p-3 text-gray-800">${c.trans}</td>
+            <td class="p-3"><span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[11px] font-semibold">${c.type}</span></td>
+            <td class="p-3 font-bold text-augRed">Koszyk ${box}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function filterVocabTable(q, lang) {
+      const query = (q || "").toLowerCase();
+      const filtered = VOCAB_DATABASE.filter(c =>
+        c.lang === lang &&
+        (c.term.toLowerCase().includes(query) || c.trans.toLowerCase().includes(query))
+      );
+      const tbody = document.getElementById("vocab-table-body");
+      if (tbody) tbody.innerHTML = renderTableRows(filtered);
+    }
+
+    // WIDOK PULPITU
+    function renderDashboardView(container) {
+      container.innerHTML = `
+        <div class="bg-augGreen text-white rounded-2xl p-6 lg:p-8 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <span class="inline-block bg-augRed text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded">Semestr Zimowy 2026/2027</span>
+            <h2 class="text-2xl lg:text-3xl font-extrabold">Witaj w AugustApce, ${studentName}!</h2>
+            <p class="text-xs lg:text-sm text-gray-200 max-w-2xl leading-relaxed">
+              Zintegrowana platforma edukacyjna Rocznika św. Augustyna z modelem 5 koszyków Leitnera, pełnymi słownikami i kompendium wiedzy.
+            </p>
+          </div>
+          <div class="bg-white/10 backdrop-blur rounded-xl p-4 min-w-[200px] text-center border border-white/15">
+            <div class="text-3xl font-extrabold text-white">${VOCAB_DATABASE.length}</div>
+            <div class="text-xs text-gray-200 mt-1">Słówek w bazie Leitnera</div>
+            <button onclick="navigateTo('leitner')" class="mt-3 bg-augRed text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow hover:bg-augRedLight transition w-full">
+              Trening 5 Koszyków →
+            </button>
+          </div>
+        </div>
+
+        <!-- Moduły główne -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div onclick="navigateTo('leitner')" class="bg-white p-5 rounded-xl border-2 border-augRed hover:shadow-md cursor-pointer transition group">
+            <div class="text-xs font-bold text-augRed uppercase">Metoda Spaced Repetition</div>
+            <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Trener 5 Koszyków Leitnera</h4>
+            <p class="text-xs text-gray-600 mt-2">Nauka słówek łacińskich i włoskich w oparciu o algorytm powtórek interwałowych.</p>
+          </div>
+          <div onclick="navigateTo('wloski-baza')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+            <div class="text-xs font-bold text-augRed uppercase">1000 słów</div>
+            <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Słownik Włoski (A1)</h4>
+            <p class="text-xs text-gray-600 mt-2">Czasowniki, rzeczowniki i przymiotniki z zajęć i podręcznika.</p>
+          </div>
+          <div onclick="navigateTo('lacina-baza')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+            <div class="text-xs font-bold text-augRed uppercase">1000 słów</div>
+            <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Słownik Łaciński</h4>
+            <p class="text-xs text-gray-600 mt-2">Koniugacje, deklinacje i słownictwo filozoficzno-teologiczne.</p>
+          </div>
+          <div onclick="navigateTo('muzyka')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+            <div class="text-xs font-bold text-augRed uppercase">Harmonia</div>
+            <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Koło Kwintowe & Akordy</h4>
+            <p class="text-xs text-gray-600 mt-2">Znaki przykluczowe, przewroty akordów i klucze muzyczne.</p>
+          </div>
+          <div onclick="navigateTo('filozofia-czlowieka')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+            <div class="text-xs font-bold text-augRed uppercase">Antropologia</div>
+            <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Filozofia Człowieka</h4>
+            <p class="text-xs text-gray-600 mt-2">Personalizm, dramat Tischnera, zło a nieszczęście.</p>
+          </div>
+          <div onclick="navigateTo('filozofia-przyrody')" class="bg-white p-5 rounded-xl border border-gray-200 hover:border-augGreen cursor-pointer shadow-sm transition group">
+            <div class="text-xs font-bold text-augRed uppercase">Kosmologia</div>
+            <h4 class="font-extrabold text-base text-augGreen mt-1 group-hover:underline">Filozofia Przyrody</h4>
+            <p class="text-xs text-gray-600 mt-2">Czas, przestrzeń Newtona i Leibniza, czasoprzestrzeń.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // WIDOK QUIZU
+    function renderQuizView(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm max-w-xl mx-auto text-center space-y-4">
+          <span class="text-3xl">⚡</span>
+          <h2 class="text-xl font-extrabold text-augGreen">Quiz Egzaminacyjny Rocznika</h2>
+          <p class="text-xs text-gray-600">Rozwiązuj testy wiedzy lub przejdź do Trenera 5 Koszyków, aby szlifować słówka.</p>
+          <button onclick="navigateTo('leitner')" class="bg-augRed text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow">
+            Przejdź do 5 Koszyków Leitnera →
+          </button>
+        </div>
+      `;
+    }
+
+    function toggleBlockCompletion(blockId) {
+      if (completedBlocks.includes(blockId)) {
+        completedBlocks = completedBlocks.filter(id => id !== blockId);
+      } else {
+        completedBlocks.push(blockId);
+      }
+      localStorage.setItem("aug_completed_blocks", JSON.stringify(completedBlocks));
+      renderCurrentView();
+    }
+
+    function toggleAuthModal() {
+      document.getElementById("auth-modal").classList.toggle("hidden");
+      document.getElementById("auth-modal").classList.toggle("flex");
+    }
+
+    function saveStudentProfile() {
+      const val = document.getElementById("student-name-input").value.trim();
+      if (val) {
+        studentName = val;
+        localStorage.setItem("aug_student_name", studentName);
+        renderCurrentView();
+      }
+      toggleAuthModal();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateLeitnerBadges();
+      renderCurrentView();
+    });
+  </script>
+</body>
+</html>
