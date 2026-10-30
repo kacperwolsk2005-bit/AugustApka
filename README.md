@@ -1,0 +1,4642 @@
+[index (5).html](https://github.com/user-attachments/files/34189283/index.5.html)
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B4F45">
+<title>AugustApka</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}img{max-width:100%}
+/* AugustApka — layout: lewy panel z przedmiotami (desktop) / dolny pasek (telefon); treść w kolumnie do 1100px.
+   Kolory z księgi znaku Rocznika św. Augustyna: butelkowa zieleń, terakota płomienia, jasne tło. */
+:root{
+  --paper:#F7F3F4; --card:#FFFDFD; --sunk:#EFE8EA; --ink:#1E2A26; --muted:#5E6A66; --line:#E2D9DB;
+  --green:#2B4F45; --green-ink:#2B4F45; --green-soft:#E3ECE8; --terra:#C2573D; --terra-soft:#F6E3DD;
+  --gold:#B8862F; --ok:#2F7A4F; --ok-soft:#E0F0E6; --bad:#B23A2E; --bad-soft:#F8E1DE;
+  --shadow:0 1px 2px rgba(30,42,38,.06),0 6px 20px rgba(30,42,38,.06);
+  --f-ui:"Montserrat",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-read:"Source Serif 4","Georgia","Times New Roman",serif;
+  --f-music:"Noto Music","Segoe UI Symbol","Apple Symbols",serif;
+  --r:14px; --r-s:9px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111714; --card:#18201C; --sunk:#1F2925; --ink:#E8EDEA; --muted:#9AA8A2; --line:#2C3833;
+  --green:#3E7363; --green-ink:#8CC3B0; --green-soft:#1E2E28; --terra:#E07A5F; --terra-soft:#3A231D;
+  --gold:#D9A94E; --ok:#5DBB86; --ok-soft:#173326; --bad:#E5776B; --bad-soft:#3A1E1B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111714; --card:#18201C; --sunk:#1F2925; --ink:#E8EDEA; --muted:#9AA8A2; --line:#2C3833;
+  --green:#3E7363; --green-ink:#8CC3B0; --green-soft:#1E2E28; --terra:#E07A5F; --terra-soft:#3A231D;
+  --gold:#D9A94E; --ok:#5DBB86; --ok-soft:#173326; --bad:#E5776B; --bad-soft:#3A1E1B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-ui);font-size:15px;line-height:1.5;margin:0;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--green)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+h1,h2,h3,h4,h5{text-wrap:balance;margin:0}
+a{color:var(--green-ink)}
+.mono{font-variant-numeric:tabular-nums}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--green);color:#fff;
+  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;color:#fff;padding:0;text-align:left}
+.brand svg{width:34px;height:34px;flex:none}
+.brand b{display:block;font-weight:800;font-size:18px;letter-spacing:.01em;line-height:1}
+.brand small{display:block;font-size:11px;opacity:.8;letter-spacing:.04em;margin-top:3px}
+.search{flex:1;min-width:0;position:relative;max-width:440px;margin-left:auto}
+.search input{width:100%;border:0;border-radius:999px;padding:9px 14px 9px 36px;background:rgba(255,255,255,.14);color:#fff}
+.search input::placeholder{color:rgba(255,255,255,.7)}
+.search input:focus{background:rgba(255,255,255,.22);outline:none}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;opacity:.8}
+.search-res{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);color:var(--ink);border-radius:12px;box-shadow:var(--shadow);
+  max-height:70vh;overflow:auto;border:1px solid var(--line);padding:6px}
+.search-res .sr{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:8px}
+.search-res .sr:hover,.search-res .sr:focus{background:var(--sunk)}
+.search-res .sr small{display:block;color:var(--muted);font-size:12px}
+.search-res .sr-h{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 10px 2px;font-weight:700}
+.icon-btn{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:999px;width:36px;height:36px;display:grid;place-items:center;flex:none}
+.icon-btn svg{width:18px;height:18px}
+
+/* ---------- shell ---------- */
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:28px;
+  padding-block:22px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.side{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 96px);overflow:auto}
+.side button{display:flex;align-items:center;gap:10px;background:none;border:0;border-radius:10px;padding:7px 10px;text-align:left;color:var(--ink);font-weight:600;font-size:14px}
+.side button:hover{background:var(--sunk)}
+.side button.on{background:var(--green);color:#fff}
+.side .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:10px 10px 4px}
+.badge{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:12px;letter-spacing:.02em;color:#fff;background:var(--c,var(--green))}
+.side button.on .badge{background:rgba(255,255,255,.18)}
+main{min-width:0}
+.bottom{display:none}
+
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr);padding-bottom:90px}
+  .side{display:none}
+  .brand small{display:none}
+  .bottom{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--card);border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .bottom button{flex:1;background:none;border:0;padding:8px 2px 7px;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+  .bottom button svg{width:22px;height:22px}
+  .bottom button.on{color:var(--terra)}
+}
+
+/* ---------- common ---------- */
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.page-h h1{font-size:clamp(24px,4vw,34px);font-weight:800;letter-spacing:-.01em;line-height:1.1}
+.page-h .sub{color:var(--muted);margin-top:6px;max-width:62ch}
+.eyebrow-s{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--terra)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card h2{font-size:18px;font-weight:800}
+.card h3{font-size:15px;font-weight:800}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:700;font-size:14px;color:var(--ink)}
+.btn:hover{border-color:var(--green-ink)}
+.btn.pri{background:var(--green);border-color:var(--green);color:#fff}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.terra{background:var(--terra);border-color:var(--terra);color:#fff}
+.btn.ghost{background:none}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.input,select.input,textarea.input{width:100%;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px}
+.input:focus{outline:2px solid var(--green-ink);outline-offset:0;border-color:transparent}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:700;color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:700;color:var(--muted)}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff}
+.pill{display:inline-block;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:800;letter-spacing:.04em;background:var(--sunk);color:var(--muted)}
+.pill.terra{background:var(--terra-soft);color:var(--terra)}
+.pill.green{background:var(--green-soft);color:var(--green-ink)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:22px;text-align:center;color:var(--muted)}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);margin-bottom:18px;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font-weight:700;color:var(--muted);font-size:14px;white-space:nowrap}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--terra)}
+.feedback{border-radius:10px;padding:10px 12px;font-weight:600}
+.feedback.ok{background:var(--ok-soft);color:var(--ok)}
+.feedback.bad{background:var(--bad-soft);color:var(--bad)}
+.kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:var(--sunk);border-radius:5px;padding:1px 5px}
+.hide{display:none!important}
+
+/* ---------- home ---------- */
+.hero{background:var(--green);color:#fff;border-radius:18px;padding:22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;margin-bottom:22px;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(22px,3.6vw,30px);font-weight:800;line-height:1.15}
+.hero p{margin:8px 0 0;opacity:.85;max-width:56ch}
+.hero .quote{font-family:var(--f-read);font-style:italic;font-size:15px;opacity:.9;margin-top:12px}
+.hero svg.mark{width:96px;height:96px;opacity:.95}
+@media (max-width:560px){.hero{grid-template-columns:1fr}.hero svg.mark{display:none}}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:26px 0 12px;flex-wrap:wrap}
+.sec-h h2{font-size:20px;font-weight:800}
+.subjects{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.subj{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;color:var(--ink);transition:transform .15s,border-color .15s}
+.subj:hover{border-color:var(--c);transform:translateY(-2px)}
+.subj .t{display:flex;align-items:center;gap:10px}
+.subj .t b{font-size:15px;line-height:1.2}
+.subj .meta{font-size:12px;color:var(--muted)}
+.bar{height:6px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c,var(--green))}
+@media (prefers-reduced-motion:reduce){.subj{transition:none}}
+
+/* terminarz */
+.agenda{display:flex;flex-direction:column;gap:8px}
+.ev{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--green));border-radius:12px;padding:10px 12px}
+.ev .d{text-align:center;line-height:1}
+.ev .d b{display:block;font-size:22px;font-weight:800}
+.ev .d small{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.ev .x{min-width:0}
+.ev .x b{display:block;font-size:14px}
+.ev .x span{font-size:12px;color:var(--muted)}
+.ev .left{font-size:12px;font-weight:800;white-space:nowrap}
+.ev.soon .left{color:var(--terra)}
+.ev.done{opacity:.55}
+.ev.done .x b{text-decoration:line-through}
+.ev .acts{display:flex;gap:4px}
+.addform{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end}
+
+/* ---------- notes ---------- */
+.lec-list{display:flex;flex-direction:column;gap:8px}
+.lec{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--ink)}
+.lec:hover{border-color:var(--green-ink)}
+.lec .n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--sunk);color:var(--muted)}
+.lec.read .n{background:var(--ok-soft);color:var(--ok)}
+.lec b{font-size:14px;display:block}
+.lec small{color:var(--muted);font-size:12px}
+.reader{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:clamp(16px,3.5vw,34px)}
+.reader-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.note{font-family:var(--f-read);font-size:17px;line-height:1.62;max-width:72ch}
+.note p{margin:.5em 0}
+.note ul{margin:.3em 0 .7em;padding-left:1.25em}
+.note li{margin:.22em 0}
+.note li::marker{color:var(--terra)}
+.note b{font-weight:700}
+.note .eyebrow{font-family:var(--f-ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--terra);margin:.2em 0 .6em}
+.note .meta{font-family:var(--f-ui);font-size:13px;color:var(--muted);margin:.3em 0}
+.note .topic{font-family:var(--f-ui);background:var(--green-soft);border-radius:12px;padding:12px 14px;margin:.6em 0 1em;font-weight:600;font-size:15px;line-height:1.45}
+.note .topic span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-ink);font-weight:800;margin-bottom:2px}
+.note h3.part{font-family:var(--f-ui);font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:var(--green-ink);margin:1.6em 0 .4em;padding-top:.8em;border-top:2px solid var(--line)}
+.note h4{font-family:var(--f-ui);font-size:18px;font-weight:800;margin:1.3em 0 .35em;line-height:1.3}
+.note h4 .num{color:var(--terra)}
+.note h5{font-family:var(--f-ui);font-size:15px;font-weight:800;margin:1em 0 .2em;color:var(--green-ink)}
+.note .note-src{font-family:var(--f-ui);font-size:12px;color:var(--muted)}
+.note .check{font-family:var(--f-ui);font-size:14px;background:var(--terra-soft);border-radius:10px;padding:10px 12px;margin-top:1.4em}
+.note .tag-exam{font-family:var(--f-ui);font-size:11px;font-weight:800;letter-spacing:.04em;background:var(--terra);color:#fff;border-radius:999px;padding:2px 8px;vertical-align:middle;margin-left:6px;text-transform:uppercase}
+.table-wrap{overflow-x:auto;margin:.6em 0 1em;max-width:100%}
+table.nt{border-collapse:collapse;font-family:var(--f-ui);font-size:14px;min-width:100%}
+table.nt th,table.nt td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+table.nt th{background:var(--sunk);font-weight:800;font-size:13px}
+.lesson{font-family:var(--f-ui);font-size:15px;line-height:1.6}
+.lesson .lead{font-size:16px}
+.rule,.tip,.warn{border-radius:12px;padding:12px 14px;margin:12px 0}
+.rule{background:var(--green-soft)}
+.tip{background:var(--sunk)}
+.warn{background:var(--terra-soft)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+
+/* glossary */
+.gl{display:flex;flex-direction:column;gap:2px}
+.gl-sec{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:18px 0 6px}
+.gl-item{padding:10px 0;border-bottom:1px solid var(--line)}
+.gl-item b{font-size:15px}
+.gl-item p{margin:3px 0 0;font-family:var(--f-read);font-size:16px;line-height:1.5}
+mark{background:var(--terra-soft);color:inherit;border-radius:3px;padding:0 2px}
+
+/* ---------- flashcards (Leitner) ---------- */
+.boxes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.box .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--muted)}
+.box .v{font-size:22px;font-weight:800;line-height:1.2}
+.box .hb{height:4px;border-radius:9px;background:var(--sunk);margin-top:6px;overflow:hidden}
+.box .hb i{display:block;height:100%;background:var(--green)}
+.box.on{border-color:var(--terra);box-shadow:0 0 0 2px var(--terra-soft)}
+.flash{background:var(--card);border:1px solid var(--line);border-radius:18px;min-height:230px;padding:24px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;position:relative}
+.flash .fbox{position:absolute;top:12px;left:14px}
+.flash .front{font-size:clamp(20px,3.6vw,28px);font-weight:800;line-height:1.25;max-width:40ch}
+.flash .front.long{font-family:var(--f-read);font-weight:500;font-size:18px;line-height:1.5}
+.flash .back{font-family:var(--f-read);font-size:18px;line-height:1.5;max-width:62ch;border-top:1px solid var(--line);padding-top:12px;width:100%}
+.flash .back b{font-family:var(--f-ui)}
+.flash-acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.flash-acts .btn{min-width:150px;padding:12px 16px}
+
+/* quiz */
+.q-opts{display:grid;gap:8px}
+.q-opt{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px}
+.q-opt:hover{border-color:var(--green-ink)}
+.q-opt.ok{background:var(--ok-soft);border-color:var(--ok)}
+.q-opt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.q-prompt{font-family:var(--f-read);font-size:19px;line-height:1.45}
+.score{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.score b{color:var(--ink);font-size:15px}
+
+/* latin */
+.conj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.conj-card{border-radius:14px;padding:14px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c)}
+.conj-card h3{font-size:16px}
+.verb-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%;color:var(--ink)}
+.verb-row:hover{background:var(--sunk)}
+.verb-row b{font-size:15px}
+.verb-row small{color:var(--muted)}
+.c-pill{font-size:12px;font-weight:800;border-radius:999px;padding:3px 9px;color:#fff;background:var(--c)}
+.paradigm td .r{color:var(--ink)}
+.paradigm td .s{color:var(--terra);font-weight:800}
+.paradigm td .e{color:var(--green-ink);font-weight:800}
+.legend-key{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+.legend-key span b{font-weight:800}
+.sim-grid{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px 10px;align-items:center;max-width:520px}
+.sim-grid .p{font-weight:700;color:var(--muted);font-size:13px}
+.sim-grid .input.ok{border-color:var(--ok);background:var(--ok-soft)}
+.sim-grid .input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.prayer{font-family:var(--f-read);font-size:20px;line-height:1.9}
+.prayer .w{cursor:pointer;border-radius:5px;padding:1px 2px}
+.prayer .w:hover{background:var(--green-soft)}
+.prayer .w.sel{background:var(--terra);color:#fff}
+.prayer .gap{display:inline-block;min-width:4ch;border:0;border-bottom:2px solid var(--terra);background:var(--terra-soft);border-radius:4px 4px 0 0;padding:0 4px;font-family:var(--f-read);font-size:18px}
+.prayer .gap.ok{border-color:var(--ok);background:var(--ok-soft)}
+.prayer .gap.bad{border-color:var(--bad);background:var(--bad-soft)}
+.gloss-pop{position:sticky;bottom:80px;background:var(--ink);color:var(--paper);border-radius:12px;padding:10px 14px;font-size:14px;margin-top:12px;box-shadow:var(--shadow)}
+.dict-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);align-items:baseline}
+.dict-row b{font-weight:700}
+.dict-row .tr{font-family:var(--f-read);font-size:16px}
+@media (max-width:560px){.dict-row{grid-template-columns:minmax(0,1fr) auto}.dict-row .tr{grid-column:1/-1;order:3}}
+
+/* music */
+.staff-wrap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;overflow-x:auto}
+svg.staff{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+svg.staff .ln{stroke:var(--ink);stroke-width:1.3}
+svg.staff .lg{stroke:var(--ink);stroke-width:1.3}
+svg.staff .nh{fill:var(--ink)}
+svg.staff .nh.ok{fill:var(--ok)} svg.staff .nh.bad{fill:var(--bad)} svg.staff .nh.ghost{fill:var(--terra);opacity:.55}
+svg.staff text{fill:var(--ink);font-family:var(--f-music)}
+svg.staff .gly{fill:var(--ink)} svg.staff .gly.ok{fill:var(--ok)} svg.staff .gly.bad{fill:var(--bad)} svg.staff .gly.ghost{fill:var(--terra);opacity:.6}
+svg.staff .clef{font-size:58px}
+svg.staff .acc{font-size:30px}
+svg.staff .hit{fill:transparent;cursor:pointer}
+svg.staff .hit:hover{fill:var(--terra-soft)}
+.note-btns{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:560px;margin:0 auto}
+.note-btns .btn{padding:14px 0;font-size:18px}
+.cof-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:760px){.cof-wrap{grid-template-columns:1fr}}
+svg.cof{width:100%;max-width:440px;height:auto;display:block;margin:0 auto}
+svg.cof .seg{cursor:pointer}
+svg.cof .seg path{fill:var(--card);stroke:var(--line);stroke-width:1.5;transition:fill .15s}
+svg.cof .seg.minor path{fill:var(--sunk)}
+svg.cof .seg:hover path{fill:var(--green-soft)}
+svg.cof .seg.on path{fill:var(--green)}
+svg.cof .seg.on text{fill:#fff}
+svg.cof text{fill:var(--ink);font-family:var(--f-ui);font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+svg.cof .acc-t{font-size:11px;font-weight:700;fill:var(--muted)}
+.piano{position:relative;height:150px;max-width:560px;margin:0 auto;user-select:none}
+.piano button{position:absolute;top:0;border:1px solid var(--line);border-radius:0 0 8px 8px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:12px;font-weight:800}
+.piano .wk{background:#fffdfd;color:#1e2a26;height:150px;z-index:1}
+.piano .bk{background:#1e2a26;color:#f7f3f4;height:92px;z-index:2;font-size:9px;line-height:1.1;text-align:center;border-color:#1e2a26}
+.piano button.hl{background:var(--terra);color:#fff}
+
+/* tables in dictionary/verbs */
+.scroll-y{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:0 10px;background:var(--card)}
+.foot{margin-top:40px;color:var(--muted);font-size:12px;text-align:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;z-index:90;box-shadow:var(--shadow)}
+
+.cof-wrap svg.staff{max-width:340px}
+
+/* ---------- jak się uczyć ---------- */
+.study-strip{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-bottom:6px}
+@media (max-width:760px){.study-strip{grid-template-columns:1fr}}
+.start-btn{display:flex;flex-direction:column;justify-content:center;gap:6px;text-align:left;border:2px solid var(--terra);background:var(--terra-soft);color:var(--ink)}
+.start-btn b{font-size:22px;font-weight:800;color:var(--terra)}
+.lec.due{border-color:var(--terra)}
+.lec.due .n{background:var(--terra-soft);color:var(--terra)}
+.cornell{display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;align-items:start}
+.c-side{position:sticky;top:80px;background:var(--sunk);border-radius:12px;padding:12px;max-height:calc(100vh - 110px);overflow:auto}
+@media (max-width:900px){.cornell{grid-template-columns:1fr}.c-side{position:static;max-height:none;order:2}}
+.c-lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--green-ink);margin-bottom:8px}
+.cq{font-size:13px;font-weight:600;background:var(--card);border-radius:8px;padding:7px 9px;border-left:3px solid var(--terra);display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+.cq.auto{border-left-color:var(--green)}
+.cq .x{background:none;border:0;color:var(--muted);padding:0 2px}
+.c-sum{margin-top:18px;border-top:2px solid var(--line);padding-top:14px}
+.rq{margin:0 0 12px;padding-left:1.3em;font-weight:600}
+.rq li{margin:4px 0}
+.mm{display:flex;flex-direction:column;align-items:center;gap:18px}
+.mm-root{background:var(--green);color:#fff;border-radius:16px;padding:14px 20px;text-align:center;max-width:560px}
+.mm-root b{display:block;font-size:17px}
+.mm-root small{display:block;opacity:.85;margin-top:4px;font-size:13px}
+.mm-br{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;width:100%;position:relative}
+.mm-b{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:12px;padding:12px}
+.mm-bt{font-weight:800;font-size:15px;color:var(--c);margin-bottom:8px}
+:root[data-theme="dark"] .mm-bt{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mm-bt{color:var(--ink)}}
+.mm-l{display:flex;flex-wrap:wrap;gap:6px}
+.mm-leaf{font-size:12px;font-weight:600;background:var(--sunk);border-radius:999px;padding:3px 9px}
+.mm-sub{width:100%;border-left:2px solid var(--line);padding-left:8px;margin:4px 0}
+.mm-st{font-size:13px;font-weight:800;margin-bottom:4px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600}
+.chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--green)}
+.timer{text-align:center;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:28px;border:2px solid var(--terra)}
+.timer.brk{border-color:var(--green)}
+.timer .clock{font-size:clamp(64px,16vw,110px);font-weight:800;line-height:1;letter-spacing:-.02em}
+.timer .now{font-size:16px}
+.mm-leaf.strong{background:var(--green-soft);color:var(--green-ink);font-weight:800}
+
+.giant{display:block;width:100%;margin:0 0 16px;border:0;border-radius:14px;background:var(--terra);color:#fff;font-family:var(--f-ui);font-weight:800;font-size:clamp(15px,2.6vw,22px);letter-spacing:.03em;padding:12px 16px;text-align:center;line-height:1.25;text-wrap:balance}
+.giant.shake{animation:shake .5s}
+@keyframes shake{0%,100%{transform:translateX(0) scale(1)}20%{transform:translateX(-6px) scale(1.02)}40%{transform:translateX(6px) scale(1.03)}60%{transform:translateX(-4px) scale(1.02)}80%{transform:translateX(4px)}}
+.egg{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:95;background:var(--ink);color:var(--paper);font-weight:800;font-size:clamp(20px,4vw,30px);padding:18px 26px;border-radius:18px;box-shadow:var(--shadow);text-align:center;animation:pop .35s ease-out}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.6);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.giant.shake,.egg{animation:none}}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+<button class="brand" id="brand" aria-label="AugustApka – strona główna"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 86 C24 69 20 52 28 43 C35 35 45 38 50 47 C55 38 65 35 72 43 C80 52 76 69 50 86Z" fill="#C2573D"/><path d="M50 41 C43 30 52 23 47 9 C59 18 63 30 54 41 Z" fill="#E9A23B"/><path d="M50 54v20M41 63h18" stroke="#F7F3F4" stroke-width="5" stroke-linecap="round"/></svg><span><b>AugustApka</b><small>Rocznik św. Augustyna</small></span></button>
+<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Szukaj pojęcia, filozofa, słówka…" autocomplete="off" aria-label="Szukaj"><div id="qres" class="search-res hide"></div></div>
+<button class="icon-btn" id="theme" aria-label="Przełącz jasny/ciemny motyw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div></header>
+<div class="shell"><nav class="side" aria-label="Przedmioty"></nav><main id="main"></main></div>
+<nav class="bottom" aria-label="Nawigacja"></nav>
+<script>
+window.AUG_NOTES={"wstep": [{"t": "Wykład 1 – Czym jest filozofia? (7.10.2026)", "html": "<ul><li><b>Wykład 1:</b> Wstęp do filozofii</li></ul>\n<div class=\"meta\">🗓 Środa, 7 października 2026, 11:30</div>\n<ul><li>Sprawy organizacyjne</li><li>Notować! To, co na wykładzie</li></ul>\n<p>= skrypt.</p>\n<ul><li><b>Wykład</b> – zakaz nagrywania!</li><li>Skrypt</li></ul>\n<p>Notatki → koniecznie wyrobić sobie nawyk notowania.</p>\n<p>„Pobożność wynika ze studiowania. Pobożność może przeminąć, a wiedza nie, dlatego warto studiować.”</p>\n<ul><li>Wstęp do filozofii</li></ul>\n<p>O wstępie do filozofii można mówić, będąc w niej lub poza nią.</p>\n<p>Nie można mówić o filozofii bez filozofowania (pytanie „Co to filozofia?” jest pytaniem filozoficznym).</p>\n<h4><span class=\"num\">1.</span> Streszczenie albo zarys</h4>\n<p>Pierwsze spojrzenie na treści/problemy specyficzne dla filozofii.</p>\n<ul><li><b>Powinno być dokładne</b> – „jak fundament będzie zły, to cały dom runie”.</li></ul>\n<h4><span class=\"num\">2.</span> Meta (μετά)</h4>\n<ul><li><b>Metafilozofia</b> – filozofia na temat filozofii; metodologia danej dziedziny.</li><li><b>Metanoia</b> – nawrócenie (odbywa się przez rozum, a nie przez uczucia).</li><li><b>Meta</b> – dokonuje się razem albo po; ma związek z przemyśleniem (podczas lub po czymś).</li></ul>\n<h4><span class=\"num\">3.</span> Prześledzenie historii myśli ludzkiej</h4>\n<p>Historia → nabycie świadomości i jej zrozumienie.</p>\n<ul><li><b>Immanuel Kant</b> – czym jest Oświecenie.</li></ul>\n<p>Filozofia to sztuka zadawania pytań, ale też odpowiadania na nie.</p>\n<p>Wszyscy ludzie z natury chcą wiedzieć.</p>\n<p>Filozofia zmierza do odpowiedzi, ale nie zawsze ją daje; bierze się ze zdziwienia.</p>\n<p>„Wiem, że nic nie wiem.”</p>\n<p>Proces Sokratesa → Zapytać ks. Pawła Andryszczaka.</p>\n<ul><li><b>Doxa / Dogma</b> – przekonanie, opinia na temat czegoś; wyrażanie, że coś takie jest.</li><li><b>Episteme (ἐπιστήμη)</b> – ustalenie, pewność (że coś jest i jakie jest).</li></ul>\n<p>Napięcie między doxa a episteme.</p>\n<p>Wyznanie wiary (nicejskie) → pierwsze słowo pisteuomen (czyli: oni stwierdzają / ustalamy, że „Jest jeden Bóg...”).</p>\n<p>Sofiści → uwodzą ludzi swoją mową.</p>\n<h4><span class=\"num\">4.</span> Przygotowanie do studiowania i uprawiania filozofii</h4>\n<p>Logika.</p>\n<ul><li><b>Studiowanie języków starożytnych</b> – greka (klucz do filozofii).</li></ul>\n<p>Stawianie sobie pytań, które wcześniej ktoś zadał, i odpowiadanie na nie.</p>\n<h4><span class=\"num\">5.</span> Charakter literacki i pojęcia</h4>\n<ul><li><b>Isagoga</b> – wprowadzenie w podstawowe pojęcia filozoficzne, u podstaw filozofii.</li></ul>\n<p>Mistagogia.</p>\n<ul><li><b>Tekna theou</b> – jesteśmy dziećmi Boga, zrodzeni z Boga.</li></ul>\n<p>Philosophia → sophia (σοφία) + phileo (φιλέω) = umiłowanie mądrości (jest podstawą).</p>\n<ul><li><b>Dialekty starogreckie</b> – sprawdzić/dopytać.</li></ul>\n<p>Wyrazem mądrości jest przyznanie się do niewiedzy.</p>"}, {"t": "Wykład 2 – Thaumazein, droga Erosa i źródła kultury", "html": "<div class=\"eyebrow\">WSTĘP DO FILOZOFII – Wykład 2</div>\n<div class=\"meta\">🗓 Środa, 14 października 2026, 11:39</div>\n<h4><span class=\"num\">1.</span> Etymologia i specyfika miłowania (przedrostek philo-)</h4>\n<h5>Złożenia ze słowem philos / phileo</h5>\n<ul><li><b>filoaitos</b> – miłośnik życia filofilos – miłośnik miłowania</li><li><b>filippos (philippos)</b> – miłośnik koni filoksenios (philoxenos) – miłośnik przybyszów / gościnny</li><li><b>filozofia (philosophia)</b> – umiłowanie wiedzy / mądrości</li></ul>\n<h5>Paradoks i istota pragnienia</h5>\n<p>„Mogę tego mieć pod dostatkiem i to miłować, ale mogę miłować coś, czego nie mam”.</p>\n<p>„Kiedy zaczynamy studiować, zaczynamy miłować to, czego nie mamy”.</p>\n<h5>Anegdota o Pitagorasie</h5>\n<p>Gdy zapytano Pitagorasa, czy jest sofos (mędrcem), odpowiedział, że jest jedynie filozofem (filosofos – miłośnikiem mądrości). Bo tylko Bóg jest sofos (mądry).</p>\n<h4><span class=\"num\">2.</span> Źródła i geneza postawy filozoficznej</h4>\n<h5>Platon, Teajtet (155 D)</h5>\n<ul><li><b>Początkiem filozofowania jest thaumazein (θαυμάζειν</b> – zdziwienie / zdumienie). Filozofia rodzi się ze zdumienia.</li><li><b>Wszyscy ludzie z natury dążą do poznania (Arystoteles)</b> – dziwiąc się, uświadamiają sobie własną niewiedzę.</li></ul>\n<h5>Wątpliwość jako źródło mądrości</h5>\n<p>Siedliskiem wiedzy jest ona sama.</p>\n<h5>Anamneza (anamnesis)</h5>\n<ul><li><b>W anamnezie chodzi o to, by wejść w pamięć</b> – przypomnieć sobie, kim naprawdę jestem.</li></ul>\n<h5>Doświadczenie piękna i dylemat Eutyfrona (Platon)</h5>\n<p>Oglądanie piękna jest sprawą mądrości i miłości. Zachwyt nad czymś jest czymś boskim.</p>\n<ul><li><b>Problem z dialogu Eutyfron:</b> „Czy bogowie miłują coś, bo to jest godne miłości, czy dopiero coś, co kochają, staje się godne miłości?” (Co jest pierwotną przyczyną, a co wtórnym skutkiem?).</li></ul>\n<h4><span class=\"num\">3.</span> Filozofowanie jako droga życia i ćwiczenie w umieraniu</h4>\n<h5>Droga Erosa i oczyszczenie duszy (katharsis)</h5>\n<ul><li><b>Filozofować to postępować drogą Erosa</b> – kontemplować Piękno samo w sobie, ale zarazem odwiązywać duszę od ciała.</li></ul>\n<p>„Czy można umierać żyjąc, albo żyjąc umierać? Ćwiczenie się w umieraniu – to jest nasze życie (Memento Mori tego dotyczy). Nie boimy się samej śmierci, tylko procesu umierania”.</p>\n<ul><li><b>Prawdziwy cel:</b> kochać oglądanie tego, co prawdziwe.</li></ul>\n<h5>Filodoksja vs Filozofia</h5>\n<ul><li><b>Filodoksja (philodoxia)</b> – miłośnik opinii (plotek, mniemań, pozorów – doxa).</li></ul>\n<p>Filozofowanie to ujmowanie tego, co jest zawsze takie samo wobec siebie (niezmienne). Jeśli wszystko płynie i jest czystą zmianą, filozofia nie jest możliwa.</p>\n<h5>Spelunca (jaskinia) i pryzmat Dobra</h5>\n<p>Oglądać całą rzeczywistość przez pryzmat Idei Dobra.</p>\n<p>Postępować dobrze → budować sprawy według umiejętności demiurgicznej (na wzór boskiego Demiurga tworzącego ład z chaosu).</p>\n<h4><span class=\"num\">4.</span> Źródła kultury i konteksty teologiczno-filozoficzne</h4>\n<h5>Trzy źródła kultury europejskiej (trójkąt kulturowy)</h5>\n<ul><li><b>Żydzi (chrześcijaństwo)</b> – wiara, etyka, transcendencja, objawienie.</li><li><b>Grecy</b> – filozofia, racjonalizm, logos, nauka.</li><li><b>Rzymianie</b> – prawo, państwowość, ustrój republikański, organizacja.</li><li><b>Kultura bizantyjska:</b> Często zapominane, kluczowe źródło syntezy chrześcijaństwa z klasyczną myślą grecką.</li></ul>\n<h5>Islam jako źródło filozofii i teologii</h5>\n<ul><li><b>Mutazylizm (mutazylia):</b> Wczesny, racjonalistyczny nurt teologii muzułmańskiej, który stosował arystotelesowski aparat pojęciowy i racjonalne metody do interpretacji Koranu i pism natchnionych.</li></ul>"}, {"t": "Wykład 3 – Mądrość semicka a grecka; podział nauk (21.10.2026)", "html": "<ul><li>Zło (dialogiczne, intencjonalne, między osobami) a Nieszczęście (na poziomie sceny/natury: trzęsienie ziemi, choroba, wypadek).</li></ul>\n<div class=\"eyebrow\">WSTĘP DO FILOZOFII – Wykład 3</div>\n<div class=\"meta\">🗓 Środa, 21 października 2026, 11:35</div>\n<div class=\"topic\"><span>Temat</span>Dwa modele mądrości (semicki a grecki) oraz arystotelesowski podział wiedzy i nauk</div>\n<h4><span class=\"num\">1.</span> Dwa modele mądrości: Semicki (judaizm) a Grecki (hellenizm)</h4>\n<h4><span class=\"num\">A.</span> Model semicki (Hebrajski / Biblijny)</h4>\n<ul><li><b>Hebrajskie pochodzenie:</b> Hebrajczycy – dosł. ludzie zza wody / zza rzeki (Eufratu), niosący wiarę w jednego Boga (monoteizm).</li></ul>\n<h5>Mądrość jako postawa życiowa i sztuka egzystencji</h5>\n<p>Dla Semitów pytanie o mądrość nie jest pytaniem czysto teoretycznym o istotę bytu, lecz pytaniem egzystencjalnym: jak żyć → jak przeżyć w wierności Bogu. Mądry to ten, kto potrafi mądrze i sprawiedliwie pokierować swoim życiem.</p>\n<h5>Kultura pamiętania i przymierza (Izrael / kultura zbawienia / Toda)</h5>\n<p>Człowiek jest mądry, bo pamięta (pamiętać oznacza nieustannie uświadamiać sobie, kim jestem wobec Boga i skąd pochodzę – pamięć o przodkach i historii zbawienia).</p>\n<p>Mądry to ten, kto wiernie zachowuje przymierze z Bogiem i wydaje owoce tego przymierza w codziennym postępowaniu.</p>\n<h4><span class=\"num\">B.</span> Model grecki (Hellenistyczny / Teoretyczny)</h4>\n<ul><li><b>Pojęcia kluczowe:</b> Sofia (σοφία) – mądrość jako wiedza najwyższa; Episteme (ἐπιστήμη) – wiedza obiektywna, naukowa, uzasadniona.</li></ul>\n<h5>Poznanie jako widzenie i ogląd</h5>\n<p>W tradycji greckiej poznanie intelektualne wywodzi się bezpośrednio z metaforyki wzroku – poznać to mieć ogląd (ściana dłoni).</p>\n<h5>Greckie terminy poznawcze zakorzenione w widzeniu</h5>\n<ul><li><b>eidenai (εἰδέναι) – wiedzieć (etymologicznie:</b> zobaczyłem, więc wiem).</li><li><b>idein (ἰδεῖν)</b> – widzieć, spostrzegać (źródłosłów dla Idei).</li><li><b>horao (ὁράω)</b> – widzę, patrzę, dostrzegam.</li><li><b>aitia (αἰτία)</b> – przyczyna, powód, racja zaistnienia rzeczy.</li></ul>\n<h4><span class=\"num\">2.</span> Podział wiedzy i klasyfikacja nauk według Arystotelesa</h4>\n<h4><span class=\"num\">A.</span> Filozofia pierwsza a filozofia druga</h4>\n<p>Filozofia pierwsza (prote philosophia) → Metafizyka / Ontologia; nauka o bycie jako bycie (to on he on), badająca pierwsze zasady i ostateczne przyczyny rzeczywistości.</p>\n<p>Filozofia druga → Fizyka (filozofia przyrody badająca byty zmienne i materialne) oraz Matematyka (badająca byty idealne i ilościowe).</p>\n<h4><span class=\"num\">B.</span> Trójpodział aktywności rozumu i nauk</h4>\n<ul><li>Arystoteles podzielił ludzką wiedzę i aktywność intelektualną na trzy komplementarne dziedziny:</li></ul>\n<h5>Theoria (θεωρία – nauki teoretyczne / kontemplacja)</h5>\n<p>Ogląd tego, co jest konieczne i zawsze takie samo wobec siebie; wiedza bezinteresowna, poszukiwana dla niej samej, biorąca swój początek z doświadczenia zmysłowego (ontologia, teologia, fizyka, matematyka).</p>\n<h5>Praxis (πρᾶξις – nauki praktyczne / ludzkie działanie)</h5>\n<p>Wiedza dotycząca wolnego działania człowieka, mająca na celu ustalenie stałych praw i reguł postępowania umożliwiających osiągnięcie pełni szczęścia – eudajmonii (εὐδαιμονία).</p>\n<h5>Główne działy praxis</h5>\n<ul><li><b>Etyka – odpowiada na pytanie:</b> jak działać, by osiągnąć dobro? Badanie ludzkiego ethosu.</li><li><b>Zasada Heraklita:</b> ethos anthropo daimon (ἦθος ἀνθρώπῳ δαίμων) – „charakter/ethos człowieka jest jego losem (demonem)” → źródłem nieszczęścia, zguby lub ocalenia człowieka jest on sam i jego wewnętrzne wybory moralne.</li><li><b>Ekonomia (oikonomia)</b> – ustalenie reguł prawnych i organizacyjnych, aby dom (oikos) i jego mieszkańcy mieli zapewnione wszystko, co niezbędne do godnego życia.</li><li><b>Polityka</b> – nauka o sprawiedliwym ustroju i wspólnym dobru obywateli w ramach polis.</li><li><b>Retoryka, Homiletyka, Erystyka</b> – sztuki sprawnego, logicznego i przekonującego argumentowania słowem (odpowiednio: w mowie publicznej, kaznodziejstwie kościelnym i dyspucie logicznej; oparte na życzliwym tłumaczeniu i wyjaśnianiu).</li></ul>\n<h5>Poiesis / Poietike (ποίησις / ποιητική – nauki pojetyczne / wytwórcze)</h5>\n<ul><li><b>Zasada dobrej twórczości umysłowej</b> – wiedza i umiejętności nakierowane na wytworzenie konkretnego dzieła materialnego, artystycznego lub technicznego (sztuka, poezja, rzemiosło, architektura).</li></ul>"}, {"t": "Wykład – Rzym, rekapitulacja cech filozofii, źródła filozofowania wg Jaspersa", "html": "\n<div class=\"eyebrow\">WSTĘP DO FILOZOFII – Wykład</div>\n<div class=\"topic\"><span>Temat</span>Rzymski sposób rozumienia mądrości (ars vitae, prawo rzymskie), rekapitulacja genezy i specyfiki filozofii zachodniej, transcendencja i transcendentalność, psychologiczne źródła filozofowania (K. Jaspers)</div>\n<h4><span class=\"num\">1.</span> Kontekst: Imperium Osmańskie i rzymska praktyczność</h4>\n<ul>\n<li>Renesans w świecie muzułmańskim – rozkwit nauki, poezji i sztuki; sam Sulejman był ponoć poetą i publikował pod pseudonimem.</li>\n<li><b>Hamam</b> – to, co u Rzymian było łaźnią; Rzymianie nazywali system ogrzewania <b>hypokaustum</b> (ogrzewanie podłogowe ciepłym powietrzem). Pokazuje to rzymską praktyczność.</li>\n</ul>\n\n<h4><span class=\"num\">2.</span> Rzymski sposób rozumienia mądrości</h4>\n<ul>\n<li>Na wykładzie historii filozofii starożytnej zwykle nie ma osobnego działu „filozofia rzymska” – rzymscy autorzy to w gruncie rzeczy <b>stoicy albo cynicy</b>: np. <b>Marek Aureliusz</b> (filozofujący cesarz), <b>Julian Apostata</b> (z ostatniej fazy, raczej Grek).</li>\n<li>Rzymskie rozumienie mądrości to <b>sztuka praktyczna</b> – <i>ars</i>:\n<ul>\n<li><b><i>Ars vitae</i></b> – sztuka życia: jak żyć dobrze i pięknie, jak w codzienności czerpać radość i należną przyjemność z tego, co zwykłe (stoicy, ale także epikurejczycy).</li>\n<li><b><i>Ars moriendi</i></b> – sztuka umierania (skoro sztuka życia, to i tego, co w życie wpisane).</li>\n<li>Sztuka <b>wyboru</b> między dobrem a złem; umiejętność korzystania.</li>\n</ul></li>\n<li><b>Horacy</b> – „Non omnis moriar”; w innym wierszu mówi, że swoją poezją zbudował pomnik „trwalszy niż ze spiżu” (<i>exegi monumentum aere perennius</i>) – figuratywne: poezja trwalsza niż spiż.</li>\n<li>Rzymianie sięgali po kulturę grecką na własną potrzebę, <b>asymilując</b> ją (podobnie jak Aleksandria); potem chrześcijaństwo zrobi coś podobnego.</li>\n</ul>\n\n<h4><span class=\"num\">3.</span> Prawo rzymskie – fundament kultury europejskiej</h4>\n<ul>\n<li>Nie ma Europy ani kultury prawnej dzisiejszego świata bez <b>prawa rzymskiego</b>; studia prawnicze zaczynają się od jego zasad.</li>\n<li><b><i>Lex</i></b> – prawo (gr. <i>nomos</i>). <b><i>Dura lex, sed lex</i></b> – „twarde prawo, ale prawo”: powszechność (obowiązuje wszystkich) i surowość, przekonanie o nieuchronności.</li>\n<li>Ciekawostka: cesarz, wymagając prawa, sam był pod prawem.</li>\n<li><b>Imperator</b> – ten, który włada państwem w granicach, które <b>sam ustanawia</b> (<i>imperium</i>) – nikt mu ich nie narzuca. Odniesienia do współczesnych „imperatorów”.</li>\n<li><i>Lex</i> ma charakter materialny – to zapis, <b>litera prawa</b>. Opisuje, co słuszne i niesłuszne; w wymiarze regulacyjnym ma <b>funkcję negatywną</b>: nie nagradza dobrych czynów, wskazuje, co zakazane, i przewiduje sankcje.</li>\n<li><i>Lex</i> opiera się na uprzednim <b>wyczuciu tego, co należy do prawa</b> – Rzymianie nazywali to <b><i>ius</i></b>. Z tym wiąże się <b><i>iustitia</i></b> – sprawiedliwość: postawa, cnota, umiejętność <b>oddania każdemu tego, co mu się należy</b>.</li>\n<li>Prawo kodyfikowane: dotyczące miast, handlu, dziedziczenia, praw obywatelskich, państwa.</li>\n<li><b><i>Nasciturus</i></b> – „ten, który ma się narodzić”: dziecko jeszcze nienarodzone posiadało już w prawie rzymskim prawa, np. <b>dziedziczyło</b>.</li>\n</ul>\n\n<h4><span class=\"num\">4.</span> Rekapitulacja: geneza i specyfika filozofii świata zachodniego (grecko-rzymskiego)</h4>\n<h5>a) Kiedy i gdzie</h5>\n<ul>\n<li>Pojawia się ok. <b>VII–VI w. p.n.e.</b>, najpierw na obrzeżach – w koloniach greckiego świata – potem także w stolicach (V–IV w.: Ateny, sofiści).</li>\n<li><b>Transfer geograficzny i społeczny</b>: filozofowanie przestaje być zajęciem elitarnym, właściwym arystokracji („nie mają co robić, to filozofują”) – staje się postawą dostępną dla wszystkich, bo do filozofowania wszyscy ludzie są zdolni z natury. Dla Greków nie było to oczywiste (filozofia nie może być barbarzyńska – jest „nasza”).</li>\n<li>Demokracja wyraża ideał współdecydowania wszystkich obywateli (realizacja była oczywiście nieidealna). Filozofują nie tylko obywatele: także <b>metojkowie</b> (mieszkający obok polis, z częściowymi prawami) i <b>niewolnicy</b> – np. <b>Epiktet z Hierapolis</b>, „drugi Sokrates”: szukał optymalnej kondycji człowieka, nie pozostawił pism, nauczał przez dialog.</li>\n<li><b>Kobiety-filozofki</b>: nazywane „niebezpiecznymi”, wyróżniały się mądrością i niezależnością poglądów; niektóre prowadziły szkoły, np. <b>Arete</b>, córka Arystypa Starszego. Część nazywano <b>heterami</b> (dosł. „inne” – inny sposób bycia niż zwykle u kobiet w Grecji). <b>Aspazja z Miletu</b>, żona Peryklesa – Sokrates miał u niej pobierać lekcje „erotyki”, czyli zgłębiania mądrości, która jest jak eros. Także <b>Hypatia z Aleksandrii</b> (późny antyk), zabita przez chrześcijan.</li>\n</ul>\n<h5>b) Od mitu do logosu</h5>\n<ul>\n<li>Przejście od <b>teogonii do teologii</b>, od <b>antropogonii do antropologii</b>, od <b>kosmogonii do kosmologii</b> – wspólny mianownik: od <b>mitu do logosu</b>.</li>\n<li>Błędne, naiwne rozumienie: że filozofia porzuciła mit i religię („ludzie nie myśleli, a potem nagle zaczęli”). Naprawdę przejście polega na <b>krytyce mitu</b> – próbie zrozumienia, co mit chce nam powiedzieć. Mity pozostają obecne (Sokrates opowiada mit Diotymy o Erosie).</li>\n</ul>\n<h5>c) Rozumność i krytyczność</h5>\n<ul>\n<li>Wyrażają się w założeniach, metodzie i celu: poszukiwanie tego, co <b>wspólne, ogólne, podstawowe</b> – w teorii i w praktyce (sztuka życia).</li>\n<li>Poszukiwanie rozstrzygnięcia w sposób <b>bezzałożeniowy</b> (na ile się da) i <b>otwarty</b> – filozofia nie zakłada z góry odpowiedzi, nie chodzi o udowodnienie tego, co „należy udowodnić”.</li>\n</ul>\n<h5>d) Naturalność (bez objawienia)</h5>\n<ul>\n<li>Odwołanie tylko do tego, co <b>naturalne</b> – to natura pokazuje. Brak czynnika nadnaturalnego, objawionego (choć Grecy mówią o bogach, którzy się odsłaniają).</li>\n<li><b>Rewelacja</b> (łac. <i>revelatio</i>) = objawienie, odsłonięcie. Greckim odpowiednikiem jest <b>apokalipsa</b> – to nie „straszna księga o końcu”, lecz <b>odsłonięcie zamysłu Boga</b>. Por. Ewangelia: „Wysławiam Cię, Ojcze… że odsłoniłeś (<i>apekalypsas</i>) to prostaczkom”.</li>\n</ul>\n<h5>e) Pytanie o całość – „katolickie”</h5>\n<ul>\n<li>Filozofia pyta o to, co ogólne, obecne we wszystkim, w całości – po grecku <b>katholikos</b> (<i>kath’ holou</i>): <b>powszechne</b>, wszędzie obecne, dotyczące wszystkich (choć wszędzie na swój sposób). To nie żaden ekskluzywizm.</li>\n<li>Dziś słowo nabrało innego sensu („nie taki jak inni”: rzymskokatolicki, polskokatolicki, starokatolicki, greckokatolicki) – dookreślenie przeczy pierwotnemu znaczeniu powszechności.</li>\n<li>Filozofia wyznacza <b>pole racjonalności</b> obejmujące całość (uniwersum) – nie ma „czegoś poza polem”.</li>\n</ul>\n<h5>f) Dyskurs oparty na twierdzeniach</h5>\n<ul>\n<li>Twierdzenie to nie „powiedzieć cokolwiek” – wyraża zastosowanie metody i założeń; dotyczy tego, co <b>konieczne</b>, a nie przygodne.</li>\n<li>Przykład: twierdzenie Pitagorasa <i>a² + b² = c²</i> – wyraża coś koniecznego niezależnie od tego, czy je rozumiemy.</li>\n</ul>\n<h5>g) Immanencja i transcendencja</h5>\n<ul>\n<li>Pytanie o całość jest <b>metaprzedmiotowe</b> (por. pierwsze zajęcia).</li>\n<li><b>Immanencja</b> – to, co obecne wszędzie, co pozostaje „wewnątrz”.</li>\n<li><b>Transcendencja</b> (łac. <i>transcendere</i>) – to, co <b>wykracza, przekracza</b>, a zarazem jest obecne w tym, o co pytamy. Nie musi mieć znaczenia teologicznego – np. decyzje człowieka, które wykraczają ponad to, co zwykle.</li>\n<li><b>Transcendentalne</b> (inaczej niż transcendentne) = <b>warunki możliwości</b> czegoś. <b>Kant</b> buduje filozofię transcendentalną – zawsze w odniesieniu do <b>podmiotu</b>: np. jakie są warunki możliwości poznania (<i>Krytyka czystego rozumu</i>). Więcej w skrypcie.</li>\n</ul>\n\n<h4><span class=\"num\">5.</span> Psychologiczne źródła postaw filozoficznych – Karl Jaspers</h4>\n<ul>\n<li><b>Karl Jaspers</b> (1883–1969) – psycholog, psychiatra i filozof; wskazał psychologiczne źródła poszczególnych postaw filozoficznych.</li>\n<li>(Dygresja prowadzącego o „psychologizacji” i komentarzach pewnego profesora wobec młodych księży – kompetencje profesora są wąskie; wypowiadając się poza dyscypliną, mówi się jako człowiek, nie jako autorytet. „Łaska wystarczy” – to nie znaczy, by rezygnować z rozumu, nauki i techniki.)</li>\n</ul>\n<h5>Źródło 1: Zdziwienie (thaumazein) → metafizyka</h5>\n<ul>\n<li>Dziwimy się i filozofujemy. Przeżywanie ma ładunek emocjonalny, ale <b>umiarkowany</b> (raczej neutralny).</li>\n<li>Postawa zdziwienia to w tradycji późniejsza <b>kontemplacja</b> – ogląd tego, co budzi zdziwienie (w średniowieczu nabierze szczególnego znaczenia).</li>\n<li>Zdziwienie dotyczy tego, co <b>zwyczajne i codzienne</b>: dlaczego jest tak jak zawsze, a nie inaczej? Nie chodzi o szukanie sensacji („cudów na szybie”).</li>\n<li>Z takiego zdziwienia rodzi się <b>metafizyka</b>.</li>\n</ul>\n<h5>Źródło 2: Wątpienie („zdziwienie plus”)</h5>\n<ul>\n<li>Postawa już nie neutralna, bardziej złożona: wątpię w coś, co jest dla mnie <b>istotne, ważne</b>. Łac. <i>dubitatio</i>.</li>\n<li><b>Kartezjusz</b> uczynił wątpienie filarem swojej metody: <b>wątpienie metodyczne</b> we wszystko, by znaleźć to, czego nie da się podważyć (pewne). Nie oznacza to krytykanctwa ani podważania wszystkiego dla zasady – to testowanie, szukanie kryteriów pewności.</li>\n</ul>\n"}], "histfil": [{"t": "Wykład 1 i ćwiczenia – narodziny filozofii, praca semestralna", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII</div>\n<ul><li><b>Ćwiczenia</b> – zadanie semestralne</li><li><b>Forma:</b> Pisemna praca semestralna.</li></ul>\n<div class=\"topic\"><span>Temat</span>Koncepcja miłości w „Uczcie” Platona – analiza i ocena.</div>\n<ul><li><b>Termin oddania:</b> do 11.01.2027.</li><li><b>Wymogi formalne:</b> 5–7 stron, czcionka 12, konieczne przypisy.</li></ul>\n<h4><span class=\"num\">1.</span> Geneza filozofii europejskiej (Grecja)</h4>\n<ul><li><b>Filozofia grecka wyróżnia Greków na tle innych kultur</b> – jest czymś zupełnie nowym (ludy Wschodu nie miały odpowiednika ani niczego podobnego).</li><li><b>Warunki powstania:</b> szczególne miejsce i ranga wolności u Greków.</li><li><b>Polis staje się horyzontem całego życia Greka</b> – cele państwa to cele jednostki (dobro wspólne, ustrój republikański).</li><li><b>Ekspansja terytorialna:</b> Filozofia narodziła się najpierw na peryferiach (w koloniach – Jonii i Wielkiej Grecji), a dopiero później dotarła do Grecji macierzystej.</li></ul>\n<h4><span class=\"num\">2.</span> Specyfika i wartość filozofii</h4>\n<h5>Trzy fundamentalne cechy konstytuujące filozofię</h5>\n<ul><li><b>Przedmiot:</b> Chce wyjaśnić wszystko – całą rzeczywistość (w ten sposób różni się od nauk szczegółowych badających jedynie wycinki; np. Tales: „Co jest zasadą [arche] wszystkiego?”).</li><li><b>Metoda:</b> Dąży do bycia racjonalnym wyjaśnieniem owej całości. Liczy się wyłącznie argument rozumowy, logiczne uzasadnienie (logos), a nie samo bezkrytyczne stwierdzenie czy potoczne doświadczenie. Szuka racji, przyczyny i zasady.</li><li><b>Cel:</b> Ma charakter czysto teoretyczny (theoria – bezinteresowna kontemplacja prawdy). Zmierza do prawdy dla niej samej, bez względu na doraźną korzyść materialną. Jest wolna od pragmatyzmu.</li></ul>\n<p>Pytania filozoficzne (np. o sens) są pierwotnym źródłem filozofii – od tych pytań i odpowiedzi na nie zależy to, jak żyję.</p>\n<h4><span class=\"num\">3.</span> Działy filozofii</h4>\n<h4><span class=\"num\">I.</span> Ogólna nauka o bycie – Metafizyka / Ontologia</h4>\n<h5>Klasyczny podział grecki (Fizyka)</h5>\n<ul><li>Nauka o przyrodzie</li><li>Nauka o duszy → Psychologia</li></ul>\n<p>Nauka o Bogu → Teologia (w ujęciu filozoficznym / teologia naturalna)</p>\n<h4><span class=\"num\">II.</span> Ogólna nauka o poznaniu – Epistemologia / Gnoseologia</h4>\n<h5>Klasyczny podział grecki (Logika)</h5>\n<ul><li>Teoria poznania</li><li>Krytyka poznania</li></ul>\n<h4><span class=\"num\">III.</span> Ogólna nauka o wartościach – Aksjologia</h4>\n<h5>Współczesny / tradycyjny podział</h5>\n<p>Etyka (nauka o dobru i moralności)</p>\n<p>Estetyka (nauka o pięknie i sztuce)</p>"}, {"t": "Wykład 1 – rozwinięcie akademickie", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII – SZCZEGÓŁOWE ROZWINIĘCIE MATERIAŁU</div>\n<h4><span class=\"num\">1.</span> Geneza filozofii europejskiej: „Cud grecki”</h4>\n<p>Filozofia w ścisłym znaczeniu narodziła się na przełomie VII i VI wieku p.n.e. w starożytnej Grecji. Nie powstała ona w izolacji kulturowej, jednak stanowiła radykalne novum na tle cywilizacji Bliskiego Wschodu (Egiptu, Babilonii czy Persji).</p>\n<h5>Mit a Logos (Przejście od mitu do rozumu)</h5>\n<p>Ludy Wschodu gromadziły potężną wiedzę praktyczną (np. geometrię potrzebną Egipcjanom do wytyczania pól po wylewach Nilu czy babilońską astrologię do wróżbiarstwa), lecz ich wyjaśnienia świata miały charakter mitologiczno-religijny (mythos).</p>\n<ul><li><b>Grecy jako pierwsi dokonali demitologizacji</b> – przestali wyjaśniać burzę gniewem Zeusa, a zaćmienie słońca walką bóstw. Zastąpili opowieść mitologiczną dociekaniem racjonalnym (logos), szukając w samej naturze wewnętrznych praw nią rządzących.</li></ul>\n<h5>Społeczno-polityczne warunki narodzin filozofii</h5>\n<ul><li><b>Idea wolności (eleutheria):</b> Grek uważał się za obywatela, a nie poddanego teokratycznego monarchy czy niewolnika despoty (jak w państwach wschodnich).</li><li><b>Fenomen Polis:</b> Miasto-państwo stanowiło przestrzeń publicznej debaty na agorze. Ustrój republikańsko-demokratyczny wymusił konieczność argumentacji – w zgromadzeniu nie decydował autorytet czy siła, lecz siła logicznego argumentu przekonującego współobywateli.</li><li><b>Religia bez dogmatów i kasty kapłańskiej:</b> W Grecji nie było świętych ksiąg o statusie nienaruszalnego objawienia ani kasty kapłanów strzegących ortodoksji. Pozwalało to na nieskrępowaną swobodę myślenia i stawiania pytań.</li></ul>\n<p>Dlaczego kolonie (Jonia i Wielka Grecja)?</p>\n<p>Pierwsze szkoły filozoficzne nie powstały w Atenach czy Sparcie, lecz na wybrzeżach Azji Mniejszej (Milet – Tales, Anaksymander, Anaksymenes; Efez – Heraklit) oraz w południowych Włoszech (Krotona – pitagorejczycy; Elea – Parmenides).</p>\n<p>Kolonie były węzłami handlowymi, w których krzyżowały się różne kultury, religie i zwyczaje. Ta różnorodność rodziła krytycyzm: skoro każdy lud wierzy w innych bogów, to co jest obiektywną prawdą o świecie? Dopiero po wojnach perskich (V w. p.n.e.) centrum myśli filozoficznej przeniosło się do Aten.</p>\n<h4><span class=\"num\">2.</span> Istota, specyfika i cel filozofii</h4>\n<ul><li>Filozofia odróżnia się od mitu, religii i nauk szczegółowych trzema konstytutywnymi wymiarami:</li></ul>\n<h4><span class=\"num\">A.</span> Przedmiot – Totum (Całość rzeczywistości)</h4>\n<p>Nauki szczegółowe (fizyka, biologia, ekonomia) wyodrębniają pewien wycinek bytu i badają go pod określonym kątem (np. biologia bada wyłącznie organizmy żywe).</p>\n<p>Filozofia pyta o całość bytu jako bytu (to on he on). Jej fundamentalne pytanie to: Dlaczego istnieje raczej coś niż nic? oraz Co stanowi ostateczną zasadę rzeczywistości (archē)? (np. dla Talesa wodą, dla Anaksymandra bezkresem – apeiron, dla Pitagorasa liczbą).</p>\n<h4><span class=\"num\">B.</span> Metoda – Logos (Czysty rozum i argumentacja)</h4>\n<p>Religia opiera się na wierze i autorytecie objawienia.</p>\n<p>Filozofia przyjmuje wyłącznie twierdzenia uzasadnione drogą racjonalną – poprzez dowód dedukcyjny, analizę pojęciową i logikę. Nie wystarczy autorytatywne orzeczenie; teza musi obronić się w dyskursie dialektycznym przed kontrargumentami.</p>\n<h4><span class=\"num\">C.</span> Cel – Theoria (Bezinteresowna kontemplacja prawdy)</h4>\n<p>Arystoteles pisał, że filozofia jest nauką „najbardziej boską” i wolną, ponieważ istnieje sama dla siebie. Nie służy żadnemu celowi techniczno-użytkowemu ani zyskowi.</p>\n<ul><li><b>Theoria (od theorein</b> – wpatrywać się, kontemplować) to czysta radość poznawania prawdy o strukturze wszechświata. Paradoksalnie, choć filozofia nie ma bezpośredniej użyteczności praktycznej, to – jak głosi notatka – „od tych pytań i odpowiedzi na nie zależy to, jak żyję”. Kształtuje bowiem ostateczny sens ludzkiej egzystencji.</li></ul>\n<h4><span class=\"num\">3.</span> Trójdzielna struktura systemu filozoficznego</h4>\n<p>Podział utrwalony w epoce hellenistycznej (głównie przez stoików i perypatetyków) dzieli filozofię na trzy filary:</p>\n<div class=\"eyebrow\">FILOZOFIA</div>\n<ul><li>┌───────────────────┼───────────────────┐</li><li>▼ ▼ ▼</li><li>METAfizyka EPISTEMOLOGIA AKSjologia</li></ul>\n<p>(nauka o bycie) (nauka o poznaniu) (nauka o wartościach)</p>\n<ul><li>│ │ │</li><li>┌────┴────┐ ┌────┴────┐ ┌────┴────┐</li><li>Fizyka Dusza/Bóg Logika Krytyka Etyka Estetyka</li></ul>\n<p>kosm. (Psychol./ formalna poznania (Dobro) (Piękno)</p>\n<p>Teologia)</p>\n<h5>Metafizyka / Ontologia (dawna „Fizyka” szeroko rozumiana)</h5>\n<ul><li><b>Kosmologia / filozofia przyrody:</b> bada świat materialny, ruch, czas, przestrzeń i materię.</li><li><b>Psychologia filozoficzna:</b> nauka o duszy (psyche) jako zasadzie życia, poznania i samoświadomości.</li><li><b>Teologia filozoficzna (teologia naturalna):</b> dociekanie istnienia i przymiotów Pierwszej Przyczyny / Boga w oparciu o sam rozum, bez odwoływania się do tekstów natchnionych.</li></ul>\n<h5>Epistemologia / Gnoseologia (Logika w ujęciu szerokim)</h5>\n<ul><li><b>Logika:</b> nauka o poprawności form myślenia, wynikania i dowodzenia.</li><li><b>Teoria i krytyka poznania:</b> bada granice, źródła i kryteria prawdziwości ludzkiego poznania (Czy poznajemy rzeczy takimi, jakie są naprawdę, czy tylko takimi, jakimi nam się jawią?).</li></ul>\n<h5>Aksjologia (Nauka o wartościach)</h5>\n<ul><li><b>Etyka:</b> bada naturę dobra, cnoty (arete), szczęścia (eudaimonia) i obowiązków moralnych człowieka.</li><li><b>Estetyka:</b> bada kryteria piękna, harmonii, wzniosłości oraz naturę sztuki i twórczości artystycznej.</li></ul>\n<h4><span class=\"num\">4.</span> Wytyczne do pracy semestralnej: Koncepcja miłości w „Uczcie” Platona</h4>\n<p>Zadana praca (5–7 stron, czcionka 12, aparat przypisów, termin do 11.01.2027) wymaga krytycznej analizy dialogu Platona. Warto oprzeć jej strukturę na dynamice poszczególnych mów:</p>\n<h5>Wstęp</h5>\n<p>Okoliczności uczty u Agatona (świętowanie zwycięstwa w konkursie tragedii).</p>\n<p>Przejście od potocznych wyobrażeń o Erosie do jego filozoficznej interpretacji.</p>\n<h5>Część analityczna – stopnie ujęcia miłości</h5>\n<ul><li><b>Fajdros:</b> Eros jako najstarszy z bogów, źródło męstwa i honoru na polu walki.</li><li><b>Pauzaniasz:</b> Rozróżnienie na Erosa Wszechpowszechnego (zmysłowego, cielesnego) i Erosa Niebiańskiego (duchowego, cnotliwego).</li><li><b>Eryksymachos:</b> Eros jako uniwersalna zasada harmonii w całej przyrodzie i medycynie.</li><li><b>Arystofanes:</b> Mit o Androgynach – miłość jako tęsknota za utraconą całością i poszukiwanie „drugiej połówki”.</li><li><b>Agaton:</b> Poetycka pochwała Erosa jako najmłodszego, najpiękniejszego i najdelikatniejszego z bogów.</li></ul>\n<h5>Kulminacja – Mowa Sokratesa (Nauka Diotymy z Mantinei)</h5>\n<ul><li><b>Geneza Erosa:</b> Jest synem Porosa (Dostatku) i Penii (Biedy) – nie jest bogiem, lecz wielkim Demonem (daimonion), pośrednikiem między tym, co ludzkie, a tym, co boskie. Jest wiecznie głodny, ale przedsiębiorczy w poszukiwaniu dobra.</li><li><b>Drabina miłości Diotymy (anabasis):</b> Droga wznoszenia się od miłości do jednego pięknego ciała → do wszystkich pięknych ciał → do piękna dusz i charakterów → do piękna praw, nauk i instytucji → aż do Idei Piękna samego w sobie (absolutnego, wiecznego i niezmiennego).</li></ul>\n<h5>Zakończenie i ocena</h5>\n<p>Wtargnięcie pijanego Alkibiadesa jako żywa ilustracja i test teorii: Sokrates jako ucieleśnienie prawdziwego filozofa odpornego na czysto zmysłowe pokusy.</p>\n<ul><li><b>Ocena krytyczna:</b> platoniczny wzniosły spirytualizm a niebezpieczeństwo instrumentalizacji człowieka z krwi i kości na drodze do czystej idei.</li></ul>"}, {"t": "Uczta Platona – mowy na cześć Erosa po kolei", "html": "<h4><span class=\"num\">1.</span> Fajdros – Eros jako najstarszy bóg i źródło męstwa</h4>\n<ul><li><b>Kim jest:</b> Młody entuzjasta retoryki.</li><li><b>Główna myśl:</b> Eros to najstarszy z bogów, który nie ma rodziców (zrodził się zaraz po Chaosie i Ziemi).</li><li><b>Sens mowy:</b> Miłość jest największym źródłem odwagi, honoru i męstwa moralnego. Zakochany boi się popełnić czyn haniebny na oczach ukochanego; oddział złożony z kochanków byłby niezwyciężony na polu walki (gotowość do poświęcenia życia za drugiego, jak Alkestis czy Achilles).</li></ul>\n<h4><span class=\"num\">2.</span> Pauzaniasz – Rozróżnienie dwóch Erosów (moralista / prawnik)</h4>\n<ul><li><b>Kim jest:</b> Dojrzały erudyta, kochanek gospodarza uczty, Agatona.</li><li><b>Główna myśl:</b> Eros nie jest jeden – towarzyszy Afrodycie, a skoro są dwie Afrodyty, istnieją też dwa Erosy:</li><li><b>Eros Wszeteczny (Pospolity / Afrodyta Pandemos):</b> Płytki, zmysłowy, skierowany na ciało (zarówno kobiet, jak i mężczyzn), zmienny i pożądliwy.</li><li><b>Eros Niebiański (Afrodyta Urania):</b> Szlachetny, stały, skierowany na duszę i umysł, zmierzający do cnoty i mądrości.</li><li><b>Sens mowy:</b> Wartość miłości zależy od tego, jak i ku czemu dąży. Prawdziwa miłość uszlachetnia i ma wymiar etyczny.</li></ul>\n<h4><span class=\"num\">3.</span> Eryksymachos – Eros jako uniwersalna zasada harmonii (lekarz)</h4>\n<p>(Zabiera głos przed Arystofanesem, bo ten dostał ataku czkawki).</p>\n<ul><li><b>Kim jest:</b> Lekarz przywiązujący wagę do ładu naturalnego i nauki.</li><li><b>Główna myśl:</b> Poszerza koncepcję Pauziasza z relacji międzyludzkich na całą naturę i kosmos.</li><li><b>Sens mowy:</b> Eros to siła harmonizująca przeciwieństwa (ciepło–zimno, suchość–wilgoć). Dobry Eros zaprowadza równowagę (zdrowie w ciele, harmonię w muzyce, dobre pory roku w rolnictwie), a zły Eros wprowadza chaos, zarazy i choroby. Miłość jest więc kosmologiczną zasadą harmonii.</li></ul>\n<h4><span class=\"num\">4.</span> Arystofanes – Mit o androgynach (komediopisarz)</h4>\n<ul><li><b>Kim jest:</b> Mistrz komedii ateńskiej.</li><li><b>Główna myśl:</b> Słynny mit o pierwotnej naturze ludzkiej. Kiedyś istniały trzy płcie (męska od słońca, żeńska od ziemi i androgyniczna – obupłciowa – od księżyca). Ludzie mieli po 4 ręce, 4 nogi, 2 twarze i byli tak potężni, że zbuntowali się przeciw bogom.</li><li><b>Sens mowy:</b> Zeus w karze przeciął każdego człowieka na pół. Od tamtej pory każda połowa tęskni za swoją drugą częścią i próbuje się z nią zrosnąć. Eros to pragnienie i poszukiwanie utraconej całości – uleczenie naszej rozciętej natury.</li></ul>\n<h4><span class=\"num\">5.</span> Agaton – Poetycka pochwała samego bóstwa (gospodarz / tragik)</h4>\n<ul><li><b>Kim jest:</b> Młody, piękny poeta tragiczny świętujący zwycięstwo w konkursie dramatycznym.</li><li><b>Główna myśl:</b> Zauważa, że poprzednicy chwalili dary Erosa, a nie samego boga. Przeczy Fajdrosowi i twierdzi, że Eros jest najmłodszym z bogów (ucieka przed starością), najdelikatniejszym (mieszka w miękkich duszach) oraz posiadającym wszystkie cnoty (sprawiedliwość, umiarkowanie, męstwo i mądrość).</li><li><b>Sens mowy:</b> Efektowny, retoryczny pean ukazujący Erosa jako absolutne ucieleśnienie piękna i dobra.</li></ul>\n<h4><span class=\"num\">6.</span> Sokrates (Nauka Diotymy) – Eros jako pragnienie piękna i wiedzy</h4>\n<ul><li><b>Kim jest:</b> Filozof; zanim zacznie, delikatnie obala mowę Agatona pytaniem: Skoro miłość to pragnienie piękna, to czy Eros sam jest piękny? (Pragnie się tylko tego, czego się nie ma).</li></ul>\n<h5>Główna myśl (przekazana od wieszczki Diotymy z Mantinei)</h5>\n<ul><li><b>Pochodzenie Erosa:</b> Nie jest bogiem ani człowiekiem, lecz wielkim demonem (pośrednikiem). Został spłodzony na urodzinach Afrodyty przez Porosa (Dostatek / Pomysłowość) i Penię (Biedę). Dlatego jest wiecznie ubogi i głodny, ale też zaradny, odważny i wiecznie dążący do dobra.</li><li><b>Cel miłości:</b> Rodzenie w pięknie (zarówno cieleśnie – potomstwo, jak i duchowo – dzieła sztuki, prawa, cnoty, mądrość).</li></ul>\n<h5>Drabina miłości (anabasis): Wspinaczka duszy</h5>\n<p>Zakochanie w jednym pięknym ciele.</p>\n<p>Dostrzeżenie piękna we wszystkich ciałach.</p>\n<p>Dostrzeżenie wyższości piękna duszy i umysłu nad pięknem ciała.</p>\n<p>Piękno w ludzkich prawach, obyczajach i naukach.</p>\n<ul><li><b>Szczyt:</b> Kontemplacja Idei Piękna samego w sobie (wiecznego, niezmiennego i absolutnego).</li></ul>\n<h4><span class=\"num\">7.</span> Alkibiades – Żywy portret i pochwała Sokratesa (wtargnięcie)</h4>\n<ul><li><b>Kim jest:</b> Pijany, charyzmatyczny wódz i polityk ateński, wieniec na głowie.</li><li><b>Główna myśl:</b> Zamiast chwalić abstrakcyjnego boga Erosa, wygłasza mowę pochwalną na cześć Sokratesa.</li><li><b>Sens mowy:</b> Porównuje Sokratesa do figurek sylenów – z zewnątrz brzydki i ironiczny, wewnątrz kryje złote posągi boskich cnót. Opowiada, jak próbował uwieść Sokratesa swoją urodą, ale mędrzec pozostał całkowicie obojętny na cielesne zaloty. Jest to praktyczny test i dowód na to, że Sokrates rzeczywiście osiągnął szczyt drabiny Diotymy.</li></ul>"}, {"t": "Wykład 2 – okresy filozofii starożytnej, Tales (12.10.2026)", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII – Wykład 2</div>\n<div class=\"meta\">🗓 Poniedziałek, 12 października 2026, 08:44</div>\n<div class=\"topic\"><span>Temat</span>Okresy filozofii starożytnej, przejście od mitu do nauki oraz Tales z Miletu i hylozoizm</div>\n<h4><span class=\"num\">1.</span> Wprowadzenie do filozofii starożytnej</h4>\n<ul><li><b>Filozofia</b> – miłość mądrości (od phileo i sophia).</li></ul>\n<p>VI w. p.n.e. – moment, kiedy termin ten po raz pierwszy pojawia się w użyciu (tradycja przypisuje go Pitagorasowi).</p>\n<ul><li><b>Przedmiot:</b> wiedza o zjawiskach, wiedza o bycie. Filozofia to pierwotnie wszechstronna, uniwersalna dziedzina wiedzy.</li><li><b>Arystoteles:</b> dążenie do oddzielenia filozofii od mitów; filozofia to „najwyższe poznanie rzeczy, sedna”.</li></ul>\n<h4><span class=\"num\">2.</span> Periodyzacja filozofii europejskiej i starożytnej</h4>\n<h5>Główne epoki filozofii europejskiej</h5>\n<ul><li><b>Starożytna:</b> VI w. p.n.e. – ok. 600 r. n.e. (koniec starożytności).</li><li><b>Średniowieczna:</b> do XIV/XV w.</li><li><b>Nowożytna:</b> od początku XV w. (wraz z późniejszym okresem współczesnym: XIX–XX w.).</li></ul>\n<h5>Pięć okresów filozofii starożytnej (Grecja)</h5>\n<ul><li><b>Powstanie filozofii (okres przedsokratejski):</b> VII/VI–V w. p.n.e. – charakter kosmologiczny (filozofia przyrody, badanie kosmosu i poszukiwanie arche).</li><li><b>Oświecenie starożytne (okres klasyczny – faza sokratejska):</b> V w. p.n.e. – charakter humanistyczny / antropologiczny (działalność sofistów i Sokratesa; zwrot ku człowiekowi).</li><li><b>Systemy starożytności (okres klasyczny – wielkie syntezy):</b> IV w. p.n.e. – charakter wiedzy wszechstronnej / całościowej (Platon, Arystoteles).</li><li><b>Wiek starożytny (okres hellenistyczny):</b> III w. p.n.e. – I w. n.e. – charakter zagadnień etycznych (stoicyzm, epikureizm, sceptycyzm; poszukiwanie recepty na szczęście).</li><li><b>Synkretyzm (okres schyłkowy / rzymski):</b> I w. n.e. – 529 r. n.e. – charakter religijny (neoplatonizm, synteza z motywami wschodnimi i chrześcijańskimi aż do zamknięcia Akademii Platońskiej przez Justyniana w 529 r.).</li></ul>\n<h4><span class=\"num\">3.</span> Tales z Miletu (VII–VI w. p.n.e., ok. 625–547 p.n.e.) – początek filozofii</h4>\n<p>Uznawany za ojca i pierwszego przedstawiciela europejskiej filozofii przyrody.</p>\n<h5>Przejście od mitu do nauki / rozumu</h5>\n<ul><li><b>Dokonał przełomowego kroku:</b> odrzucił wyjaśnienia mitologiczne na rzecz racjonalnych dociekań przyrodniczych.</li><li><b>Przewidział zaćmienie słońca (ok. 585 r. p.n.e.)</b> – poprawnie, choć jeszcze bez pełnej znajomości nowoczesnych praw astrofizyki; wykorzystał w tym celu dorobek Babilonii i Egiptu.</li></ul>\n<h5>Dystynkcja: Mit a Nauka</h5>\n<ul><li><b>Mit:</b> wyjaśnienia zmysłowo-obrazowe, poetyckie, emocjonalne; daje gotowe, arbitralne odpowiedzi bez krytycznego uzasadnienia.</li><li><b>Nauka / Filozofia:</b> dąży do prawdy obiektywnej, logicznego uzasadnienia (logos), docieka przyczyn i skutków, opiera się na weryfikowalnych przesłankach.</li></ul>\n<h5>Prazasada (Arche) u Talesa – WODA</h5>\n<p>„Wszystko jest z wody, z wody powstało i z wody się składa.”</p>\n<h5>Uzasadnienie empiryczno-biologiczne</h5>\n<p>Nasiona i zarodki wszelkich bytów są wilgotne; wysuszenie oznacza śmierć.</p>\n<p>Pokarm i soki roślinne mają naturę płynną.</p>\n<p>Woda wykazuje zdolność do zmiany stanów skupienia (lód, ciecz, para), tworząc wrażenie uniwersalnego tworzywa wszechświata.</p>\n<h4><span class=\"num\">4.</span> Pierwotne zagadnienia filozoficzne i Hylozoizm</h4>\n<h5>Physis (φύσις – przyroda / natura)</h5>\n<p>Arystoteles pierwszych filozofów jońskich nazwał fizjologami (fysiologoi – badaczami natury), ponieważ ich dociekania koncentrowały się wokół pytania o tworzywo materialne i dynamiczną zasadę rządzącą przyrodą.</p>\n<h5>Hylozoizm (hylezoizm)</h5>\n<ul><li><b>Złożenie słów:</b> hyle (ὕλη – materia) + zoe (ζωή – życie).</li></ul>\n<p>Pogląd pierwszych filozofów z Miletu, według którego cała materia jest wewnętrznie ożywiona i posiada w sobie zdolność do samoistnego ruchu i działania („Wszystko jest pełne bogów / wszystko jest ożywione, jak to widać w bursztynie przyciągającym skrawki i w magnesie”).</p>\n<p>Jońscy filozofowie przyrody nie znali jeszcze dualistycznego podziału na martwą materię i niematerialnego ducha – traktowali materię jako żywą i samoorganizującą się jedność.</p>"}, {"t": "Wykład 3 – Jońscy filozofowie przyrody i Heraklit", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII – Wykład 3</div>\n<div class=\"meta\">🗓 Poniedziałek, 19 października 2026, 09:48</div>\n<div class=\"topic\"><span>Temat</span>Jońscy filozofowie przyrody (Tales, Anaksymander, Anaksymenes) oraz wariabilizm i dialektyka Heraklita z Efezu</div>\n<h4><span class=\"num\">1.</span> Przełom joński: od mitu do logosu</h4>\n<p>Dlaczego woda u Talesa? Tales uznał wodę za zasadę wszechrzeczy, ponieważ można badać logos – czyli racjonalne, logiczne i sprawdzalne uzasadnienie wywiedzione z obserwacji natury, a nie z mitologicznego obrazu świata.</p>\n<ul><li><b>Najważniejsza zasługa Talesa:</b> Nie tyle konkretna odpowiedź (woda), ile zadanie właściwego pytania o to, co pierwotne, stałe i wspólne w całej zmienności bytu.</li></ul>\n<h5>Ewolucja kluczowych pojęć</h5>\n<ul><li><b>Arche (ἀρχή):</b> Pierwotnie oznaczało po prostu „początek / punkt wyjścia w czasie”, z czasem zaczęło oznaczać zasadę bytu (principium) – to, co nie tylko było na początku, ale stale podtrzymuje rzeczy i stanowi ich niezmienną osnowę.</li><li><b>Physis (φύσις – przyroda / natura):</b> W języku potocznym oznaczała to, co wzrasta, rodzi się i ulega zmianie; w filozofii zaczęła oznaczać stałe prawo i naturę rzeczy rządzącą zmiennymi zjawiskami.</li></ul>\n<h5>Zjawiska a Natura</h5>\n<ul><li><b>Zjawiska:</b> zmienne, dostępne zmysłom, różnorodne, przypadkowe.</li><li><b>Natura (istota):</b> stała, jedyna, konieczna, niezależna od woli i ustanowień człowieka.</li></ul>\n<h4><span class=\"num\">2.</span> Szkoła z Miletu (Trzej filozofowie przyrody)</h4>\n<h4><span class=\"num\">A.</span> Tales z Miletu (VII/VI w. p.n.e.)</h4>\n<ul><li><b>Arche:</b> Woda (uzasadnienie biologiczno-empiryczne: nasiona są wilgotne, pokarm zawiera soki, woda zmienia stany skupienia).</li></ul>\n<h4><span class=\"num\">B.</span> Anaksymander z Miletu (ok. 610–545 p.n.e.)</h4>\n<ul><li><b>Dzieło:</b> Napisał pierwsze greckie dzieło filozoficzne (O naturze – zachowane we fragmentach).</li><li><b>Arche:</b> Apeiron (ἄπειρον – bezkres / bezgraniczność / nieokreśloność).</li></ul>\n<h5>Argumentacja dedukcyjna (wyjście poza czyste zmysły)</h5>\n<p>Zasada musi być nieograniczona ilościowo i bezgraniczna, ponieważ w przeciwnym razie wyczerpałaby się w procesie powstawania nieskończonej liczby bytów i światów.</p>\n<p>Zasada nie może być żadnym z określonych żywiołów (jak woda czy ogień), gdyż żywioły te zwalczają się wzajemnie i przekształcają jeden w drugi. Zasada musi być jakościowo neutralna i nieokreślona.</p>\n<h5>Mechanizm powstawania przyrody (Kosmogonia)</h5>\n<p>Świat nie powstaje przez prostą przemianę jednego żywiołu w drugi, lecz przez wyłanianie się przeciwieństw (ciepło–zimno, suchość–wilgoć) z pierwotnego apeironu.</p>\n<p>Proces ten napędza wieczny ruch, który jest immanentną cechą materii (założenie hilozoizmu).</p>\n<h4><span class=\"num\">C.</span> Anaksymenes z Miletu (ok. 585–525 p.n.e.)</h4>\n<p>Trzeci z filozofów z Miletu; autor traktatu o przyrodzie pisanego prostym, zwięzłym stylem.</p>\n<ul><li><b>Arche:</b> Powietrze (aer – ἀήρ).</li></ul>\n<p>Dlaczego powietrze?</p>\n<ul><li><b>Stanowi syntezę poglądów Talesa i Anaksymandra:</b> wydaje się przestrzennie i ilościowo bezkresne (wypełnia przestrzeń kosmiczną), a jednocześnie jest konkretną materią uchwytną w doświadczeniu.</li></ul>\n<p>Cechuje je nieustanny ruch i ogromna łatwość przemiany (kondensacja/zagęszczenie tworzy wiatr, chmury, wodę, ziemię i kamienie; rozrzedzenie/rozprężenie tworzy ogień).</p>\n<ul><li><b>Związek z życiem i duszą:</b> tchnienie (pneuma) i powietrze podtrzymują życie człowieka i kosmosu.</li></ul>\n<h4><span class=\"num\">3.</span> Heraklit z Efezu (przełom VI/V w. p.n.e., ok. 540–480 p.n.e.)</h4>\n<ul><li><b>Osobowość i dzieło:</b> Pochodził z arystokratycznego rodu w Efezie; zrzekł się dziedzicznych godności i wycofał z życia publicznego, pełen pesymizmu wobec ludzi. Ze względu na aforystyczny, wieloznaczny styl pisania nazwany „Ciemnym” (Skoteinos). Dzieło dzieliło się na 3 traktaty: kosmologiczny, polityczny i teologiczny (zachowało się ponad 130 fragmentów).</li><li><b>Metoda:</b> Obok obserwacji przyrody jako pierwszy zastosował introspekcję (samoobserwację: „Badałem samego siebie”).</li></ul>\n<h4><span class=\"num\">A.</span> Arche: Żywy Ogień (pyr – πῦρ)</h4>\n<p>Kosmosu nie stworzył żaden z bogów ani ludzi; był, jest i będzie wiecznie żywym ogniem, zapalającym się według miary i według miary gasnącym.</p>\n<p>Ogień to nie statyczny surowiec, lecz faza wiecznej przemiany i uniwersalny ekwiwalent bytu („Wszystko wymienia się na ogień, a ogień na wszystko, jak towary na złoto, a złoto na towary”).</p>\n<ul><li><b>Drogi przemiany:</b> Droga w dół (ogień → powietrze → woda → ziemia) i droga w górę (ziemia → woda → parowanie → ogień) są jedną i tą samą drogą.</li></ul>\n<h4><span class=\"num\">B.</span> Wariabilizm i relatywizm (Panta rhei)</h4>\n<ul><li><b>Panta rhei (πάντα ῥεῖ – wszystko płynie):</b> Teoria powszechnej zmienności wszechrzeczy (wariabilizm). Trwanie jest złudzeniem zmysłów; jedyną stałą rzeczą jest samo stawanie się.</li><li><b>Metafora rzeki:</b> „Niepodobna wstąpić dwukrotnie do tej samej rzeki, bo już inne napłynęły w nią wody”.</li><li><b>Relatywizm cech i jedność przeciwieństw:</b> W nieustannym ruchu zacierają się granice między przeciwieństwami (dzień i noc, sen i jawa, młodość i starość, życie i śmierć w swej osnowie są jednym).</li></ul>\n<h4><span class=\"num\">C.</span> Rozumność świata – Kosmiczny Logos i dialektyka</h4>\n<ul><li><b>Rozumność przyrody (Logos – λόγος):</b> Choć zjawiska stale płyną, procesem tym rządzi jedno, wieczne prawo – boski, kosmiczny Rozum (Logos). Rozum nie jest wyłączną własnością człowieka, lecz obiektywną siłą kosmiczną, w której człowiek jedynie partycypuje.</li><li><b>Walka przeciwieństw:</b> „Wojna (polemos) jest ojcem i królem wszechrzeczy”. Napięcie i konflikt przeciwieństw są konieczne do istnienia wszechświata: ukryta harmonia jest wyższa i piękniejsza od widocznej.</li></ul>\n<h4><span class=\"num\">4.</span> Aneks metodologiczny (Reguły tworzenia przypisów i cytatów w pracach naukowych)</h4>\n<ul><li><b>Lokalizacja odsyłacza przypisu:</b> W polskiej normie typograficznej numer przypisu umieszcza się przed znakiem interpunkcyjnym kończącym zdanie lub frazę (przed kropką lub przecinkiem). Wyjątkiem są znaki zapytania i wykrzykniki będące integralną częścią cytatu.</li><li><b>Cudzysłów wewnętrzny:</b> Gdy wewnątrz cytatu pojawia się kolejny cytat, stosuje się cudzysłów francuski ostrokątny: « ».</li><li><b>Zasada zapisu nazwisk i tytułów:</b> Za pierwszym razem podaje się pełne imię i nazwisko autora oraz pełny tytuł; w kolejnych powtórzeniach stosuje się nazwisko skrócone oraz skrócony tytuł dzieła.</li><li><b>Krój czcionki cytatu:</b> Cytaty (polskie i obcojęzyczne) pisze się w cudzysłowie czcionką prostą (antykwą), bez kursywy.</li></ul>"}, {"t": "Ćwiczenia – mowa Arystofanesa, Sokrates i Agaton, elenchos", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII / WSTĘP DO FILOZOFII – Notatka z ćwiczeń</div>\n<div class=\"topic\"><span>Temat</span>Mowa Arystofanesa w „Uczcie”, Sokrates wobec Agatona i Metoda Elenktyczna</div>\n<h4><span class=\"num\">1.</span> Mowa Arystofanesa w Uczcie Platona</h4>\n<p>Co mówi Arystofanes? → Opowiada mit o pierwotnej naturze człowieka (mit o androgynach).</p>\n<p>Jak należy to zinterpretować? → Zeus, karząc ludzi za ich pychę (hybris), przepołowił ich na dwie części. Od tamtej pory każda połówka tęskni i szuka swojej brakującej części – miłość (Eros) jest dążeniem do odzyskania utraconej pełni i jedności.</p>\n<h4><span class=\"num\">2.</span> Rozmowa Sokratesa z Agatonem: Metoda Elenktyczna</h4>\n<ul><li><b>Koniec:</b> Patrzenie bezkrytyczne → Sokrates w dyskusji najpierw zaczął od tego, że pozornie przyznał rację Agatonowi (zastosował ironię sokratejską).</li></ul>\n<p>Następnie poprzez umiejętnie stawiane pytania doprowadził Agatona do zaprzeczenia samemu sobie (do obalenia własnej tezy: skoro miłość jest pragnieniem piękna, to znaczy, że samemu Erosowi tego piękna brakuje, nie może więc być bogiem najpiękniejszym).</p>\n<ul><li><b>Metoda elenktyczna (metoda zbijania):</b> Dialektyczny sposób prowadzenia dialogu przez Sokratesa, polegający na zadawaniu pytań w taki sposób, aby rozmówca sam dostrzegł wewnętrzną sprzeczność swoich przekonań i uznał własną niewiedzę.</li></ul>\n<h4><span class=\"num\">3.</span> Zadanie na następne zajęcia</h4>\n<p>Platon, Państwo, księga VII (Alegoria jaskini, 514a–517a).</p>"}, {"t": "Wykład 4 i ćwiczenia – Heraklit, Parmenides, atomiści, Platon (26.10.2026)", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII – Wykład 4 i Ćwiczenia</div>\n<div class=\"meta\">🗓 Poniedziałek, 26 października 2026, 09:45</div>\n<h3 class=\"part\">CZĘŚĆ I: WYKŁAD – HERAKLIT (DOKOŃCZENIE), PARMENIDES Z ELEI I ATOMIŚCI</h3>\n<h4><span class=\"num\">1.</span> Heraklit z Efezu – Psychologia, Epistemologia i Etyka</h4>\n<h4><span class=\"num\">A.</span> Koncepcja „suchej duszy” i losy pośmiertne</h4>\n<ul><li><b>Zasada z tablicy:</b> „Dusza sucha jest najlepsza, dusza mokra jest najgorsza”. „Ludzie czuwający mają wspólny świat, a śpiący [zwracają się każdy do własnego]”.</li></ul>\n<p>Czym jest sucha dusza?</p>\n<p>Nie jest to po prostu dusza człowieka fizycznie trzeźwego.</p>\n<p>Sucha dusza to dusza człowieka, który panuje nad sobą i swoimi emocjami, myśli racjonalnie i nie daje się unosić emocjom.</p>\n<h5>Przemiany żywiołów w duszy (droga w dół i droga wzwyż)</h5>\n<p>Dusza uczyniona jest z ognia. Gdy ogień zamienia się w wodę (wilgoć), dusza słabnie.</p>\n<ul><li><b>Droga w dół:</b> Kiedy droga wiodąca w dół osiąga najwyższą przewagę, a ogień w nas przekształca się w wodę, wówczas umieramy – i wszystko, co z nas pozostaje, to woda i ziemia.</li><li><b>Droga wzwyż (możliwość wiary w nieśmiertelność):</b> Istnieje proces odwrotny, dokonujący się na drodze wzwyż – gdy trzeźwiejemy albo gdy budzimy się rano, ogień, który przygasł chwilowo, ożywa na nowo.</li></ul>\n<h5>Aforyzm o śmiertelnych i nieśmiertelnych (wątek orficko-pitagorejski)</h5>\n<ul><li><b>Cytat:</b> „Śmiertelnicy są nieśmiertelni, nieśmiertelni zaś śmiertelni”.</li><li><b>Znaczenie:</b> Niektóre dusze (śmiertelnicy) stają się ostatecznie tak płomieniste, że umierają dla ciała i stają się bogami. Ale i bogowie (nieśmiertelni), kiedy przeważa w nich droga w dół, zstępują ku ziemi i stygną, przez co stają się duszami ludzkimi.</li></ul>\n<h4><span class=\"num\">B.</span> Refleksje epistemologiczne i etyczne (Punkt 6 z tablicy)</h4>\n<p>Heraklit był pierwszym między filozofami przyrody, który wykazał zainteresowania humanistyczne – pozostawił refleksje epistemologiczne i etyczne.</p>\n<h5>Refleksje epistemologiczne</h5>\n<p>Krytycznie zapatrywał się na poznanie zmysłowe.</p>\n<ul><li><b>Cytat:</b> „Złymi świadkami są oczy i uszy ludziom, którzy mają dusze barbarzyńców” – jest to najdawniejsza (najstarsza) refleksja z krytyki poznania, jaka przechowała się w filozofii europejskiej.</li></ul>\n<h5>Refleksje (aforyzmy) etyczne</h5>\n<p>Przejawia się w nich kult prawa oraz kult jednostki wyższej.</p>\n<ul><li><b>Cytat:</b> „Jeden wart tyle, co dziesięć tysięcy, jeśli jest najlepszy”.</li></ul>\n<h5>Dwa typy moralności</h5>\n<ul><li><b>Moralność przeciętna (moralność tłumu):</b> Tłum uważa przeciwieństwa za zbędne – przekłada zdrowie nad chorobę, ciepło nad zimno, radość nad smutek. Skoro tak, to skarży się, gdy przychodzi choroba, zimno czy smutek.</li><li><b>Moralność wyższa (moralność mędrca):</b> Mędrzec wie, że przeciwieństwa są potrzebne – zło czyni dobro przyjemnym, a głód każe cenić nadmiar (sytość). Poczucie panujących wszędzie przeciwieństw było więc wspólnym motywem zarówno fizyki, jak i etyki Heraklita.</li></ul>\n<h4><span class=\"num\">2.</span> Parmenides z Elei (Część V wykładu)</h4>\n<h4><span class=\"num\">A.</span> Wstęp biograficzny i historyczny</h4>\n<p>Wnioski Heraklita spotkały się z gwałtownym sprzeciwem Parmenidesa z Elei (miasto w południowej Italii).</p>\n<p>Pochodził z bogatego i potężnego rodu; działał w początkach V w. p.n.e.</p>\n<ul><li><b>W wieku 65 lat (na tablicy:</b> 60 lat) odwiedził Ateny, gdzie rozmawiał z nim młodociany wówczas Sokrates.</li></ul>\n<p>Początki wiedzy filozoficznej otrzymał prawdopodobnie od pitagorejczyków.</p>\n<h4><span class=\"num\">B.</span> Poglądy Parmenidesa (5 punktów z wykładu i tablicy)</h4>\n<ul><li><b>Punkt 1:</b> Droga prawdy</li></ul>\n<p>Dotąd filozofowie po prostu ogłaszali swoje teorie; Parmenides podbudował swoje poglądy rozumowaniem logicznym.</p>\n<ul><li><b>Pierwszą jego troską było wyłożyć zasady rozumowania:</b> ostatecznym sędzią prawdy jest rozum.</li></ul>\n<p>Kiedykolwiek i gdziekolwiek zmysły pozostają z rozumem w konflikcie, dane dostarczane przez zmysły muszą być fałszywe.</p>\n<ul><li><b>Fundamentalne prawo myśli:</b> żadna koncepcja sama w sobie sprzeczna nie może być słuszna.</li><li><b>Punkt 2:</b> Zmiana (Atak na realność zmiany)</li></ul>\n<p>Według Parmenidesa zmiana jest niemożliwa logicznie.</p>\n<ul><li><b>Przypuścił atak na realność zmiany</b> – skierowany po części przeciw Heraklitowi, a w dużej mierze przeciw całej wcześniejszej filozofii greckiej, która uważała zmianę za zjawisko oczywiste i nieulegające wątpliwości.</li><li><b>Rdzeń uwag krytycznych Parmenidesa:</b> Żadna rzecz nie może być jednocześnie sobą i nie-sobą.</li><li><b>Cytat:</b> „Ciemne pospólstwo utrzymuje, że coś jest i zarazem nie jest tym samym i nie tym samym, jak również, że wszelkie rzeczy wędrują w przeciwnych sobie kierunkach”.</li><li><b>Według niego każda rzecz musi albo być, albo nie być</b> – nie ma drogi pośredniej. Co więcej, to, co jest, nie może się zmienić (zmiana zatem nie może istnieć).</li><li><b>Punkt 3:</b> Teoria bytu (Ontologia)</li><li><b>Punkt wyjścia rozważań o bycie:</b> Niezwykle prosty – polegał na jednej tautologicznie brzmiącej tezie.</li><li><b>Wyjaśnienie pojęcia tautologii:</b> Tautologia to wypowiedź (zdanie), w której wyraz określający nie wzbogaca treści wyrazu określanego, lecz tylko ją powtarza (np. „Masło jest maślane” – wyraz określający „maślane” nie dodaje nic nowego do wyrazu określanego „masło”).</li></ul>\n<h5>Tautologiczna teza Parmenidesa</h5>\n<p>„Trzeba z konieczności powiedzieć i myśleć, że tylko to, co jest, istnieje, bo byt jest, a niebytu nie ma.”</p>\n<ul><li>Z tej jednej prostej zasady Parmenides wywnioskował (wyprowadził) wszystkie własności bytu:</li><li><b>Byt nie ma początku ani końca (jest wieczny i nieśmiertelny):</b> Z czego miałby powstać? Tylko z niebytu, a wiadomo, że niebytu nie ma. Z tej samej racji nie może mieć końca.</li><li><b>Byt jest ciągły:</b> Każda przerwa byłaby niebytem, a niebytu nie ma.</li><li><b>Byt jest nieruchomy i w ogóle niezmienny:</b> Mógłby się zmienić tylko w niebyt, a niebytu nie ma.</li><li><b>Byt jest niepodzielny:</b> Części bytu, nie będąc już całym bytem, musiałyby być niebytem.</li><li><b>Byt nie ma w sobie różnic:</b> To, co różne od bytu, byłoby niebytem.</li><li><b>Byt jest stały i jeden</b> – jest przeciwieństwem stawania się i mnogości.</li><li><b>Cytat:</b> „Słowami jest tylko to, co śmiertelni ustanowili w swym języku, w przekonaniu, że mówią prawdę: stawanie się i ginięcie, istnienie i nieistnienie, zmiana miejsca i świecącej barwy”. (Zerwanie z jończykami, dla których ruch był nieodłączny od rzeczy).</li></ul>\n<p>Czy byt Parmenidesa jest niematerialny?</p>\n<ul><li><b>Nie</b> – rozróżnienie na byt materialny i niematerialny (abstrakcyjny, pozaświatowy) było obce czasom Parmenidesa. Miał on na myśli ten sam byt materialny, o którym rozmyślali inni filozofowie greccy.</li></ul>\n<p>Wynika to z jego twierdzenia, że byt jest ograniczony, zakończony we wszystkich kierunkach, podobny do kuli.</p>\n<h5>Rozbrat z doświadczeniem i zaczątek dualizmu</h5>\n<p>Teoria Heraklita była w zgodzie ze zmysłowym obrazem świata; Parmenides drogą czystego rozumowania doszedł do wyników przeciwnych doświadczeniu.</p>\n<p>Znał zjawiska w ich zmienności i różnorodności, ale uznał je za złudne mniemania ludzkie (doxa), przeciwstawiając im proste, niezmienne, jednolite podłoże (byt).</p>\n<ul><li><b>Tym samym uczynił koniecznym odróżnienie bytu od zjawisk</b> – dlatego jego filozofia jedności, paradoksalnie, nosiła w sobie zaczątek dualizmu (którego nie było u Heraklita).</li><li><b>Punkt 4:</b> Metoda (Metoda dedukcyjna a priori)</li></ul>\n<p>Parmenides po raz pierwszy świadomie i systematycznie zastosował metodę dedukcyjną.</p>\n<p>Stał się prototypem filozofów odrzucających doświadczenie i wywodzących całą wiedzę z założonych a priori przesłanek ogólnych:</p>\n<ul><li><b>a priori</b> – z góry, niezależnie od doświadczenia.</li><li><b>a posteriori</b> – w oparciu o doświadczenie (po doświadczeniu).</li></ul>\n<p>Zaufał wyłącznie rozumowi i poznaniu myślowemu, poznanie zmysłowe uznając za niewiarygodne.</p>\n<p>Odpowiadało to naturalnym skłonnościom umysłu (jakość i stałość są potrzebą umysłu i postulatem badania), jednak Parmenides zlekceważył znajomość faktów, zrywając łączność między bytem a doświadczeniem (stworzył groźny precedens w historii filozofii).</p>\n<ul><li><b>Punkt 5:</b> Postawa epistemologiczna (Tożsamość myśli i bytu)</li></ul>\n<p>Swoją ontologię Parmenides uzasadnił epistemologicznie. Skąd wiemy, że niebytu nie ma? → Bo o niebycie nie można ani pomyśleć, ani go poznać, ani wypowiedzieć.</p>\n<h5>Między myślą a bytem zachodzi najściślejszy związek</h5>\n<p>„Ta sama rzecz jest i jest myślana. Tym samym jest myśl i rzecz, której myśl dotyczy, bo nie znajdziesz myśli bez czegoś istniejącego, co wypowiada się w myśli.”</p>\n<ul><li><b>Sens twierdzenia:</b> Myśl ma naturę odtwórczą (może odtwarzać tylko coś istniejącego); gdy myśl nie jest w błędzie, w swojej treści nie różni się od tego, co rzeczywiście istnieje.</li><li><b>Brak rozróżnienia myśli dyskursywnej i intuicyjnej:</b> Wcześni Grecy nie utożsamiali myśli z abstrakcyjnym procesem rozumowania (dyskursywnym), lecz pojmowali myśl jako intuicję – czyli pewnego rodzaju oglądanie i dotykanie rzeczywistości przez umysł.</li></ul>\n<p>Parmenides utożsamił byt z myślą, a nie ze spostrzeżeniami czy wyobrażeniami (które ulegają złudzeniom). Dokonał w ten sposób epokowego rozróżnienia poznania zmysłowego i myślowego (pierwszy i najważniejszy etap rozróżniania władz umysłowych).</p>\n<ul><li><b>Cytat:</b> „Nie poddawaj się przyzwyczajeniu i nie daj się powodować wzrokowi, który nie umie patrzeć, szumiącemu słuchowi i językowi, ale myślą rozsądź sporne dociekania”.</li></ul>\n<h4><span class=\"num\">3.</span> Demokryt i Atomiści (Część VI wykładu – Wprowadzenie)</h4>\n<ul><li><b>Znaczenie atomizmu:</b> Najdojrzalszy twór, jaki wydała wczesna grecka filozofia przyrody w pierwszym okresie filozofii starożytnej; główna starożytna postać materializmu (materialistycznego poglądu na świat).</li></ul>\n<h5>Twórcy</h5>\n<ul><li><b>Leucyp (połowa V w. p.n.e.):</b> Zainicjował atomizm, stworzył jego zasadniczy zrąb, główne pojęcia i tezy. O jego życiu i dziełach brak pewnych informacji (nawet w starożytności podejrzewano niesłusznie, że był postacią mityczną); prawdopodobnie mieszkał w Abderze i kierował tamtejszą szkołą.</li><li><b>Demokryt z Abdery (ok. 460 – ok. 370 p.n.e.):</b> Uczeń Leucypa; rozwinął teorię i powiązał ją z doświadczeniem, a jego potężna postać przysłoniła nauczyciela.</li></ul>\n<h5>Życie i dzieła Demokryta</h5>\n<p>Uczył się od Leucypa w Abderze, kształcił się w podróżach (korzystał z mądrości Wschodu), odwiedził Ateny, lecz ciche, oddane nauce życie spędził w rodzinnym mieście.</p>\n<p>Dla pogodnego usposobienia otrzymał przydomek „śmiejącego się filozofa”.</p>\n<ul><li><b>Wyjątkowa wszechstronność naukowa:</b> za panowania Tyberiusza Trazjusz (Trasylos) ułożył jego 60 dzieł w 15 tetralogii (pisma z najrozmaitszych dziedzin). W kolejnych pokoleniach nastąpiła już specjalizacja naukowa i oddzielenie filozofii od nauk szczegółowych.</li></ul>\n<p>W poglądach Demokryta widoczna jest reakcja na relatywizm sofistów (z którymi stykał się w Abderze) oraz wymiana myśli z pitagorejczykami w matematycznym traktowaniu przyrody.</p>\n<h3 class=\"part\">CZĘŚĆ II: ĆWICZENIA – PLATON („UCZTA” ORAZ „PAŃSTWO” KS. VII)</h3>\n<h4><span class=\"num\">1.</span> Analiza „Uczty” Platona (Rozdziały XXII–XXIV, XXVII–XXVIII)</h4>\n<h4><span class=\"num\">A.</span> Charakter i cel rozmowy Sokratesa z Diotymą</h4>\n<ul><li><b>Sokrates przytacza swoją rozmowę z kobietą</b> – wieszczką Diotymą.</li><li><b>Cel literacki (forma przeprosin gospodarza):</b> Dialog został tak skonstruowany, by pokazać, że tak jak wcześniej Agaton (gospodarz uczty) został zbity z tropu i doprowadzony do sprzeczności przez Sokratesa, tak dawniej sam Sokrates został potraktowany przez Diotymę. Łagodzi to przykre wrażenie po obaleniu tez gospodarza.</li></ul>\n<p>Kto przemawia przez Sokratesa? Ustami Sokratesa własny poglądy na naturę miłości wykłada sam Platon.</p>\n<h4><span class=\"num\">B.</span> Kim jest Eros? (Między głupotą a mądrością)</h4>\n<ul><li><b>Eros nie jest bogiem ani człowiekiem</b> – jest pośrednikiem (daimonem) pomiędzy boskością a ludzkością (między Bogiem a człowiekiem), synem Porosa i Penii.</li></ul>\n<h5>Eros jako filozof</h5>\n<ul><li><b>Znajduje się pomiędzy mądrością a głupotą</b> – nie jest mędrcem, lecz miłośnikiem mądrości, czyli filozofem (tym, który mądrości nie posiada, ale jej pożąda).</li></ul>\n<h5>Trzy postacie wobec wiedzy</h5>\n<ul><li><b>Filozof (Eros):</b> Wie, że nie wie (uświadamia sobie brak, dlatego pragnie i szuka mądrości).</li><li><b>Głupiec:</b> Nie wie, że nie wie (nie odczuwa braku, więc nie dąży do wiedzy).</li><li><b>Mędrzec (bóg):</b> Wie, że wie (posiada już mądrość, więc nie musi do niej dążyć).</li></ul>\n<h4><span class=\"num\">C.</span> Definicja miłości i droga ku Idei Piękna (Rozdz. XXVII–XXVIII)</h4>\n<ul><li><b>Definicja miłości:</b> Ponieważ u podstaw leży brak, miłość to właściwe duszy dążenie do osiągnięcia i wiecznego posiadania dobra (szczęścia).</li></ul>\n<h5>Droga do osiągnięcia dobra (Drabina Piękna)</h5>\n<p>W starożytnej Grecji pojęcie piękna miało znaczenie szersze niż tylko estetyczne – obejmowało również dobro i prawdę.</p>\n<h5>Kolejne szczeble wznoszenia się</h5>\n<p>Najpierw człowiek zachwyca się pięknem fizycznym / cielesnym (piękne ciała).</p>\n<p>Następnie czyni przedmiotem miłości piękno duchowe (piękne dusze, myśli, zachowania; motyw Sokratesa „zapładniającego dusze” młodych ludzi w rozdz. XXVII).</p>\n<p>Na samym końcu ten, kto udoskonala się w miłości, ogląda Piękno samo w sobie, niezmienne i wieczne – czyli platońską Ideę Piękna (Dobro Najwyższe).</p>\n<h4><span class=\"num\">D.</span> Ocena i krytyka platońskiej koncepcji miłości</h4>\n<ul><li><b>Greckie rozumienie miłości z braku:</b> Według Greków i Platona kocha wyłącznie ten, kto nie posiada (komu brakuje). Gdyby miłość została całkowicie zaspokojona, przestałaby być dążeniem (czyli miłością), a stałaby się samym posiadaniem.</li></ul>\n<p>Czego brakuje w tej koncepcji?</p>\n<p>W ujęciu platońskim nie ma miłości rozumianej jako bezinteresowny dar z samego siebie (poświęcenie dla drugiego).</p>\n<h4><span class=\"num\">2.</span> Analiza „Państwa” Platona – Księga VII: Alegoria Jaskini</h4>\n<ul><li><b>Czas powstania dzieła:</b> między 380 a 370 r. p.n.e. (dokładniej: ok. 380 r. p.n.e.).</li></ul>\n<h4><span class=\"num\">A.</span> Streszczenie i elementy konstrukcyjne mitu jaskini</h4>\n<h5>Wewnątrz jaskini</h5>\n<p>Więźniowie przykuci od dzieciństwa kajdanami za nogi i szyje – siedzą nieruchomo, patrząc tylko na przeciwległą ścianę.</p>\n<p>Ściana jaskini, na którą padają cienie i od której odbija się echo głosów (więźniowie biorą cienie za jedyną prawdę i nadają im nazwy).</p>\n<p>Ścieżka (droga) biegnąca w górę za plecami więźniów oraz zbudowany wzdłuż niej murek (jak parawan u kuglarzy).</p>\n<p>Ludzie idący ścieżką, niosący ponad murkiem różnorodne przedmioty, posągi ludzi i zwierząt z kamienia i drewna (jedni wydają głosy, drudzy milczą).</p>\n<p>Ogień płonący z góry i z daleka za murkiem, oświetlający noszone przedmioty.</p>\n<p>Strome, kamieniste wyjście prowadzące pod górę ku światłu.</p>\n<h5>Świat poza jaskinią (na górze)</h5>\n<p>Cienie oraz odbicia ludzi i przedmiotów w wodzie (pierwsze obiekty, na które może patrzeć oślepiony więzień).</p>\n<p>Same przedmioty, gwiazdy, księżyc i nocne niebo (łatwiejsze do oglądania w nocy niż słońce za dnia).</p>\n<ul><li><b>Słońce samo w sobie</b> – oglądane na końcu na własnym miejscu; więzień odkrywa, że to ono rządzi porami roku, całym światem widzialnym i jest ostateczną przyczyną wszystkiego, co wcześniej widział w jaskini.</li></ul>\n<h4><span class=\"num\">B.</span> Etapy wyzwolenia i powrót do jaskini</h4>\n<ul><li><b>Cierpienie przy wyzwoleniu:</b> Zerwanie kajdan, obrócenie szyi, spojrzenie w blask ognia i wyciąganie siłą po stromiźnie na słońce powodują ból oczu, cierpienie i gniew; więzień początkowo uważa dawne cienie za prawdziwsze.</li><li><b>Przemiana wartości:</b> Po ujrzeniu Słońca wyzwolony człowiek uważa swoją przemianę za szczęście, lituje się nad współwięźniami i gardzi dawnymi zaszczytami jaskini (tych, którzy najlepiej pamiętali kolejność cieni) – wolałby jak u Homera „być parobkiem u biedaka”, niż wrócić do dawnych złudzeń.</li><li><b>Powrót na dół:</b> Gdyby wrócił ze słońca w mrok jaskini, zanim jego oczy przywykną do ciemności, przegrałby w odgadywaniu cieni i naraziłby się na śmiech. Więźniowie uznaliby, że wspinaczka psuje oczy, a gdyby ktoś próbował ich wyzwalać i prowadzić na górę – zabiliby go.</li></ul>\n<h4><span class=\"num\">C.</span> Dwie perspektywy interpretacji alegorii (zapowiedź analizy)</h4>\n<ul><li><b>Perspektywa ontologiczna (dotycząca tego, co istnieje):</b> Poszczególne elementy obrazu symbolizują rodzaje bytów (jaskinia = świat zmysłowy; świat na zewnątrz = świat Idei).</li><li><b>Perspektywa epistemologiczna (dotycząca poznania):</b> Elementy i etapy wyjścia z jaskini symbolizują kolejne poziomy i sposoby ludzkiego poznania.</li></ul>"}, {"t": "Praca semestralna o „Uczcie” – plan działania", "html": "<div class=\"eyebrow\">HISTORIA FILOZOFII – ćwiczenia: praca semestralna</div><div class=\"topic\"><span>Temat</span>Koncepcja miłości w „Uczcie” Platona – analiza i ocena</div><ul><li><b>Termin oddania:</b> do 11.01.2027</li><li><b>Wymogi formalne:</b> 5–7 stron, czcionka 12, konieczne przypisy</li></ul><ul><li><b>Określenie celu pracy:</b> analiza polifonicznej koncepcji Erosa w Uczcie Platona oraz jej krytyczna ocena.</li><li><b>Krótka zapowiedź tezy:</b> Uczta ukazuje miłość nie jako stan posiadania, lecz jako dynamikę braku, pragnienia i wznoszenia się od zmysłowego piękna ku transcendencji.</li><li><b>Analiza tekstowa</b> – wielowymiarowość Erosa (ok. 3–4 strony)</li><li><b>Mowa Arystofanesa:</b> mit o androgynach – miłość jako próba odzyskania pierwotnej całości i leczenie ludzkiej egzystencjalnej rozbiorowości.</li><li><b>Polemika z Agatonem i metoda elenktyczna:</b> wykazanie przez Sokratesa, że miłość zawsze jest pragnieniem tego, czego się nie ma (brak = pragnienie).</li><li><b>Objawienie Diotymy (Kluczowy element na ocenę celującą):</b> Eros jako wielki daimon (pośrednik między bóstwami a śmiertelnikami), miłość jako dążenie do nieśmiertelności poprzez zrodzenie w pięknie (cielesne lub duchowe) oraz słynna drabina miłości (wstęp od piękna ciał, przez piękno dusz i praw, aż po kontakt z ideą Piękna samego w sobie).</li></ul>\n<p>Ocena i krytyka filozoficzna (ok. 1–1,5 strony)</p>\n<ul><li><b>Ocena ontologiczna:</b> Eros jako siła napędowa ludzkiego poznania (epistemologiczny wymiar miłości).</li><li><b>Krytyka / perspektywa porównawcza:</b> Zderzenie platońskiego Erosa (który opiera się na braku i dążeniu \"w górę\" po drabinie braku) z późniejszym ujęciem chrześcijańskim (agape – miłość bezinteresowna, darująca). To punkt, który profesorowie nagradzają najwyższymi ocenami za samodzielność myślenia.</li></ul>\n<p>Zakończenie (ok. 0,5 strony)</p>\n<ul><li><b>Podsumowanie wniosków:</b> synteza miłości jako pośrednika i drogi ku mądrości.</li></ul>\n<h4><span class=\"num\">II.</span> 4 kroki do napisania pracy w ekspresowym tempie</h4>\n<ul><li><b>Krok 1:</b> Zbierz gotowe klocki (0,5 godziny)</li></ul>\n<h5>Nie wymyślaj koła na nowo. Wykorzystaj materiały z zajęć</h5>\n<ul><li><b>Przypomnij sobie omówione motywy:</b> dylemat Eutyfrona, drogę Erosa, pojęcie eidos oraz metodę elenktyczną stosowaną w dialogu z Agatonem.</li><li><b>Sięgnij bezpośrednio do tekstu Uczty Platona</b> – wypisz sobie 3–4 mocne cytaty (np. definicję Erosa jako syna Porosa i Penii oraz fragment o drabinie miłości).</li><li><b>Krok 2:</b> Pisz metodą od środka (2–3 godziny)</li><li><b>Nigdy nie zaczynaj pisania od wstępu</b> – to blokuje.</li><li><b>Zacznij od Partii Analitycznej (Rozdział II):</b> Opisz mowę Arystofanesa i koncepcję Diotymy. To najprostsza część, bo opiera się na czystej egzegezie tekstu źródłowego.</li><li><b>Napisz Ocenę (Rozdział III):</b> Dodaj od siebie 2 akapity refleksji nad tym, czym różni się miłość romantyczna od platońskiego dążenia do absolutnego Piękna.</li><li><b>Na koniec napisz Wstęp i Zakończenie:</b> Kiedy wiesz już, co faktycznie znalazło się w pracy, napisanie wstępu zajmie 10 minut.</li><li><b>Krok 3:</b> Zadbaj o wymogi formalne i przypisy (0,5 godziny)</li><li><b>Czcionka:</b> Times New Roman lub Arial, rozmiar 12, interlinia 1,5.</li><li><b>Złota zasada przypisów:</b> Pamiętaj o rygorystycznym wymogu edytorskim z wykładów – numer przypisu umieszcza się zawsze PRZED znakiem interpunkcyjnym (np. ...wskazuje na naturę Erosa. a nie po kropce).</li></ul>\n<p>Jako przypisy główne stosuj odwołania do stron Uczty Platona (np. Platon, Uczta, 201d–202b) oraz do 1–2 opracowań podręcznikowych (np. Giovanni Reale, Historia filozofii starożytnej).</p>\n<ul><li><b>Krok 4:</b> Szybka korekta logiczna (15 minut)</li></ul>\n<p>Przeleć tekst pod kątem płynności przejść między akapitami. Upewnij się, że nie pomieszałeś poziomu języka przedmiotowego z metajęzykiem i trzymasz się naukowej, precyzyjnej terminologii (używaj pojęć takich jak daimon, penia, poros, eidos).</p>\n<p>Dzięki temu podejściu zamkniesz pisanie w okolicach 3–4 godzin skupionej pracy, a praca będzie miała zwarty, wysoce akademicki charakter, gwarantujący najwyższą ocenę.</p>"}], "teoria": [{"t": "Wykład 1 – wprowadzenie (zeszyt)", "html": "<div class=\"eyebrow\">TEORIA POZNANIA</div>\n<div class=\"meta\">🗓 Data: 5 X 2026</div>\n<ul><li><b>Kontakt:</b> marek.soltysiak@upjp2.edu.pl</li><li><b>(W prawym górnym rogu:</b> LAPTOP!)</li><li>Literatura</li><li>Wykłady</li></ul>\n<h4><span class=\"num\">G.</span> Reale</h4>\n<ul><li>K. Ajdukiewicz</li><li><b>J. Woleński</b> – Epistemologia</li><li><b>Roman Rożdżeński</b> – Teoria poznania ks. Józef Tischner – Teoria poznania</li><li>Ćwiczenia</li><li>Wytyczne do sprawozdania</li><li><b>Objętość:</b> max 2/3 strony</li><li><b>Format:</b> format A4, czcionka 12, interlinia 1,5 między wierszami</li><li><b>Treść:</b> do jakich wniosków doszliśmy, krótka charakterystyka pojęć</li><li>Podstawowe pojęcia i zagadnienia</li><li><b>Filozofia</b> – umiłowanie mądrości.</li></ul>\n<h5>Teoria poznania – poznawanie tego, co istnieje, i sposobu, w jaki to istnieje</h5>\n<ul><li><b>Gnoseologia</b> – nauka o poznaniu.</li><li><b>Kryteriologia</b> – kryterium poznania w związku z odróżnieniem prawdy od fałszu.</li><li>Trójkąt platoński (struktura relacji poznawczo-bytowej):BÓG/ \\/ \\</li><li>CZŁOWIEK ——— ŚWIAT</li><li><b>(Bóg</b> – wierzchołek, Człowiek i Świat – podstawa relacji).</li></ul>\n<h5>Główne problemy epistemologiczne</h5>\n<h5>Źródło poznania</h5>\n<p>Doświadczenie / zmysły (empiryzm)</p>\n<p>Rozum (racjonalizm)</p>\n<p>Intuicja (u niektórych)</p>\n<ul><li><b>Granica poznania:</b> jesteśmy ograniczeni w tym, co możemy poznać.</li></ul>"}, {"t": "Wykład 1 – rozwinięcie akademickie", "html": "<div class=\"eyebrow\">TEORIA POZNANIA – SZCZEGÓŁOWE ROZWINIĘCIE MATERIAŁU</div>\n<h4><span class=\"num\">1.</span> Nazewnictwo i definicja dziedziny</h4>\n<p>Teoria poznania bada relację poznawczą zachodzącą między podmiotem poznającym (subiectum) a przedmiotem poznawanym (obiectum). W tradycji filozoficznej funkcjonują trzy bliskoznaczne terminy:</p>\n<h5>Epistemologia (gr. epistēmē – wiedza pewna, naukowa + logos – nauka, teoria)</h5>\n<p>Używana powszechnie w tradycji anglosaskiej i filozofii analitycznej.</p>\n<p>Kładzie nacisk na analizę pojęcia wiedzy, jej definicję (np. wiedza jako prawdziwe, uzasadnione przekonanie – tzw. definicja platońska), strukturę uzasadniania oraz problem sceptycyzmu.</p>\n<h5>Gnoseologia (gr. gnōsis – poznanie w sensie ogólnym, wgląd + logos)</h5>\n<p>Termin częściej stosowany w tradycji kontynentalnej i neotomistycznej.</p>\n<ul><li><b>Oznacza ogólną teorię poznania</b> – bada samą naturę aktu poznawczego, jego genezę psychologiczną i metafizyczne podstawy (poznanie jako relacja bytu do bytu).</li></ul>\n<h5>Kryteriologia (gr. kritērion – sprawdzian, probierz, narzędzie rozstrzygania)</h5>\n<p>Dział teorii poznania zajmujący się kryteriami prawdy.</p>\n<ul><li><b>Odpowiada na pytanie:</b> Skąd mamy pewność, że to, co poznajemy, jest prawdą, a nie błędem, iluzją czy snem? Jak odróżnić prawdę (veritas) od fałszu (falsitas)?</li></ul>\n<h4><span class=\"num\">2.</span> Klasyczny trójkąt relacji poznawczo-bytowej (Trójkąt platoński)</h4>\n<p>Schemat ten przedstawia trzy bieguny, w obrębie których rozgrywa się problematyka filozoficzna i epistemologiczna:</p>\n<ul><li>BÓG (Absolut / Świat Idei)/\\/ \\/ \\/ \\</li><li>CZŁOWIEK &lt;-------------&gt; ŚWIAT</li></ul>\n<p>(Podmiot) (Przedmiot)</p>\n<h5>Relacja Człowiek – Świat (horyzontalna)</h5>\n<p>Poznanie zmysłowo-empiryczne. Człowiek jako byt cielesny wchodzi w interakcję ze światem materialnym za pomocą zmysłów.</p>\n<p>W ujęciu Platona świat materialny to świat cieni (zmienny, zmysłowy, nietrwały), dający jedynie mniemanie (doxa), a nie wiedzę pewną.</p>\n<h5>Relacja Człowiek – Bóg / Absolut (wertykalna)</h5>\n<p>Człowiek posiada duszę / rozum (nous), który jest zdolny przekroczyć świat zmysłowy.</p>\n<p>U Platona poznanie prawdy dokonuje się przez anamnezę (przypomnienie sobie przez duszę tego, co oglądała w świecie wiecznych Idei przed połączeniem się z ciałem).</p>\n<p>W tradycji chrześcijańskiej (np. św. Augustyn) poznanie prawdy najwyższej dokonuje się na drodze iluminacji – boskiego oświecenia ludzkiego umysłu.</p>\n<h5>Relacja Bóg – Świat</h5>\n<p>Bóg (lub platoński Demiurg / Świat Idei) stanowi rację bytu i rację poznawalności świata materialnego. Świat jest racjonalny i uporządkowany (kosmos, nie chaos), dlatego umysł ludzki w ogóle jest w stanie go zrozumieć.</p>\n<h4><span class=\"num\">3.</span> Główne źródła poznania (Spór o genezę wiedzy)</h4>\n<ul><li><b>Jedno z fundamentalnych pytań epistemologii brzmi:</b> Skąd czerpiemy wiedzę o świecie i co jest ostateczną podstawą jej prawomocności?</li></ul>\n<h4><span class=\"num\">A.</span> Empiryzm (Zmysły / Doświadczenie)</h4>\n<ul><li><b>Teza:</b> Cała nasza wiedza pochodzi z doświadczenia zmysłowego (a posteriori).</li></ul>\n<p>Umysł ludzki w chwili narodzin jest czystą kartą (tabula rasa – John Locke).</p>\n<ul><li><b>Zasada arystotelesowsko-tomistyczna:</b> Nihil est in intellectu quod non sit prius in sensu (Nic nie ma w umyśle, co by wcześniej nie było w zmysłach).</li><li><b>Zagrożenie:</b> Prowadzi do subiektywizmu i sceptycyzmu (David Hume – zmysły rejestrują jedynie następstwo zdarzeń, a nie konieczny związek przyczynowo-skutkowy).</li></ul>\n<h4><span class=\"num\">B.</span> Racjonalizm (Rozum)</h4>\n<ul><li><b>Teza:</b> Źródłem i gwarantem wiedzy pewnej jest sam rozum (a priori), niezależny od zwodniczych danych zmysłowych.</li><li><b>Idee wrodzone (Platon, Kartezjusz):</b> pewne prawdy (np. pojęcia matematyczne, pojęcie Boga, zasada niesprzeczności) są wpisane w strukturę rozumu.</li></ul>\n<p>Wzorem poznania racjonalistycznego jest dedukcja matematyczno-geometryczna.</p>\n<h4><span class=\"num\">C.</span> Intuicjonizm (Intuicja – „u niektórych”)</h4>\n<h5>Czym jest intuicja (łac. intueri – wpatrywać się, oglądać)</h5>\n<p>Bezpośrednie, całościowe ujęcie przedmiotu lub prawdy bez udziału pośredniego wnioskowania logicznego czy analizy dyskursywnej.</p>\n<h5>Odmiany intuicji</h5>\n<ul><li><b>Intuicja intelektualna (racjonalna):</b> Natychmiastowe uchwycenie oczywistości logicznej (np. że część nie może być większa od całości, kartezjańskie Cogito ergo sum).</li><li><b>Intuicja zmysłowa:</b> Bezpośrednie naoczne ujęcie cechy fizycznej w akcie spostrzeżenia.</li><li><b>Intuicja filozoficzna / metafizyczna (np. Henri Bergson):</b> Zdolność wnikania w samą istotę życia i czasu (trwanie), niedostępna dla chłodnego, mechanicznego intelektu.</li></ul>\n<h4><span class=\"num\">4.</span> Problem granic poznania (Agnostycyzm i Granice rozumu)</h4>\n<ul><li><b>Notatka podkreśla:</b> „Granica poznania – jesteśmy ograniczeni w tym, co możemy poznać”.</li></ul>\n<h5>Ograniczenia sensoryczne i biologiczne</h5>\n<p>Nasze zmysły rejestrują zaledwie wąski wycinek spektrum fizycznego (długości fal świetlnych, częstotliwości dźwięków).</p>\n<h5>Ograniczenia kategorialne (Immanuel Kant)</h5>\n<ul><li><b>Kant dokonał rewolucji kopernikańskiej w epistemologii:</b> nie poznajemy „rzeczy samych w sobie” (noumenów), lecz jedynie „zjawiska” (fenomeny), które są ukształtowane przez nasze wrodzone, aprioryczne formy zmysłowości (czas i przestrzeń) oraz kategorie intelektu (np. przyczynowość).</li></ul>\n<h5>Granica metafizyczna / teologiczna</h5>\n<p>Umysł skończony (człowiek) z natury nie jest w stanie w pełni pojąć Bytu Nieskończonego (Boga), co prowadzi do teologii apofatycznej (negatywnej – poznawania Boga przez to, czym On nie jest).</p>\n<h4><span class=\"num\">5.</span> Jak ułożyć wymagane sprawozdanie (Wskazówki praktyczne)</h4>\n<h5>Zgodnie z wymogami wykładowcy (ks. dra Marka Sołtysiaka)</h5>\n<ul><li><b>Objętość:</b> maks. 2/3 strony A4, czcionka 12, interlinia 1,5.</li></ul>\n<h5>Układ treści</h5>\n<ul><li><b>Zwięzła charakterystyka pojęć:</b> Zdefiniowanie czym jest epistemologia/gnoseologia (nauka o poznaniu) oraz kryteriologia (poszukiwanie kryterium odróżniania prawdy od błędu).</li><li><b>Struktura relacji poznawczej:</b> Krótkie odwołanie do trójkąta platońskiego (podmiot–przedmiot–Absolut jako fundament możliwości poznawania).</li><li><b>Wnioski:</b> Konkluzja na temat źródeł (napięcie między zmysłami, rozumem a intuicją) oraz konieczności uświadomienia sobie granic ludzkiego aparatu poznawczego (krytycyzm poznawczy chroni przed dogmatyzmem i naiwnym realizmem).</li></ul>\n<p>Teraz cię bardzo proszę z tych wszystkich specjalistycznych naukowych słów zrób mi słowniczek i jak będę podsylał kolejne zdjęcia w przyszłości to wyłapuj nowe zwroty, słowa, wyrazy itp.</p>\n<ul><li>Słowniczek Terminów Naukowych i Filozoficznych</li></ul>"}, {"t": "Wykład 2 – Prawda przedpredykatywna, jaskinia Platona", "html": "<div class=\"eyebrow\">TEORIA POZNANIA – Wykład 2</div>\n<div class=\"topic\"><span>Temat</span>Prawda przedpredykatywna – Jaskinia Platona</div>\n<ul><li><b>Platon (427/428</b> – 348/347 p.n.e.)</li></ul>\n<h4><span class=\"num\">1.</span> Prawda przedpredykatywna i Jaskinia Platona</h4>\n<ul><li><b>Jaskinia Platona to jeden z najważniejszych tekstów kultury</b> – alegoria drogi ku światłu (świata idei). To, co dostrzegamy oczami, jest przemijające (nie dla nas, ale nie wieczne). Dla empirystów prawda to tylko rzecz/zjawisko, natomiast dla Platona słowem kluczowym jest istota.</li></ul>\n<p>Dobre pytania rodzą się na poziomie przedpredykatywnym (Sokrates szedł pod prąd i to sobie cenił).</p>\n<ul><li><b>Odniesienie artystyczne:</b> Szkoła Ateńska Rafaela Santiego (Platon wskazuje ku górze na idee, Arystoteles dłonią ku ziemi – ku empirii).</li></ul>\n<p>„Bez dobrej filozofii nie ma dobrej teologii”.</p>\n<h5>Metafora jaskini (Państwo, ks. VII)</h5>\n<p>Czym jest jaskinia? → To świat naszego codziennego doświadczenia zmysłowego.</p>\n<p>Cienie na ścianie → to, co poznajemy zmysłami (realizacja idei w materii jest zawsze niedoskonała).</p>\n<p>Wyjście z jaskini → trud nauki i poznania perspektywicznego.</p>\n<p>Światło (Słońce) → prawda i Idea Dobra, która rodzi życie i pozwala rzeczom być poznawalnymi.</p>\n<p>„Cała filozofia europejska to tylko przypisy do Platona” (A.N. Whitehead).</p>\n<h4><span class=\"num\">2.</span> Spór o źródło wiedzy: Platon a Arystoteles</h4>\n<ul><li><b>Platon:</b> człowiek posiada już wiedzę w zarodku w swojej duszy; kształcenie to jedynie wydobywanie jej na jaw poprzez anamnezę (przypomnienie). Jaskinia to przeszłość, jesteśmy w drodze.</li><li><b>Arystoteles:</b> to doświadczenie zmysłowe wnosi pojęcia do naszego umysłu (umysł jako czysta karta).</li></ul>\n<h4><span class=\"num\">3.</span> Mit, symbol i znak</h4>\n<ul><li><b>Mit operuje dwoma elementami:</b> symbolem oraz znakiem.</li><li><b>Symbol:</b> ukazuje głęboką prawdę o kondycji ludzkiej, której nie da się wyrazić wprost (np. labirynt – ludzki los; krzyż – męka, śmierć i zmartwychwstanie; mit o stworzeniu – pokusa, upadek i wolność).</li><li><b>Znak:</b> jest ustalony umownie i sztucznie, wyczerpuje się w tym, do czego bezpośrednio odsyła (np. znak drogowy).</li><li><b>Rozróżnienie Paula Ricœura:</b> problem (kwestia do rozwiązania, poznawalna technicznie) a tajemnica (nieosiągalna w 100%, rzeczywistość stale pogłębiająca się).</li></ul>\n<h4><span class=\"num\">4.</span> Koncepcje prawdy i trójwarstwowa struktura bytu</h4>\n<ul><li><b>Prawda przedpredykatywna:</b> bezpośrednie uchwycenie zgodności bytu z pojęciem przed sformułowaniem orzeczenia (sądu językowego).</li><li><b>Prawda ontologiczna:</b> zgodność bytu ze swoją istotą („Każdy byt ma się tak do prawdy, jak do istnienia” – Arystoteles). Im więcej w bycie zrealizowanej istoty, tym więcej prawdy ontologicznej.</li></ul>\n<h5>Struktura poznania bytu (trzy warstwy – koncentryczne okręgi)</h5>\n<p>Zjawisko (warstwa zewnętrzna / fenomen)</p>\n<p>Istnienie = prawda (warstwa pośrednia)</p>\n<ul><li><b>Istota (rdzeń bytu</b> – to, czym rzecz rzeczywiście jest)</li></ul>"}, {"t": "Wykład 3 – Augustyn, iluminizm, prawda i wolność (19.10.2026)", "html": "<div class=\"eyebrow\">TEORIA POZNANIA – Wykład 3</div>\n<div class=\"meta\">🗓 Poniedziałek, 19 października 2026, 07:58</div>\n<div class=\"topic\"><span>Temat</span>Dualizm antropologiczny, przezwyciężenie sceptycyzmu, teoria iluminizmu św. Augustyna oraz dialektyka prawdy i wolności u Hegla</div>\n<ul><li><b>(Lektura na za tydzień:</b> Platon, Fedon oraz List VII)</li></ul>\n<h4><span class=\"num\">1.</span> Problem psychofizyczny: Dualizm a Monizm</h4>\n<h5>Dualizm duszy i ciała (Platon, św. Augustyn, Kartezjusz)</h5>\n<h5>W człowieku współistnieją dwie odrębne substancje</h5>\n<ul><li><b>Dusza (substancja duchowa):</b> nierozciągła (nie zajmuje miejsca w przestrzeni, brak wymiarów), jednorodna i prosta (niezłożona z części). Ponieważ nie posiada części, nie może ulec rozpadowi – z natury jest nieśmiertelna.</li><li><b>Ciało (substancja materialna):</b> rozciągłe (res extensa – posiada długość, szerokość, wysokość), złożone i podlegające zniszczeniu – z natury jest śmiertelne.</li><li><b>Aporia oddziaływania:</b> Fundamentalne pytanie filozoficzne brzmi: jak to, co bezcielesne i nierozciągłe, może wywierać wpływ przyczynowy na materię (i odwrotnie)? Napięcie to ujawnia się w doświadczeniu: „duch chce, a ciało mdleje” (np. niemoc fizyczna Jana Pawła II w oknie apostolskim mimo pragnienia przemówienia).</li></ul>\n<h5>Monizm antropologiczny (Arystoteles, św. Tomasz z Akwinu)</h5>\n<p>Odrzucenie traktowania duszy i ciała jako dwóch sklejonych substancji. Człowiek to jedna substancja, w której dusza stanowi formę substancjalną materii (hylemorfizm).</p>\n<h5>Materializm i redukcjonizm</h5>\n<p>Odrzucenie dualizmu poprzez sprowadzenie umysłu wyłącznie do procesów w mózgu (materia zorganizowana, obliczenia na wzór komputera). Wyeliminowanie ducha prowadzi bezpośrednio do empiryzmu, scjentyzmu lub agnostycyzmu.</p>\n<h4><span class=\"num\">2.</span> Św. Augustyn (354–430): Przezwyciężenie sceptycyzmu i Iluminizm</h4>\n<h5>Kontekst biograficzny i polemiki</h5>\n<p>Przez 9 lat tkwił w manicheizmie (radykalny dualizm dobra i zła, pogarda dla ciała/materii).</p>\n<ul><li><b>Spór z donatystami:</b> Augustyn sformułował zasadę obiektywnej ważności sakramentów (ex opere operato) – sakrament działa mocą Chrystusa, a nie dzięki moralnej godności szafarza.</li></ul>\n<p>Nawrócenie w Mediolanie pod wpływem kazań św. Ambrożego oraz tajemniczego głosu dziecka: Tolle, lege („Bierz i czytaj”).</p>\n<h5>Przezwyciężenie sceptycyzmu (Si fallor, sum)</h5>\n<ul><li><b>Teza sceptyków:</b> o wszystkim można wątpić, nic nie jest pewne.</li><li><b>Odpowiedź Augustyna:</b> Granicą wątpienia jest sam fakt wątpienia. Nie mogę wątpić w to, że wątpię. Skoro wątpię, to myślę; skoro błądzę, to muszę istnieć:</li></ul>\n<p>Si fallor, sum („Jeśli się mylę, to jestem”)</p>\n<p>(Formuła wyprzedzająca o ponad 1200 lat słynne kartezjańskie Cogito ergo sum).</p>\n<h5>Teoria iluminacji (światła Bożego)</h5>\n<p>U Platona idee istniały w osobnym, zewnętrznym świecie ponad Demiurgiem. U Augustyna idee wieczne (rationes aeternae) znajdują się w Bożym Umyśle.</p>\n<p>Bóg, stwarzając kosmos, uczynił go racjonalnym i matematycznym, a stwarzając człowieka, wszczepił w jego umysł prawdy wieczne (np. prawa logiki, zasady matematyki).</p>\n<ul><li><b>Iluminacja:</b> Światło Boże działa w poznaniu intelektualnym tak, jak słońce w poznaniu wzrokowym. Oświeca ludzki rozum, czyniąc prawdy wiecznymi i bezpośrednio poznawalnymi.</li></ul>\n<h5>Trzy stopnie poznania</h5>\n<ul><li><b>Poznanie zmysłowe</b> – zmienne, cielesne, najniższe.</li><li><b>Poznanie rozumowe (wiedza</b> – scientia) – odkrywanie w intelekcie prawd wiecznych i obiektywnych praw przyrody (dostępne każdemu, także niewierzącemu).</li><li><b>Mądrość (sapientia)</b> – poznanie ukierunkowane na Boga i zbawienie, zdolność odróżniania dobra od zła dzięki łasce Bożej.</li></ul>\n<h5>Wewnętrzny Nauczyciel (Magister Interior)</h5>\n<p>Ziemski wykładowca jest jedynie pomocnikiem, który podaje litery i budzi myślenie.</p>\n<p>Prawdziwym, ostatecznym Nauczycielem w człowieku jest obecny w głębi duszy Chrystus (Logos), który pociąga intelekt ku Prawdzie i Mądrości.</p>\n<ul><li><b>Relacja wiary i rozumu:</b> Crede ut intelligas, intellige ut credas („Wierz, abyś rozumiał; rozumiej, abyś wierzył”).</li></ul>\n<h4><span class=\"num\">3.</span> Dialektyka Prawdy i Wolności: G.W.F. Hegel (1770–1831)</h4>\n<h5>Koncepcja Ducha (Geist) w Fenomenologii ducha</h5>\n<ul><li><b>Rozwój świadomości dokonuje się przez etapy:</b> Duch subiektywny (indywidualna myśl i wola) → Duch obiektywny (realizacja w strukturach prawa, państwa, moralności) → Duch absolutny (samowiedza Ducha w sztuce, religii i filozofii).</li></ul>\n<h5>Zależność prawdy i wolności</h5>\n<p>Warunkiem prawdy jest wolność (wyjście z jaskini zmysłów wymaga zerwania kajdan), ale warunkiem wolności jest prawda.</p>\n<h5>Forma a Treść wolności</h5>\n<ul><li><b>Forma wolności:</b> sam akt wyboru, dyspozycja do decydowania.</li><li><b>Treść wolności:</b> wiedza o tym, co wybieram (treścią wolności jest prawda).</li></ul>\n<p>Wybór pozbawiony prawdy staje się samowolą i prowadzi do zniewolenia (np. mechanizm popadania w uzależnienie lub anarchia rewolucyjna).</p>\n<h5>Lekcja Rewolucji Francuskiej</h5>\n<ul><li><b>Hegel początkowo zachwycony hasłami:</b> Wolność, Równość, Braterstwo.</li></ul>\n<p>Gdy wolność oderwała się od prawdy i rozumu, przekształciła się w krwawy terror (gilotyna, rzeź Wandei, przewrót Napoleona).</p>\n<ul><li><b>Rycina Goi:</b> „Gdy rozum śpi, budzą się demony”.</li><li><b>Wniosek:</b> Autentyczna wolność nie polega na dowolnym wyborze czegokolwiek, lecz na wolnym wyborze prawdy („Prawda was wyzwoli”).</li></ul>\n<h4><span class=\"num\">4.</span> Otwartość człowieka na prawdę vs Redukcjonizm</h4>\n<h5>Otwartość człowieka (Husserl, Heidegger)</h5>\n<p>W odróżnieniu od zwierząt człowiek posiada egzystencjalną potrzebę poszukiwania bezinteresownej prawdy bytu. W naturę ludzką wpisany jest pęd ku wznoszeniu się ponad nizinę jaskini zmysłowej.</p>\n<h5>Krytyka Woltera i materializmu</h5>\n<ul><li><b>Aforyzm Woltera:</b> „Człowiekowi nie potrzeba skrzydeł, ale ołowiu” – przestroga przed ucieczką w metafizykę i niebo idei na rzecz twardego stąpania po ziemi.</li></ul>\n<p>Skrajna kontynuacja tej myśli (Marks, Lenin) doprowadziła do uznania transcendencji za „opium dla ludu” i redukcji człowieka do wymiaru czysto materialno-ekonomicznego.</p>"}], "logika": [{"t": "Wykład 1 – Organon, sylogizm, zaliczenie", "html": "<ul><li><b>Wykład 1:</b> Logika</li></ul>\n<div class=\"meta\">🗓 Niedziela, 30 sierpnia 2026, 20:18</div>\n<ul><li>Kontekst historyczny i wprowadzenie</li><li><b>Pierwszy cel św. Pawła:</b> zhellenizować chrześcijan i zchrystianizować Hellenów.</li><li><b>De doctrina Christiana</b> – O nauce chrześcijańskiej.</li></ul>\n<p>Tradycja nie istnieje bez historii; tradycja to filozofia.</p>\n<p>Uczyć się naukowego słownictwa, bo jest bardziej precyzyjne.</p>\n<ul><li><b>Logika skodyfikowana</b> – dzięki logice powstała filozofia.</li></ul>\n<p>Filozof zaczyna tam, gdzie inni kończą.</p>\n<ul><li>Logika formalna i sylogistyka</li></ul>\n<h5>Logika zajmuje się formą, bo ona jest zawsze ważna</h5>\n<ul><li><b>Przykład:</b> Każdy człowiek jest śmiertelny / Każdy Polak jest człowiekiem // Każdy Polak jest śmiertelny</li><li><b>Postać ogólna rachunku:</b> Każdy x jest y / Każdy z jest x // Każde z jest y</li></ul>\n<p>Logika nazw → Arystotelesowska (rachunek nazw).</p>\n<p>Twórcą logiki jest Arystoteles, początkowo nazywał ją organon (narzędzie).</p>\n<h5>6 ksiąg logicznych Arystotelesa (Organon)</h5>\n<p>Kategorie (ogólna teoria rozumu)</p>\n<ul><li><b>Hermeneutyka (Peri hermeneias</b> – logiczna teoria zdań)</li><li>Analityki pierwsze</li><li>Analityki wtóre</li></ul>\n<p>Topiki (badanie wiedzy prawdopodobnej; stosuje sylogizmy)</p>\n<p>O dowodach sofistycznych (teoria wprowadzania w błąd; sofistyczny = przewrotny)</p>\n<ul><li>Zasady zaliczenia przedmiotu</li><li><b>3 kolokwia po 20 min</b> – zaliczenie od 50%.</li></ul>\n<p>Egzamin końcowy z całości (głównie zadania, np. zastosowanie definicji w praktyce, najważniejsze dzieło Arystotelesa) – zaliczenie od 50%.</p>\n<ul><li><b>Wskazówka:</b> trzymać się skryptu, żeby nie pogubić się w precyzyjnych znaczeniach.</li></ul>\n<p>Podział semiotyczny (Definicja znaku)</p>\n<p>Semantyka → relacja między znakiem a tym, do czego się odnosi (znaczenie i oznaczanie).</p>\n<p>Pragmatyka → relacja między znakiem a jego użytkownikiem (nadawcą/odbiorcą i kontekstem użycia).</p>\n<ul><li><b>(Dopełnienie triady semiotycznej Ch. Morrisa:</b> Syntaktyka – relacje pomiędzy samymi znakami).</li></ul>"}, {"t": "Wykład 2 – czym jest logika, trójkąt semiotyczny (8.10.2026)", "html": "<ul><li><b>Wykład 2:</b> Logika</li></ul>\n<div class=\"meta\">🗓 Czwartek, 8 października 2026, 08:42</div>\n<p>„Mamy być trochę lepsi niż idioci!”</p>\n<ul><li>Kontekst historyczny i język</li></ul>\n<p>Jeszcze w XVII w. pisano pisma naukowe po łacinie, a teologię uczono po łacinie jeszcze w XX w.</p>\n<ul><li>Substancja</li></ul>\n<h5>= Ewolucja</h5>\n<p>Z substancji powstała teologia.</p>\n<p>Ze zjawiska ewolucji wyciągamy to, czym dzisiaj żyjemy.</p>\n<ul><li><b>Pytanie:</b> I jak to połączyć?</li></ul>\n<p>Nurt arystotelesowski → logika nazw.</p>\n<p>Nurt stoicki → logika zdań.</p>\n<p>Według Arystotelesa logika była narzędziem (organon), a nie osobną nauką.</p>\n<p>Ludwig Wittgenstein (1919 r.) → KRZ (Klasyczny Rachunek Zdań).</p>\n<ul><li>Intersubiektywność vs Subiektywność</li></ul>\n<h5>Intersubiektywność</h5>\n<p>Poprzez komunikację muszę to sprawdzić.</p>\n<p>Tylko to obchodzi naukę.</p>\n<p>Wiara jest intersubiektywna, bo Tradycja zawsze jest intersubiektywna (ale bywa też subiektywna, bo dotyczy osobistego doświadczenia).</p>\n<h5>Subiektywność</h5>\n<p>Nasze przeżycia i doznania.</p>\n<p>Jeśli coś jest wiedzą tylko dla mnie, to nie jest to nauka.</p>\n<p>Brak jednoznacznych słów.</p>\n<ul><li>Czym jest logika i jej podział</li></ul>\n<p>Logika to zespół nauk badających język i czynności poznawcze człowieka (nazywanie, definiowanie, wnioskowanie itp.) w aspekcie ich poprawności i skuteczności.</p>\n<h5>Dotyczy rozumowań niezawodnych</h5>\n<ul><li><b>Semiotyka logiczna</b> – logiczna teoria znaku językowego (1. semestr).</li><li><b>Logika formalna</b> – bada formalne prawa wynikania logicznego i wnioskowanie (2. semestr).</li><li><b>Metodologia</b> – logiczna teoria metody naukowej (2. rok).</li></ul>\n<h5>Program i pojęcia</h5>\n<p>Retoryka logiczna lub dialektyka.</p>\n<h5>Pierwszy semestr</h5>\n<p>Logiczna teoria nazw i zdań.</p>\n<p>KRZ, wybrane elementy rachunku predykatów.</p>\n<p>Elementy argumentacji dialektycznej.</p>\n<ul><li>Retor</li></ul>\n<h5>= Sofista</h5>\n<p>Św. Augustyn to najwybitniejszy retor.</p>\n<p>Trójkąt semiotyczny (Ogdena-Richardsa)</p>\n<h5>W każdym znaku wyróżnia się 3 elementy</h5>\n<ul><li><b>Wierzchołek (NZ):</b> Nazwa / Znak (nośnik znaku).</li></ul>\n<p>J: Pojęcie / Treść / Myśl / Interpretant.</p>\n<p>D: Przedmiot / Desygnat oznaczany przez znak.</p>\n<h5>Składowe znaku</h5>\n<p>a) Materialny nośnik znaku → intersubiektywny.</p>\n<p>b) Przedmiot (desygnat) oznaczany przez znak → poznawany przez zmysły.</p>\n<ul><li><b>c) Interpretant:</b> chodzi przede wszystkim o intersubiektywne rozumienie nośnika.</li></ul>"}, {"t": "Wykład 3 – semiotyka logiczna: znak, wyrażenie, język", "html": "<div class=\"eyebrow\">LOGIKA – Wykład 3</div>\n<div class=\"topic\"><span>Temat</span>Semiotyka logiczna – Znak, Wyrażenie, Język i Relacje semiotyczne</div>\n<h4><span class=\"num\">1.</span> Trójdzielna struktura logiki i jej cel badawczy</h4>\n<h5>Rozwój kursu logiki</h5>\n<ul><li><b>Semiotyka logiczna (część teoretyczna – semestr 1):</b> ogólna teoria znaków językowych.</li><li><b>Logika formalna (właściwa teoria wynikania logicznego</b> – semestr 2): badanie schematów wnioskowania i poprawności formalnej.</li><li><b>Metodologia nauk (rok 2):</b> teoria poznania naukowego, badania procedur uzasadniania, weryfikacji i falsyfikacji twierdzeń.</li></ul>\n<h5>Zdanie logiczne jako nośnik wartości logicznej</h5>\n<p>Logika bada przede wszystkim zdania w sensie logicznym, ponieważ wyłącznie zdania orzekają o prawdzie lub fałszu.</p>\n<p>Nazwy bada się jedynie pomocniczo, jako składowe zdań (podmioty lub orzeczniki).</p>\n<ul><li><b>Naczelny cel logiki:</b> Badanie wynikania logicznego – orzekanie, czy z danego zdania (lub układu przesłanek) w sposób konieczny i formalny wynika drugie zdanie.</li></ul>\n<h4><span class=\"num\">2.</span> Pojęcie znaku – definicja ogólna i tomistyczna</h4>\n<ul><li><b>Definicja ogólna:</b> Znak jest to postrzegalny zmysłowo przedmiot</li><li>X (fizyczny nośnik), który u obserwatora</li><li>O (interpretanta) wywołuje myśl o oznaczonym obiekcie</li></ul>\n<p>A (desygnat).</p>\n<h5>Definicja św. Tomasza z Akwinu</h5>\n<ul><li>Signum est res, quae praeter speciem, quam ingerit sensibus, aliud aliquid ex se facit in cognitionem venire</li></ul>\n<p>(„Znak jest rzeczą/przedmiotem postrzegalnym zmysłowo, przez który podmiot dochodzi do poznania czegoś innego”).</p>\n<h5>Kluczowe właściwości znaku</h5>\n<ul><li><b>Transparentność (przezroczystość):</b> Znak nie zatrzymuje uwagi poznawczej na swojej materialnej postaci, lecz odsyła ku swojemu desygnatowi/znaczeniu.</li><li><b>Byt relacyjny:</b> Przedmiot fizyczny staje się znakiem dopiero w relacji do odbiorcy zdolnego go zinterpretować według określonych reguł.</li><li><b>Egzemplarze tego samego znaku:</b> Dystrybutywność posługiwania się fizycznymi kopiami znaku o jednym i tym samym sensie.</li></ul>\n<h5>Pojęcie a Idea</h5>\n<p>Eidos → widzieć, obserwować.</p>\n<p>Idea → ujęcie platońskie.</p>\n<p>Forma → ujęcie arystotelesowskie.</p>\n<p>W logice współczesnej zaleca się stosowanie terminu pojęcie (conceptus, greckie noema → odniesienie noetyczne).</p>\n<h4><span class=\"num\">3.</span> Piramida i relacje semiotyczne (Trójkąt Ogdena-Richardsa)</h4>\n<ul><li>Pomiędzy nośnikami materialnymi ( NZ1,NZ2</li></ul>\n<h5>), interpretantem ( J) a desygnatem ( D) zachodzą trzy relacje</h5>\n<p>Interpretant (J)</p>\n<ul><li>[Pojęcie/Sens]/ \\ pragmatyczna / \\ semantyczna/ \\/ \\</li></ul>\n<p>Materialny Nośnik (NZ1) —————— Desygnat (D)</p>\n<ul><li>| \\ syntaktyczna| \\</li><li>= (tożsamość) NZ2</li></ul>\n<h5>Relacja syntaktyczna (syntaktyka / składnia logiczna)</h5>\n<p>Związek między samymi nośnikami znaków ( NZ1↔NZ2).</p>\n<p>Reguły poprawnego budowania wyrażeń złożonych z prostych (gramatyka logiczna).</p>\n<ul><li><b>Przykład tożsamości formalnej:</b> pies</li></ul>\n<p>≡ pies.</p>\n<h5>Relacja semantyczna (semantyka)</h5>\n<p>Związek między nośnikiem znaku a desygnatem/światem ( NZ↔D).</p>\n<p>Obejmuje oznaczanie (desygnowanie) oraz orzekanie o prawdzie i fałszu.</p>\n<h5>Relacja pragmatyczna (pragmatyka)</h5>\n<p>Związek między nośnikiem a interpretantem/użytkownikiem ( NZ↔J).</p>\n<p>Obejmuje nadawanie i odczytywanie sensu, intencję nadawcy i zrozumienie u odbiorcy.</p>\n<ul><li><b>Aspekt:</b> Punkt widzenia, z którego ujmuje się dany przedmiot (np. góra Matterhorn oglądana z różnych stron ma inne nazwy i perspektywy, ale ten sam desygnat).</li></ul>\n<h5>Przykłady rozpisania trójkąta semiotycznego</h5>\n<h5>KLERYK</h5>\n<ul><li><b>Nośnik materialny ( NZ):</b> ciąg liter K-L-E-R-Y-K.</li><li><b>Interpretant ( J):</b> pojęcie/definicja – student seminarium duchownego przygotowujący się do święceń.</li><li><b>Desygnat ( D):</b> konkretny człowiek (alumn) w świecie fizycznym.</li></ul>\n<h5>POGODA</h5>\n<ul><li><b>Nośnik materialny ( NZ):</b> słowo POGODA.</li><li><b>Interpretant ( J):</b> definicja w języku polskim – stan atmosfery w danym miejscu i czasie.</li><li><b>Desygnat ( D):</b> realne zjawiska atmosferyczne za oknem.</li></ul>\n<h4><span class=\"num\">4.</span> Klasyfikacje znaków</h4>\n<h5>Ze względu na genezę</h5>\n<ul><li><b>Znaki naturalne (oznaki / symptomy):</b> Oparte na naturalnym związku przyczynowo-skutkowym (np. dym jako oznaka ognia; gorączka jako symptom choroby).</li><li><b>Znaki konwencjonalne (umowne / arbitralne):</b> Ustanowione na mocy umowy społecznej (np. język etniczny, znaki drogowe).</li><li><b>Znaki ikoniczne:</b> Oparte na zmysłowym podobieństwie do desygnatu (np. fotografia, rysunek, schemat).</li></ul>\n<h5>Ze względu na strukturę logiczną</h5>\n<ul><li><b>Znak prosty:</b> Taki, którego żadna część właściwa (różna od całości) nie jest samodzielnym znakiem tego samego rodzaju.</li><li><b>Przykład:</b> Kot (poszczególne litery k, o, t nie są samodzielnymi nazwami).</li><li><b>Znak złożony:</b> Zbudowany ze znaków prostych.</li><li><b>Przykłady:</b> kot i pies, czarny kot.</li></ul>\n<h4><span class=\"num\">5.</span> Pięć funkcji znaku</h4>\n<ul><li><b>Oznaczanie (denotowanie, desygnowanie):</b> Wskazywanie na konkretny desygnat lub zbiór desygnatów w świecie.</li><li><b>Współoznaczanie (konotowanie):</b> Wskazywanie na zespół cech konstytutywnych tworzących treść pojęcia.</li><li><b>Sens:</b> Znaczenie pojęciowe i słownikowe przypisane znakowi w danym systemie.</li><li><b>Wyrażanie:</b> Funkcja pragmatyczna / ekspresywna – uzewnętrznianie subiektywnych stanów, emocji i nastawienia nadawcy.</li><li><b>Nazywanie:</b> Przypisywanie nazw i imion obiektom.</li></ul>\n<h5>Użycie dystrybutywne vs kolektywne</h5>\n<ul><li><b>Dystrybutywne:</b> Orzekanie dotyczy każdego poszczególnego elementu zbioru z osobna (np. „Każdy pies jest zwierzęciem domowym”).</li><li><b>Kolektywne:</b> Orzekanie dotyczy zbioru jako niepodzielnej całości/agregatu (np. „Las szumi”).</li></ul>\n<h4><span class=\"num\">6.</span> Logiczna definicja języka i jego reguły</h4>\n<h5>Język w sensie logicznym to</h5>\n<ul><li>Zbiór znaków (słownik / zasób prostych znaków językowych),</li></ul>\n<p>Służący do przekazywania informacji wraz ze zbiorem reguł posługiwania się nimi w celu komunikacji.</p>\n<ul><li><b>Wyrażenie:</b> Wszelki prosty lub złożony znak językowy funkcjonujący w danym języku.</li><li><b>Słownik:</b> Zbiór elementarnych znaków prostych danego języka.</li></ul>\n<h5>Trzy grupy reguł językowych</h5>\n<ul><li><b>Reguły syntaktyczne (składniowe):</b> Reguły tworzenia wyrażeń złożonych z wyrażeń prostych.</li><li><b>Reguły semantyczne (znaczeniowe):</b> Zasady przypisywania nazwom odpowiednich desygnatów (chronią przed błędami kategorialnymi, np. zwrot „zielone pojęcie” czy „zielony sakrament”).</li><li><b>Reguły pragmatyczne:</b> Zasady doboru wyrażeń zależnie od kontekstu i poziomu percepcji odbiorcy (np. kazanie do dzieci a wykład akademicki).</li></ul>\n<h5>Rodzaje języków</h5>\n<ul><li><b>Naturalne (etniczne):</b> Powstałe w drodze spontanicznej umowy społecznej (np. polski, grecki).</li><li><b>Sztuczne:</b> Powstałe w drodze umowy świadomej i celowej (np. KRZ, algebra, języki komputerowe).</li><li><b>(Uwaga:</b> w ujęciu ścisłym nie istnieje język w 100% sztuczny, gdyż każdy odwołuje się w warstwie metajęzykowej do języka naturalnego).</li><li><b>Słowniczek Terminów</b> – Wykład 3 z Logiki</li><li><b>Signum (Znak w ujęciu św. Tomasza)</b> – postrzegalny zmysłowo przedmiot lub zjawisko fizyczne, które na mocy relacji poznawczej prowadzi umysł obserwatora do poznania innego, oznaczonego obiektu.</li><li><b>Transparentność znaku</b> – właściwość polegająca na tym, że znak nie skupia uwagi podmiotu na sobie samym jako przedmiocie fizycznym, lecz odsyła bezpośrednio ku desygnatowi/znaczeniu.</li><li><b>Conceptus (Pojęcie)</b> – łaciński odpowiednik greckiego noema; treść myślowa, akt ujęcia istoty rzeczy w umyśle (źródłosłowo tożsame z biologicznym „poczęciem” – zrodzenie myśli w intelekcie).</li><li><b>Noetyczny (od gr. noema / nous)</b> – intelektualny, poznawczy, dotyczący czystego myślenia i aktów pojęciowych umysłu (w odróżnieniu od poziomu zmysłowego).</li><li><b>Eidos (εἶδος) – pierwotnie:</b> widok, postać, to co widoczne; u Platona źródłosłów dla Idei, a u Arystotelesa dla Formy (morphe).</li><li><b>Obiectum (Przedmiot / Desygnat)</b> – od łac. obicere (rzucać przed, stawiać naprzeciw); to, co stoi naprzeciw podmiotu poznającego w świecie zewnętrznym; stąd: obiektywny = przedmiotowy.</li><li><b>Znak naturalny (oznaka / symptom)</b> – zjawisko fizyczne powiązane z oznaczanym faktem związkiem przyczynowo-skutkowym wynikającym z praw natury (np. dym dla ognia), a nie z umowy społecznej.</li><li><b>Znak konwencjonalny (arbitralny)</b> – znak ustanowiony na mocy umowy, zwyczaju lub konwencji kulturowej (właściwa cecha języka ludzkiego).</li><li><b>Znak ikoniczny</b> – znak, którego relacja z desygnatem opiera się na fizycznym podobieństwie zmysłowym (np. fotografia, ikona, rysunek).</li><li><b>Znak prosty</b> – znak językowy, którego żadna część właściwa nie stanowi samodzielnego znaku tego samego rodzaju (np. pojedynczy wyraz w relacji do liter).</li><li><b>Znak złożony</b> – znak powstały z połączenia co najmniej dwóch znaków prostych według określonych reguł składniowych.</li><li><b>Wyrażenie – w logice:</b> każdy prosty lub złożony znak językowy posiadający określone znaczenie w danym języku.</li><li><b>Słownik (w sensie logicznym)</b> – zasób elementarnych, prostych znaków językowych danego systemu językowego.</li><li><b>Denotowanie (desygnowanie / ekstensja)</b> – funkcja semantyczna polegająca na wskazywaniu przez nazwę zbioru konkretnych przedmiotów (desygnatów) w świecie.</li><li><b>Konotacja (współoznaczanie / intensja)</b> – zespół konstytutywnych cech przysługujących desygnatom danej nazwy, tworzący treść pojęcia.</li><li><b>Funkcja wyrażania (ekspresywna)</b> – funkcja pragmatyczna wypowiedzi polegająca na uzewnętrznianiu przez nadawcę jego subiektywnych stanów emocjonalnych lub nastawienia.</li><li><b>Użycie dystrybutywne nazwy</b> – odniesienie nazwy do poszczególnych elementów klasy z osobna (każdy z osobna posiada daną cechę).</li><li><b>Użycie kolektywne nazwy</b> – odniesienie nazwy do klasy obiektów traktowanej jako zbiorowa całość (agregat).</li><li><b>Błąd kategorialny (naruszenie reguł semantycznych)</b> – logiczno-językowe przypisanie cechy lub orzecznika do przedmiotu należącego do zupełnie innej kategorii ontologicznej (np. „zielone pojęcie”, „zielony sakrament”).</li><li><b>Język naturalny (etniczny)</b> – system znakowy ukształtowany historycznie w drodze umowy spontanicznej w ramach danej wspólnoty narodowej/kulturowej.</li><li><b>Język sztuczny</b> – sformalizowany system znaków stworzony celowo i świadomie do określonych zadań naukowych (np. KRZ, algebra, języki programowania).</li></ul>"}, {"t": "Wykład 4 – poziomy języka, prawda Tarskiego, metalogika", "html": "<div class=\"eyebrow\">LOGIKA – Wykład 4</div>\n<div class=\"meta\">🗓 Czwartek, 15 października 2026, 08:46</div>\n<div class=\"topic\"><span>Temat</span>Poziomy języka (język przedmiotowy, metajęzyk, meta-metajęzyk), semantyczna definicja prawdy i twierdzenia limitacyjne</div>\n<h4><span class=\"num\">1.</span> Problem pomieszania języka z rzeczywistością</h4>\n<ul><li><b>Mowa potoczna a błąd pomieszania poziomów:</b> W codziennym języku stale mieszamy wypowiedzi o rzeczach w świecie z wypowiedziami o samych znakach językowych (słowach, nazwach, pojęciach).</li></ul>\n<h5>Przykład fizyczny vs logiczny</h5>\n<p>„Pociąg dzieli się na wagony i lokomotywę” → fizyczny podział przedmiotu materialnego w świecie.</p>\n<p>„Pociągi dzielą się na dalekobieżne i regionalne” → logiczny podział zakresu pojęcia/nazwy.</p>\n<h5>Przykład ze studentem</h5>\n<p>„Student ma głowę, ręce i nogi” → orzekanie o bycie fizycznym.</p>\n<p>„Studenci dzielą się na stacjonarnych i niestacjonarnych” → logiczny podział pojęcia/zbioru.</p>\n<h5>Użycie cudzysłowu / słowa „słowo” (nazwa cudzysłowowa)</h5>\n<p>Kot ma 4 łapy → zdanie orzeka o zwierzęciu w świecie fizycznym (język przedmiotowy).</p>\n<p>Słowo „kot” ma 3 litery lub \"Kot\" ma 3 litery → zdanie orzeka o znaku językowym, o samym słowie (metajęzyk).</p>\n<ul><li><b>Różnica między cytowaniem a użyciem metajęzykowym:</b> W logice cudzysłów nie oznacza zwykłego cytatu literackiego, lecz tworzy nazwę wyrażenia (przenosi nas na wyższy poziom analizy logicznej).</li></ul>\n<h4><span class=\"num\">2.</span> Hierarchia poziomów języka</h4>\n<h5>W logice formalnej wyróżnia się precyzyjne stopnie języka</h5>\n<h5>Język przedmiotowy (1° stopnia)</h5>\n<p>Język, w którym orzekamy bezpośrednio o świecie i przedmiotach pozajęzykowych.</p>\n<ul><li><b>Przykłady:</b> „Ten kot jest czarny”, „Boston ma 800 tysięcy mieszkańców”.</li></ul>\n<h5>Metajęzyk (2° stopnia)</h5>\n<p>Język, w którym mówimy i orzekamy o języku przedmiotowym (1° stopnia).</p>\n<ul><li><b>Przykłady:</b> „»Kot« ma trzy litery”, „Nazwa »Boston« posiada 2 sylaby”.</li></ul>\n<h5>Meta-metajęzyk (3° stopnia)</h5>\n<p>Język, w którym mówimy o metajęzyku (2° stopnia).</p>\n<ul><li><b>Przykład z tablicy:</b> Zdanie [„Kot” jest wyrazem czteroliterowym] jest zdaniem fałszywym.</li></ul>\n<h5>Przeniesienie na grunt hermeneutyki / teologii</h5>\n<h5>Schemat z tablicy</h5>\n<p>„Św. Tomasz interpretuje słowa Jezusa, i ja je interpretuję”</p>\n<ul><li>Słowa Jezusa → język wyjściowy / poziom</li><li>1° Interpretacja św. Tomasza → poziom</li></ul>\n<p>2° (metapoziom)</p>\n<ul><li>Moja interpretacja dzieła Tomasza → poziom</li></ul>\n<p>3° (meta-metapoziom)</p>\n<h5>Pojęcie „meta” w nauce</h5>\n<p>Greckie meta (μετά) = poza, ponad, po.</p>\n<p>Fizyka bada świat przyrody → Filozofia nauki / Metanauka bada założenia i metodologię samej fizyki.</p>\n<p>Logika bada rachunek zdań → Metalogika bada własności systemów logicznych (ich niesprzeczność, zupełność).</p>\n<h4><span class=\"num\">3.</span> Alfred Tarski i semantyczna definicja prawdy</h4>\n<ul><li><b>Alfred Tarski (1901–1983):</b> Polski logik ze szkoły lwowsko-warszawskiej, uznawany obok Arystotelesa i Fregego za jednego z najważniejszych logików w historii.</li></ul>\n<h5>Rozwiązanie problemu definicji prawdy</h5>\n<p>Aby podać poprawną, wolną od sprzeczności definicję prawdy (semantyczną definicję prawdy), należy bezwzględnie rozróżnić język przedmiotowy od metajęzyka.</p>\n<p>W języku naturalnym pojawiają się antynomie semantyczne (np. paradoks kłamcy: „To zdanie jest fałszywe”), ponieważ język potoczny jest semantycznie zamknięty (jest swoim własnym metajęzykiem).</p>\n<h5>Konwencja T (schemat Tarskiego)</h5>\n<p>Zdanie „Śnieg pada” jest prawdziwe w języku J wtedy i tylko wtedy, gdy śnieg pada.</p>\n<p>(Wyrażenie w cudzysłowie należy do języka przedmiotowego, natomiast orzeczenie o jego prawdzie formułowane jest w metajęzyku).</p>\n<h4><span class=\"num\">4.</span> Twierdzenia limitacyjne (Granice systemów formalnych i poznania)</h4>\n<p>Przez stulecia wierzono, że za pomocą racjonalnego systemu metafizyki lub aksjomatyki matematycznej da się uchwycić rzeczywistość w sposób absolutny (jakby „podglądało się świat przez dziurkę od klucza na sposób boski”). W latach 30. XX wieku seria odkryć logicznych obaliła ten mit:</p>\n<h5>Twierdzenia o niezupełności Kurta Gödla (1931 r.)</h5>\n<ul><li><b>I twierdzenie o niezupełności:</b> W każdym niesprzecznym systemie formalnym dostatecznie bogatym (zawierającym arytmetykę) istnieją zdania prawdziwe, których nie da się w ramach tego systemu udowodnić.</li><li><b>II twierdzenie:</b> Żaden taki system nie jest w stanie dowieść własnej niesprzeczności przy użyciu własnych środków dowodowych.</li></ul>\n<h5>Twierdzenie Churcha-Turinga (problem obliczalności i maszyna Turinga)</h5>\n<p>Alonzo Church i Alan Turing udowodnili, że nie istnieje uniwersalny algorytm zdolny rozstrzygnąć prawdziwość każdego problemu matematycznego (nierozstrzygalność problemu stopu).</p>\n<h5>Twierdzenie Löwenheima-Skolema (problem wielości modeli)</h5>\n<p>Każda niesprzeczna teoria formalna pierwszego rzędu posiada nieskończenie wiele różnych, nierównoważnych modeli interpretacyjnych. Wskazuje to na nieusuwalną wieloznaczność formalnych systemów dedukcyjnych.</p>\n<ul><li><b>Wniosek epistemologiczny:</b> Ani logika formalna, ani matematyka nie mają statusu wiedzy absolutnej. Ludzkie systemy pojęciowe napotykają strukturalne granice możliwości poznawczych.</li></ul>"}, {"t": "Supozycje, paradoks kłamcy, poziomy języka", "html": "<div class=\"eyebrow\">LOGIKA – Notatka z tablicy</div>\n<div class=\"topic\"><span>Temat</span>Teoria supozycji, antynomie semantyczne (paradoks kłamcy) i hierarchia poziomów języka</div>\n<h4><span class=\"num\">1.</span> Wartość logiczna i poprawność orzekania</h4>\n<ul><li><b>Tylko zdanie może być fałszywe (lub prawdziwe):</b> Same nazwy i pojęcia nie posiadają wartości logicznej – orzekają o prawdzie/fałszu dopiero po zestawieniu w strukturę zdania.</li></ul>\n<h5>Orzekanie semantyczne a błąd kategorialny</h5>\n<p>'czarne' jest orzeczone o 'kocie' \\equiv kot jest czarny (orzekanie semantycznie poprawne).</p>\n<p>przymiotnik jest orzeczony o rzeczowniku ≠ rzeczownik jest przymiotnikiem (błąd pomieszania rzędów logicznych i kategorii gramatycznych).</p>\n<h4><span class=\"num\">2.</span> Teoria supozycji nazw (Suppositio – podstawienie / funkcja znaczeniowa)</h4>\n<ul><li>Supozycja określa rolę, w jakiej dana nazwa została użyta w konkretnym kontekście zdaniowym:</li></ul>\n<h5>Supozycja materialna (suppositio materialis)</h5>\n<p>Nazwa odnosi się do samej siebie jako znaku fizycznego (do napisu, kształtu graficznego, brzmienia).</p>\n<ul><li><b>Przykład:</b> Kot (3 litery).</li></ul>\n<h5>Supozycja zwykła (suppositio simplex)</h5>\n<p>Nazwa odnosi się do pojęcia ogólnego, natury lub gatunku jako całości (do powszechnika).</p>\n<ul><li><b>Przykład:</b> kot (wszystkie koty / kociość).</li></ul>\n<h5>Supozycja osobowa (suppositio personalis)</h5>\n<p>Nazwa odnosi się do konkretnego, jednostkowego desygnatu istniejącego w świecie pozajęzykowym.</p>\n<ul><li><b>Przykład:</b> czarny kot (ten oto konkretny kot).</li></ul>\n<h4><span class=\"num\">3.</span> Paradoksy semantyczne i reguła rozgraniczenia poziomów</h4>\n<h5>Paradoks kłamcy (antynomia semantyczna Eubulidesa)</h5>\n<ul><li><b>Kłamca mówi:</b> „Ja zawsze kłamię” (lub: „To zdanie jest fałszywe”).</li><li><b>Pytanie:</b> czy skłamał, czy powiedział prawdę?</li></ul>\n<p>Jeśli mówi prawdę → to kłamie.</p>\n<p>Jeśli kłamie → to mówi prawdę.</p>\n<p>Powstaje nierozstrzygalna pętla sprzeczności.</p>\n<h5>Fundamentalna zasada semantyki logicznej</h5>\n<p>NIE MIESZAMY JĘZYKA PRZEDMIOTOWEGO Z METAJĘZYKIEM!</p>\n<h5>Dylemat metodologiczny</h5>\n<ul><li>Albo swoboda wysławiania się (język naturalny ze swoją wieloznacznością i podatnością na antynomie),</li></ul>\n<p>Albo matematyka / logika formalna (rygorystyczna hierarchia poziomów wykluczająca paradoksy, ale ograniczająca swobodę wypowiedzi).</p>\n<h5>Inne klasyczne aporie i paradoksy przywołane na tablicy</h5>\n<ul><li><b>Paradoks fryzjera / goli brodę wojskowy:</b> dowódca rozkazuje, by fryzjer wojskowy golił tylko tych żołnierzy, którzy nie golą się sami. Pytanie: czy goli samego siebie?</li><li><b>Paradoks wszechmocy:</b> Czy Bóg może stworzyć kamień, którego nie jest w stanie podnieść?</li><li><b>Pytanie teologiczno-metafizyczne:</b> Co robił Bóg przed stworzeniem świata?</li></ul>\n<h4><span class=\"num\">4.</span> Schemat poziomów języka (Analiza wielopoziomowa)</h4>\n<h5>Zapis tablicowy zdania trójstopniowego</h5>\n<ul><li><b>≪Twierdzenie:</b> \"Wyraz ’kot’ jest wyrazem czteroliterowym\" jest prawdziwe≫</li><li><b>1° stopień – Język przedmiotowy:</b> 'kot' (słowo w supozycji materialnej na poziomie bazowym).</li><li><b>2° stopień – Metajęzyk:</b> \"Wyraz 'kot' jest wyrazem czteroliterowym\" (zdanie w cudzysłowie orzekające o wyrazie z poziomu</li></ul>\n<p>1° ).</p>\n<ul><li><b>3° stopień – Meta-metajęzyk:</b> &lt;&lt; Twierdzenie: [...] jest prawdziwe &gt;&gt; (orzeczenie o wartości logicznej prawdy/fałszu formułowane w nawiasie ostrokątnym wobec zdania z poziomu</li></ul>\n<p>2° ).</p>"}, {"t": "Kategorie semantyczne, zdania, funkcje zdaniowe", "html": "<div class=\"eyebrow\">LOGIKA – Notatka z tablicy</div>\n<div class=\"topic\"><span>Temat</span>Kategorie semantyczne, Zdania w sensie logicznym, Funkcje zdaniowe i Semantyczny podział zdań</div>\n<h4><span class=\"num\">1.</span> Kategorie typów (Kategorie semantyczne / składniowe)</h4>\n<h5>W analizie logicznej języka wyróżnia się cztery podstawowe kategorie wyrażeń</h5>\n<ul><li>Zdania</li><li>Nazwy</li><li>Funktory</li><li>Operatory</li></ul>\n<h4><span class=\"num\">2.</span> Zdania w sensie logicznym</h4>\n<ul><li><b>Zdanie jako wyłączny nośnik prawdy:</b> W logice zdania stanowią jedyną kategorię, której przysługuje orzekanie o prawdzie lub fałszu.</li></ul>\n<h4><span class=\"num\">A.</span> Definicja</h4>\n<ul><li>Zdanie w sensie logicznym ( </li><li><b>= zdanie gramatyczne!):</b> Wyrażenie złożone, któremu można jednoznacznie przypisać wartość logiczną: prawdę lub fałsz.</li></ul>\n<h5>Zasada ścisłości logicznej</h5>\n<p>„Logika nie pozostawia domysłów, wszystko trzeba zaartykułować (zakłada wiedzę).”</p>\n<h5>Podział zdań ze względu na tryb orzekania</h5>\n<ul><li><b>Kategoryczne:</b> oznajmujące, stwierdzające stan rzeczy wprost bez zastrzeżeń (np. „S jest P”).</li><li><b>Modalne:</b> zawierające funktory modalne orzekające o stopniu pewności lub konieczności (np. „jest konieczne, że...”, „jest możliwe, że...”).</li></ul>\n<h4><span class=\"num\">3.</span> Funkcje zdaniowe i Zmienna wolna</h4>\n<ul><li><b>Definicja funkcji zdaniowej:</b> Wyrażenie zawierające co najmniej jedną zmienną wolną, które samo w sobie nie jest ani prawdziwe, ani fałszywe, lecz staje się zdaniem w sensie logicznym na jeden z dwóch sposobów:</li></ul>\n<h5>Przez związanie zmiennych wolnych kwantyfikatorem</h5>\n<ul><li><b>Kwantyfikatorem ogólnym:</b> każdy, wszyscy, żaden.</li><li><b>Kwantyfikatorem szczegółowym (egzystencjalnym):</b> pewien, niektórzy, istnieje.</li></ul>\n<h5>Przykład z tablicy</h5>\n<p>Wyrażenie „Człowiek jest wysoki” to funkcja zdaniowa (brak precyzyjnej wartości logicznej) → dopiero po kwantyfikacji staje się zdaniem: „Każdy człowiek jest wysoki”.</p>\n<ul><li><b>Przez podstawienie stałych za zmienne wolne:</b> Podstawienie konkretnej nazwy indywidualnej w miejsce zmiennej (np. za zmienną</li><li><b>x wstawiamy stałą Janek:</b> „Janek jest wysoki”).</li><li><b>Zmienna wolna:</b> Zmienna w formule logicznej, która nie jest związana żadnym operatorem ani kwantyfikatorem (pozostaje „pustym miejscem” do podstawienia stałej lub kwantyfikacji).</li></ul>\n<h4><span class=\"num\">4.</span> Podział zdań ze względu na budowę formalną</h4>\n<ul><li><b>Zdania proste:</b> Nie zawierają w sobie innych zdań jako swoich części właściwych.</li><li><b>Zdania złożone:</b> Zawierają w sobie co najmniej jedno inne zdanie jako swoją część składową połączoną funktorem.</li></ul>\n<h5>Ważna uwaga logiczna z tablicy</h5>\n<p>Negacja zdania prostego jest zdaniem złożonym!</p>\n<ul><li><b>Przykład:</b> „Janek jest wysoki” (zdanie proste) → „Nieprawda, że Janek jest wysoki” (zdanie złożone, ponieważ zawiera w sobie funktor negacji oraz całe zdanie wyjściowe).</li></ul>\n<h4><span class=\"num\">5.</span> Semantyczny podział zdań i desygnat zdania</h4>\n<p>Co jest desygnatem zdania w sensie logicznym? → Desygnatem zdania (przedmiotem, na który wskazuje w świecie) jest stan rzeczy (zapisywany formalnie jako okoliczność, że zachodzi fakt X).</p>\n<h5>Klasyfikacja zdań ze względu na zakres podmiotu (ilość)</h5>\n<ul><li><b>Zdania ogólne:</b> Podmiot jest związany kwantyfikatorem ogólnym (każdy, wszyscy, żaden).</li><li><b>Zdania szczegółowe (egzystencjalne):</b> Podmiot jest związany kwantyfikatorem szczegółowym (istnieje, pewien, niektórzy).</li><li><b>Zdania jednostkowe:</b> Orzekają bezpośrednio o jednym, konkretnym, nazwanym przedmiocie (np. „Sokrates jest filozofem”).</li></ul>"}, {"t": "Symbole: ≠, ≡ i orzekanie", "html": "<ul><li>co to ≠</li><li>Symbol</li></ul>\n<p>= to matematyczny i logiczny znak nierówności lub różności (czytany jako: „nie równa się”, „jest różne od”).</p>\n<p>Powstaje przez przekreślenie klasycznego znaku równości ( =) i oznacza, że dwie strony wyrażenia nie są tożsame, nie mają tej samej wartości lub należą do zupełnie innych kategorii logicznych/gramatycznych.</p>\n<h5>W kontekście notatki z logiki</h5>\n<ul><li>przymiotnik jest orzeczony o rzeczowniku ≠ rzeczownik jest przymiotnikiem</li><li><b>Znak ten wskazuje na błąd logiczny i brak równoważności:</b> fakt, że przymiotnik może pełnić funkcję orzecznika o rzeczowniku (np. „kot jest czarny”), w żadnym wypadku nie jest tożsamy z twierdzeniem, że sam rzeczownik staje się przymiotnikiem.</li></ul>\n<p>\\(\\equiv \\)</p>\n<ul><li>Symbol</li></ul>\n<h5>≡ w logice i matematyce oznacza</h5>\n<h5>Równoważność logiczną (wtedy i tylko wtedy, gdy)</h5>\n<p>Łączy dwa zdania lub formuły, które mają dokładnie taką samą wartość logiczną (albo oba są prawdziwe, albo oba są fałszywe). Czyta się go: „wtedy i tylko wtedy, gdy” (odpowiednik symbolu↔).</p>\n<h5>Tożsamość / relację tożsamościową (identyczność)</h5>\n<p>W semiotyce i logice formalnej jest to znak mocniejszy od zwykłej równości ( =) – oznacza bezwzględną identyczność lub zdefiniowanie czegoś przez to samo.</p>\n<h5>W materiałach z logiki symbol ten pojawił się w dwóch kluczowych miejscach</h5>\n<h5>Przy relacji tożsamościowej znaków</h5>\n<ul><li>pies</li></ul>\n<p>≡ pies (dwa nośniki wskazują na ten sam znak i są tożsame formalnie).</p>\n<h5>Przy definicji orzekania semantycznego</h5>\n<p>'czarne' jest orzeczone o 'kocie' ≡ kot jest czarny (jedno wyrażenie jest semantycznie tożsame i równoważne drugiemu).</p>"}, {"t": "Wykład – nazwy: budowa, deskrypcje, funkcje nazwy; zdania kategoryczne", "html": "\n<div class=\"eyebrow\">LOGIKA – Wykład: nazwy i zdania kategoryczne</div>\n<div class=\"topic\"><span>Temat</span>Nazwa w ujęciu syntaktycznym i semantycznym, nazwy proste i złożone, deskrypcje, negacja nazwowa, funkcje logiczne nazwy; cztery typy zdań kategorycznych (a, e, i, o) i sylogizm</div>\n<h3 class=\"part\">CZĘŚĆ I – NAZWY</h3>\n<h4><span class=\"num\">1.</span> Nazwa w ujęciu syntaktycznym</h4>\n<ul>\n<li><b>Definicja:</b> nazwa to wyrażenie, które może być <b>podmiotem lub orzecznikiem</b> prostego zdania podmiotowo-orzecznikowego typu <i>x jest y</i> / <i>x nie jest y</i>.</li>\n<li>W logice nazwami są nie tylko rzeczowniki (jak w gramatyce, gdzie nazwą jest tylko podmiot): <i>Jan, dom, człowiek, zwierzę rozumne, zielone</i>, ale także <i>idący, piszący, śpiewający</i>.</li>\n<li>Czasownik („śpiewa”) nie jest nazwą – rozbijamy go: <i>śpiewa</i> = <i>jest śpiewający</i>; wtedy „śpiewający” jest nazwą.</li>\n<li>Przymiotniki (cechy) i imiesłowy są w logice traktowane jako nazwy.</li>\n<li>Jesteśmy w <b>metajęzyku</b> (jest nim język polski), dlatego odwołujemy się do gramatyki polskiej – potem się jej „pozbędziemy”.</li>\n<li>Nazwą może stać się wszystko, także całe zdanie – jeśli potraktujemy je metajęzykowo jako podmiot kolejnego zdania.</li>\n</ul>\n\n<h4><span class=\"num\">2.</span> Nazwa w ujęciu semantycznym</h4>\n<ul>\n<li><b>Definicja:</b> nazwa to <b>wyrażenie znaczące</b>, tzn. desygnujące – wskazujące na jakiś przedmiot.</li>\n<li>Funkcja <b>oznaczania</b> przypisana jest <b>wyłącznie nazwom</b>. Pozostałe kategorie (zdania, funktory, operatory) definiuje się przez inne funkcje logiczne.</li>\n<li>Mówienie, że „zdanie oznacza stan rzeczy”, to <b>skrót myślowy</b>. Zdanie oznacza stan rzeczy dopiero wtedy, gdy przekształcimy je w nazwę – wtedy przestaje działać jako zdanie.</li>\n<li>Przykład: <i>Dzisiaj świeci słońce</i> (zdanie) → <i>fakt, że dzisiaj świeci słońce</i> / <i>okoliczność, że dzisiaj świeci słońce</i> (nazwa).</li>\n<li><b>Różnica:</b> okoliczność nie jest ani prawdziwa, ani fałszywa – to stan rzeczy. Zdanie natomiast stwierdza, że coś zachodzi albo nie zachodzi, więc ma wartość logiczną.</li>\n<li>Każde zdanie można przekształcić w nazwę za pomocą odpowiednich funktorów (poznamy je).</li>\n</ul>\n\n<h4><span class=\"num\">3.</span> Podział syntaktyczny: nazwy proste i złożone</h4>\n<ul>\n<li><b>Nazwa prosta</b> – żadna jej część właściwa nie jest nazwą (litery nie są częściami znaczącymi; w słowie „pod” żadna litera nic nie znaczy).</li>\n<li><b>Nazwa złożona</b> – zbudowana za pomocą <b>funktorów nazwotwórczych</b> od argumentów nazwowych lub zdaniowych.</li>\n</ul>\n\n<h4><span class=\"num\">4.</span> Deskrypcje</h4>\n<ul>\n<li>Problem zdań typu <i>„Obecny król Francji jest łysy”</i> – czy można temu zdaniu przypisać prawdę lub fałsz, skoro takiego króla nie ma? Co najwyżej można powiedzieć, że „coś tu jest źle”.</li>\n<li>Pod wpływem takich zdań rozwinęła się współczesna logika (Frege) – np. <i>gwiazda poranna</i> i <i>gwiazda wieczorna</i> mają ten sam desygnat.</li>\n<li>Bertrand Russell – jeden z wybitnych logików tamtych czasów – rozwiązywał ten problem, przekształcając takie wyrażenia w zdania, którym można przypisać prawdę lub fałsz.</li>\n<li><b>Deskrypcja określona</b> – wskazuje dokładnie jeden przedmiot (zakłada, że jest jeden), np. <i>najwyższa góra świata</i>, <i>obecny król Francji</i>.</li>\n<li><b>Deskrypcja nieokreślona</b> – ogólna, np. <i>wysoki budynek</i> (takich budynków jest wiele).</li>\n<li><b>Ukryta deskrypcja</b> – nazwa, która w rzeczywistości jest skróconą deskrypcją.</li>\n<li>Deskrypcję określoną można budować na różne sposoby – może zajmować nawet całą stronę.</li>\n</ul>\n\n<h4><span class=\"num\">5.</span> Funktory nazwotwórcze; negacja nazwowa</h4>\n<ul>\n<li>Są specjalne funktory do tworzenia nazw (np. „i”, „lub” między nazwami) – brzmią tak samo jak funktory zdaniotwórcze, ale logicznie zapisuje się je inaczej. Działają jak <b>iloczyn</b> i <b>suma</b> zbiorów.</li>\n<li><b>Negacja nazwowa „nie-”</b> (pisana z kreseczką): <i>nie-sprawiedliwy</i> oznacza <b>wszystko</b>, co nie jest sprawiedliwe (także buty). Tak samo <i>nie-pies</i> to wszystkie przedmioty, które nie są psami.</li>\n<li><i>pies</i> i <i>nie-pies</i> to <b>nazwy sprzeczne</b> – razem obejmują wszystko i nic nie ma pomiędzy.</li>\n<li><i>sprawiedliwy</i> i <i>niesprawiedliwy</i> (bez kreseczki, zwykłe słowo) to <b>nazwy przeciwne</b>, a nie sprzeczne – może być coś pomiędzy. W mowie akcent na „nie” pokazuje, że użyto negacji logicznej.</li>\n<li>Funktor nazwotwórczy od argumentu zdaniowego („fakt, że…”) – tzw. funktor urzeczowiający (reifikujący).</li>\n<li><b>Parafraza</b> – przekładanie struktur gramatyki na strukturę logiczną.</li>\n</ul>\n\n<h4><span class=\"num\">6.</span> Funkcje logiczne nazwy <span class=\"tag-exam\">będzie pytane</span></h4>\n<h5>a) Nazywanie</h5>\n<ul>\n<li>Potocznie: przypisywanie etykiet rzeczom, żeby móc się porozumiewać.</li>\n<li>Rzeczy jest więcej niż nazw – nazywamy tylko to, co nam potrzebne. Nauka nazywa rzeczy niewidoczne w życiu codziennym i wprowadza nowe nazwy.</li>\n<li>„Nazwanie rzeczy to początek jej historii” (powiedzenie z XIX w.) – dopóki rzecz nie została nazwana, nie była zauważana; <b>nazwa koncentruje uwagę</b>.</li>\n<li>Przykład: ścianę nazywamy całą, a jej tysięcy fragmentów nie; kolorów są miliony (programy graficzne), a nazywamy niewiele. Język upraszcza rzeczywistość – i to uproszczenie działa.</li>\n<li>Filozofia języka zaczęła się właściwie w XIX wieku.</li>\n</ul>\n<h5>b) Znaczenie (sens)</h5>\n<ul>\n<li>Rozumienie treści – to, co rozumiemy przez daną nazwę, nazywamy dziś <b>pojęciem</b>.</li>\n<li>Różni ludzie mają różne pojęcia związane z tą samą nazwą → <b>wieloznaczność</b>. Wyrażeń całkiem jednoznacznych w języku potocznym prawie nie ma.</li>\n</ul>\n<h5>c) Oznaczanie (desygnowanie) – najważniejsza z logicznego punktu widzenia</h5>\n<ul>\n<li><b>Definicja:</b> nazwa N oznacza (desygnuje) przedmiot x wtedy i tylko wtedy, gdy N – przy określonym jej rozumieniu (trzeba ją ujednoznacznić) – jest orzekana prawdziwie o tym przedmiocie.</li>\n<li>Jest to <b>procedura sprawdzania</b>, czy przedmiot jest desygnatem nazwy: budujemy zdanie „x jest N” i pytamy, czy jest prawdziwe. Jeśli obaj uznajemy je za prawdziwe – zgadzamy się, że x jest desygnatem (to jest okno, to jest łóżko…).</li>\n<li>Tak dziecko uczy się języka. Tak samo <b>egzamin</b>: sprawdza, czy student używa słów w tym samym znaczeniu co profesor. Pełnej zgodności się nie osiągnie – jest pewna granica zgodności.</li>\n<li><b>Desygnat w znaczeniu wąskim</b> – przedmiot istniejący realnie (skrajny empiryzm). <b>W znaczeniu szerokim</b> – także przedmioty możliwe, intencjonalne (np. przyszłe). Na egzaminie pytania dotyczą desygnatów realnych.</li>\n</ul>\n<h5>d) Denotacja (zakres)</h5>\n<ul>\n<li>Zbiór <b>wszystkich desygnatów</b> nazwy – przeszłych, teraźniejszych i przyszłych (np. „człowiek”: wszyscy, którzy żyli, żyją i będą żyć, także ci, o których nigdy nie słyszeliśmy).</li>\n<li>Niektórzy autorzy odróżniają denotację (tylko desygnaty realne) od pojęcia szerszego.</li>\n</ul>\n<h5>e) Konotacja (współoznaczanie)</h5>\n<ul>\n<li>Łac. <i>con-</i> = „razem z”, „współ-”. Nazwa „pies” oznacza nie tylko przedmiot, ale „współoznacza” jego cechy – bez znajomości cech nie umiałbym wskazać desygnatu (wiem, że był Einstein, ale bez cech nie wskażę go).</li>\n<li><b>Konotacja</b> = zbiór cech <b>charakterystycznych</b> (specyficznych), przysługujących <b>łącznie wszystkim i tylko</b> desygnatom danej nazwy.</li>\n<li>Brak choćby jednej cechy charakterystycznej sprawia, że przedmiot nie jest desygnatem nazwy.</li>\n<li>Relacja między oznaczaniem a konotacją jest skomplikowana – od czasów Fregego piszą o tym całe książki, zawsze znajdzie się jakiś wyjątek.</li>\n</ul>\n<h5>f) Treść pełna</h5>\n<ul>\n<li>Zbiór <b>wszystkich</b> cech przysługujących wszystkim desygnatom (np. pies musi mieć serce – ale to nie jest cecha charakterystyczna psa, bo mają je też inne zwierzęta).</li>\n<li>Treści pełnej żadnej nazwy nie znamy – to pojęcie idealne, bardzo potrzebne w filozofii. Negatywnie potrafimy powiedzieć, co do niej nie należy (np. kwadratowość u psa).</li>\n<li>Twierdzenia matematyczne udowadniają kolejne cechy danych figur.</li>\n<li><b>Treść pleonastyczna</b> – dwa razy to samo, „masło maślane” („w dniu dzisiejszym”).</li>\n</ul>\n\n<h3 class=\"part\">CZĘŚĆ II – ZDANIA KATEGORYCZNE I SYLOGIZM</h3>\n<h4><span class=\"num\">7.</span> Cztery typy zdań kategorycznych</h4>\n<p>Arystoteles zbudował całą logikę (szerszą od nauki swoich czasów) w oparciu o 4 typy zdań kategorycznych. Do XX wieku tak dzielono zdania.</p>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead><tr><th>Symbol</th><th>Schemat</th><th>Nazwa</th><th>Przykład</th></tr></thead>\n<tbody>\n<tr><td><b>SaP</b></td><td>Każde S jest P</td><td>ogólnotwierdzące</td><td>Każdy człowiek jest śmiertelny</td></tr>\n<tr><td><b>SeP</b></td><td>Żadne S nie jest P</td><td>ogólnoprzeczące</td><td>Żaden człowiek nie jest kamieniem</td></tr>\n<tr><td><b>SiP</b></td><td>Pewne S jest P</td><td>szczegółowotwierdzące</td><td>Pewien punkt jest czarny</td></tr>\n<tr><td><b>SoP</b></td><td>Pewne S nie jest P</td><td>szczegółowoprzeczące</td><td>Pewien punkt nie jest czarny</td></tr>\n</tbody></table></div>\n<ul>\n<li><b>Skąd litery?</b> Z łaciny: <i><b>a</b>ff<b>i</b>rmo</i> – stwierdzam (a – ogólne, i – szczegółowe twierdzące); <i>n<b>e</b>g<b>o</b></i> – przeczę (e – ogólne, o – szczegółowe przeczące). Pierwsza samogłoska = ogólne, druga = szczegółowe; to czysto mechaniczne.</li>\n<li><b>S</b> – podmiot (łac. <i>subiectum</i>), stąd „subiektywny” = podmiotowy. <b>P</b> – orzecznik (<i>praedicatum</i>).</li>\n<li>Dawne znaczenie „subiektywny” nie ma nic wspólnego z dzisiejszym. W średniowieczu: Bóg jest „najbardziej subiektywny” (podmiotowy), czyli najbardziej istniejący – istnienie podmiotowe było najsilniejsze, a obiektywne (przedmiotowe, w umyśle) najsłabsze.</li>\n<li><b>„Kategoryczny”</b> w tym kontekście nie oznacza konieczności – znaczy tyle co <b>orzekający</b> (oznajmujący). Zdanie konieczne to zdanie <b>apodyktyczne</b>. Zmiana znaczenia słowa „kategoryczny” w polszczyźnie zaczęła się jeszcze przed wojną – warto szukać w starszych podręcznikach.</li>\n<li>Słowo <b>„pewien”</b> ma w logice specyficzne znaczenie, inne niż potoczne: co najmniej jeden (może to być jeden przypadek, najczęściej kilka; nie wyklucza, że wszystkie).</li>\n<li>Wśród zdań szczegółowych wyróżniano <b>zdania jednostkowe</b> – podmiot jest jednostką (np. „Jan jest wysoki”).</li>\n<li>Język polski ma podwójną negację – czasem nie wiadomo, co się powiedziało; negacje w zdaniach złożonych bywają skomplikowane.</li>\n</ul>\n\n<h4><span class=\"num\">8.</span> Koniunkcja i alternatywa (zapowiedź KRZ)</h4>\n<ul>\n<li>Z dwóch zdań („Jan jest wysoki”, „Jan jest studentem”) budujemy koniunkcję (i) albo alternatywę (lub).</li>\n<li><b>Alternatywa</b> traktowana jest jak <b>suma</b>: 1 + 0 = 1, 1 + 1 = 1 – suma nigdy nie może być większa niż 1 (nie ma takiej wartości).</li>\n<li><b>Klasyczny rachunek zdań</b> – najprostszy: nie patrzy, jak zdanie jest zbudowane w środku, przyjmuje zdania p, q jako całości. Interesują nas tylko wartości logiczne (2 wartości) – to właściwie kombinatoryka. Cała logika to „składanie funktorów”.</li>\n<li>Funktorów dwuargumentowych może być <b>16</b>; najpopularniejsze są 4 (poznamy je). „Nieprawda, że p” – funktor zdaniotwórczy od jednego argumentu zdaniowego.</li>\n</ul>\n\n<h4><span class=\"num\">9.</span> Wnioskowania i sylogizm</h4>\n<ul>\n<li>Na zdaniach kategorycznych opiera się: wnioskowanie z jednego zdania (kwadrat logiczny) oraz <b>sylogizmy</b> – przyjmuje się 2 zdania (przesłanki) i pyta, co z nich wynika.</li>\n<li>W poprawnym sylogizmie mogą być tylko <b>3 różne terminy</b>: S, P i M. S i P pełnią funkcję terminu <b>mniejszego</b> i <b>większego</b>, M – terminu <b>średniego</b>. Trzecią literkę wprowadza się na poziomie wyższym (w metajęzyku).</li>\n<li>Sylogizm uchodził za najdoskonalsze rozumowanie naukowe. Trybów sylogizmu jest 256, z czego 24 są poprawne; o samym sylogizmie można by wykładać cały rok.</li>\n</ul>\n\n<h4><span class=\"num\">10.</span> Dygresja: Kościół, logika i nowa nauka</h4>\n<ul>\n<li>Logika Arystotelesa powstała jako analiza istniejącej wtedy nauki. Nowa nauka pojawiła się dopiero w <b>XVII wieku</b> (od Galileusza); nowa logika potrzebowała czasu, by ją przeanalizować, a teologia – jeszcze ok. 100 lat, by to przyswoić.</li>\n<li>Okazało się, że fizyki nie da się budować tak jak dawniej – pojęcie nauki „przewróciło się do góry nogami”. Kościół długo nie umiał sobie poradzić z nową koncepcją wiedzy.</li>\n<li>Teorię kopernikańską „rehabilitowano” na początku XIX wieku – gdy odkryto paralaksę.</li>\n<li>Dawniej wszelką dynamikę wiązano z pojęciem ducha (pojęcie z Grecji); planetom przypisywano inteligencje. <b>Kepler</b> jako pierwszy „pozbawił planety inteligencji” (ok. 1600–1620).</li>\n<li>Po Trydencie zwykły człowiek nie miał prawa czytać Pisma Świętego (obawa przed własną interpretacją). Ponad 90% ludzi przedwojennych nie miało wykształcenia – nie było szkół powszechnych, uczyły szkoły parafialne.</li>\n<li>Teoria (krytyka) źródeł pojawia się dopiero w XIX wieku – zaczęto krytycznie wydawać źródła. Wcześniej cytowano Tomasza czy Augustyna, ale ich nie studiowano; <b>patrologia</b> jako dziedzina rozwinęła się naprawdę w XIX–XX wieku.</li>\n<li>Idea wolności religijnej (prawo do wiary zgodnie z sumieniem) była kiedyś potępiana – groziła za nią ekskomunika.</li>\n<li>W 1943 r. papież (Pius XII, encyklika <i>Divino afflante Spiritu</i>) po raz pierwszy zezwolił na nowoczesne metody badania Pisma Świętego.</li>\n<li>Trzeba było Kościół „przewietrzyć” – w tym celu zwołano Sobór Watykański II. Zmiany były rewolucyjne z zewnątrz, ale nie w tym, co istotne. <b>Zmienia się wyraz wiary, nie wiara.</b> Kościół jest dzieckiem swoich czasów i mówi swoim językiem.</li>\n<li>„Nie da się dzisiaj być duszpasterzem, nie mając głowy” – serce najważniejsze, ale trzeba rozumieć.</li>\n</ul>\n"}, {"t": "Wykład 29.10.2026 – konotacja, typy cech, rodzaj i gatunek, podziały nazw", "html": "\n<div class=\"eyebrow\">LOGIKA – Wykład z 29.10.2026</div>\n<div class=\"topic\"><span>Temat</span>Konotacja i treść pełna, typy cech, prawo odwrotnej proporcjonalności, rodzaj i gatunek, sześć podziałów nazw</div>\n<h4><span class=\"num\">1.</span> Konotacja i treść pełna</h4>\n<ul>\n<li><b>Treść pełna</b> = zbiór <b>wszystkich</b> cech desygnatów. To pojęcie idealne – nie znamy jej pozytywnie.</li>\n<li>Dogmat się nie zmienia – zmienia się sposób pojmowania (przykład z grzebaniem samobójców).</li>\n<li><b>Konotacja nazwy</b> = zbiór cech charakterystycznych = definicja przy określonym rozumieniu (zakończenie wykładu).</li>\n</ul>\n<h4><span class=\"num\">2.</span> Typy cech</h4>\n<div class=\"table-wrap\"><table class=\"nt\"><thead><tr><th>Cecha</th><th>Co to znaczy</th><th>Przykład</th></tr></thead><tbody>\n<tr><td><b>Konstytutywne (istotne)</b></td><td>tworzą istotę, wyrażają się w definicji</td><td>człowiek = zwierzę rozumne</td></tr>\n<tr><td><b>Konsekutywne</b></td><td>wynikają koniecznie z definicji</td><td>cała matematyka to ich wyprowadzanie</td></tr>\n<tr><td><b>Konieczne niecharakterystyczne</b></td><td>ma je każdy desygnat, ale nie definiują</td><td>człowiek ma serce</td></tr>\n<tr><td><b>Przygodne (niekonieczne)</b></td><td>mogą być lub nie</td><td>student z Polski</td></tr>\n<tr><td><b>Proprium</b> (łac. <i>proprietas</i>)</td><td>konieczne, właściwe tylko danej nazwie, ale nie tworzą istoty</td><td>–</td></tr>\n<tr><td><b>Treść pleonastyczna / redundantna</b></td><td>za dużo w definicji</td><td>masło maślane</td></tr>\n</tbody></table></div>\n<ul><li><b>Definicja arystotelesowska:</b> najbliższy rodzaj + różnica gatunkowa. Słowo „specyficzny” pochodzi od <i>species</i>.</li></ul>\n<h4><span class=\"num\">3.</span> Prawo odwrotnej proporcjonalności</h4>\n<ul>\n<li>Im bogatsza treść (więcej cech), tym węższy zakres.</li>\n<li><b>Uogólnianie</b> = odejmowanie cech z konotacji; <b>ograniczanie</b> = dodawanie cech do treści.</li>\n<li>Przykład: prostokąt równoboczny → odejmując „równoboczny” otrzymujemy prostokąt; odejmując „prostokąt” – równoboczność.</li>\n</ul>\n<h4><span class=\"num\">4.</span> Rodzaj i gatunek</h4>\n<ul>\n<li><b>Genus</b> (rodzaj, szerszy) i <b>species</b> (gatunek, węższy). Rodzaj obejmuje wiele gatunków.</li>\n<li>Zapisuje się diagramami kół (Eulera). Słowa: generalny (genus), specjalny/specyficzny (species).</li>\n</ul>\n<h4><span class=\"num\">5.</span> Podziały nazw (6 kryteriów)</h4>\n<h5>Ze względu na zakres</h5>\n<ul><li><b>Ostre</b> – łatwo wskazać desygnaty (pies, stół).</li><li><b>Nieostre</b> – granica rozmyta (szlachetny, żółty/pomarańczowy).</li></ul>\n<h5>Ze względu na treść</h5>\n<ul><li><b>Wyraźne</b> – potrafimy podać cechy (kwadrat, koło matematyczne).</li><li><b>Niewyraźne (intuicyjne)</b> – wiemy, ale nie potrafimy opisać (pies, religia). Religia jest intuicyjna. Na egzaminie trzeba umieć wyrazić wiedzę intuicyjną pojęciami.</li></ul>\n<h5>Ze względu na charakter przedmiotów</h5>\n<ul><li><b>Konkretne</b> – arystotelesowskie substancje: rzeczy, osoby.</li><li><b>Abstrakcyjne</b> – oderwane od podmiotu: sprawiedliwość, biel, relacja, zbiór.</li></ul>\n<h5>Zbiorowe i niezbiorowe</h5>\n<ul><li>Las, ręce – kolektywnie (całość) lub dystrybutywnie (każdy element). Logika ma z tym podziałem problem.</li></ul>\n<h5>Ze względu na realność</h5>\n<ul>\n<li><b>Analitycznie puste</b> (wewnętrznie sprzeczne): koło kwadratowe, żonaty kawaler, większa połowa – nie mogą istnieć; według Tomasza nawet Bóg ich nie stworzy. <i>Coincidentia oppositorum</i> – średniowieczna technika przekraczania sprzeczności przy mówieniu o Bogu.</li>\n<li><b>Empirycznie puste</b>: Kubuś Puchatek, flogiston, eter (jako nośnik fal; eksperyment Michelsona-Morleya, koniec XIX w.). Eter do usypiania to inna nazwa – wieloznaczność.</li>\n</ul>\n<h5>Ze względu na ilość desygnatów <span class=\"tag-exam\">najważniejszy – będzie na ćwiczeniach</span></h5>\n<p>Logika ekstensjonalna (zakresowa) – liczy się tylko zakres; nazwy o tym samym zakresie można podstawiać.</p>\n<div class=\"table-wrap\"><table class=\"nt\"><thead><tr><th>Typ</th><th>Desygnaty</th><th>Przykłady</th></tr></thead><tbody>\n<tr><td><b>Pusta</b></td><td>0</td><td>szklana góra (zakres = ∅), flogiston</td></tr>\n<tr><td><b>Jednostkowa</b></td><td>dokładnie 1</td><td>Jowisz, „najwyższa góra świata”, zbiór wszystkich liczb parzystych</td></tr>\n<tr><td><b>Ogólna</b></td><td>co najmniej 2</td><td>człowiek, Polak, zbiór liczb parzystych (dowolny)</td></tr>\n<tr><td><b>Uniwersalna</b> (szczególny przypadek ogólnej)</td><td>nieskończenie wiele</td><td>człowiek, ptak, ser</td></tr>\n</tbody></table></div>\n<ul>\n<li>Każda nazwa własna jest jednostkowa (konwencja), choć może być wiele miejsc o tej nazwie.</li>\n<li>Liczba gramatyczna nie decyduje o typie – liczymy desygnaty.</li>\n<li>„Ręka Fryderyka Chopina” – ogólna (2 desygnaty); „ręce Fryderyka Chopina” jako zbiór – jednostkowa (1).</li>\n<li>Wszechświat – jednostkowa z nazwy; fizyka dopuszcza wielość, ale to niesprawdzalne (jak nieśmiertelność).</li>\n<li>„Coś” – najbardziej ogólna nazwa. „Polacy” – wieloznaczne (zbiór wszystkich vs. niektórzy).</li>\n<li>Zbiór liczb parzystych (dowolny) – ogólna; zbiór <b>wszystkich</b> liczb parzystych – jednostkowa.</li>\n<li>Każda nazwa o określonym znaczeniu ma tylko <b>jedną denotację</b> (zbiór wszystkich desygnatów).</li>\n</ul>\n"}], "fczl": [{"t": "Wykład 1 – filozofia człowieka i teologia", "html": "<ul><li><b>Wykład 1:</b> Filozofia człowieka i teologia</li><li>Uwagi wstępne</li></ul>\n<p>Filozofia fundamentem teologii. Filozofia jest najważniejsza, uczy ona myślenia krytycznego.</p>\n<p>Uczyć się dla siebie, a jak nie, to dla Kościoła. Studiowanie jest „w bibliotece”, czyli w ciszy.</p>\n<h5>Sylabus: 5 książek, które każdy kleryk ma przeczytać</h5>\n<ul><li><b>Wyznania</b> – św. Augustyn → jako lektura duchowa</li></ul>\n<p>Cztery pytania Immanuela Kanta (logika myślenia o człowieku)</p>\n<ul><li><b>(Zestawienie z Heideggerem</b> – odwrócony wektor pytań)</li><li><b>Najpierw zadaj pytanie o wiedzę:</b> Co wiem? (Heidegger: 4)</li><li><b>Co powinienem czynić? → filozofia moralna (Heidegger:</b> 3)</li></ul>\n<p>Czego mogę się spodziewać? → pytam o religię, o religijną perspektywę istnienia (Heidegger: 2)</p>\n<ul><li><b>Kim jest człowiek? → pytanie antropologiczne (Heidegger:</b> 1)</li><li>Człowiek, wolność i zło</li><li><b>Schelling:</b> Jak człowiek uświadomi sobie kim jest, to zaraz zada sobie pytanie: jaki powinien być. Człowiek dąży do ciągłego odkrywania i ulepszania.</li></ul>\n<p>Jak człowiek zaczyna zdumiewać się nad sobą, to zaczyna być świadomy swojej inności (wielkości).</p>\n<p>Mamy w sobie pierwiastek Boży i od nas zależy, jak go wykorzystamy.</p>\n<p>Dlaczego jest zło? → Bo Bóg dał nam wolność. My wybraliśmy zło i ponosimy tego konsekwencje. Wolność możemy wykorzystać dobrze i źle.Zło</p>\n<h5>= nieszczęście</h5>\n<ul><li><b>Zło:</b> rodzi się z dialogu, wyrządza je człowiek człowiekowi.</li><li><b>Nieszczęście:</b> coś, co wynika z natury, na co nie mamy wpływu (choroby, trzęsienia ziemi itp.).</li><li>Współczesność, nadzieja i kondycja człowieka</li><li><b>Transhumanizm:</b> nauka o tym, by człowiek był nieśmiertelny (większość jest ateistami, nie wierzą, bo nie chcą śmierci). Pokazuje to, że mają tęsknotę za nieśmiertelnością. Wszyscy jesteśmy powołani do nieśmiertelności, ale oni ją źle rozumieją – chodzi o nieśmiertelność duchową, a nie fizyczną.</li></ul>\n<p>Chrześcijaństwo to religia nadziei. Gdy nie ma nadziei, to jest rozpacz.</p>\n<ul><li><b>Kierkegaard:</b> rozpacz jest wtedy, gdy sytuacja jest tak beznadziejna, że jedyną nadzieją na rozwiązanie jest śmierć, która nie chce przyjść. Życie psychiczne jest narzędziem życia duchowego. Badania pokazują, że nawet ludzie psychicznie zdrowi popełniają samobójstwa, bo tracą nadzieję.</li></ul>\n<h5>Freud → wielkość człowieka nie jest uzasadniona (kryzysy antropologiczne)</h5>\n<ul><li><b>Teoria Kopernika:</b> jesteśmy mali, nie jesteśmy w centrum.</li><li><b>Teoria Darwina:</b> jesteśmy bardzo podobni do małpy.</li><li><b>Freud:</b> człowiek jest kompletnie zawładnięty przez nieuświadomione popędy (np. seksualny).</li><li>Odniesienia historyczno-teologiczne</li><li><b>Protestanci:</b> dualizm między dobrą duszą a złym ciałem.</li></ul>\n<p>Palili kobiety na stosie → ciało kobiety uznawali za gorsze, jako źródło pożądania.</p>"}, {"t": "Wykład 2 – personalizm, dramat, dialog, horyzont agatologiczny (opracowanie kompleksowe)", "html": "<div class=\"eyebrow\">FILOZOFIA CZŁOWIEKA – Wykład: Chrześcijański Personalizm i Filozofia Dramatu (Opracowanie Kompleksowe)</div>\n<ul><li><b>Wprowadzenie:</b> Kontekst narodzin personalizmu chrześcijańskiego</li></ul>\n<p>Refleksja nad człowiekiem w tradycji chrześcijańskiej rodziła się nie w próżni, lecz w kontekście wielkich sporów dogmatycznych (chrystologicznych i trynitarnych – jak rozumieć tajemnicę Chrystusa i Trójcy Świętej). Filozofia ta stała się pomostem łączącym starożytną myśl grecką (ontologię) z nowym, biblijnym spojrzeniem na ludzką egzystencję. W przeciwieństwie do zdrowego rozsądku, który zadowala się powierzchownym stwierdzeniem („to jest krzesło i koniec”), filozofia pyta o ostateczną istotę trzech wielkich przedmiotów: Boga, człowieka i świata.</p>\n<h4><span class=\"num\">1.</span> Trzy perspektywy patrzenia na człowieka</h4>\n<h4><span class=\"num\">A.</span> Patrzenie „z góry” (Perspektywa teologiczna / św. Augustyn)</h4>\n<ul><li><b>Kluczowe pojęcie:</b> Człowiek jako imago Dei (obraz Boży).</li><li><b>Założenie i metoda:</b> Punktem wyjścia jest Bóg. Filozof patrzy na człowieka z perspektywy Stwórcy – skoro człowiek jest obrazem Boga, to w jego wnętrzu należy szukać śladów samego Boga.</li><li><b>Przykład:</b> Słynne wyznanie św. Augustyna: „Niespokojne jest serce nasze, dopóki nie spocznie w Tobie”.</li></ul>\n<h4><span class=\"num\">B.</span> Patrzenie „od dołu” (tzw. Mistrzowie Podejrzeń: Marks, Freud, Nietzsche)</h4>\n<ul><li><b>Charakterystyka ogólna:</b> Są to antropologie ateistyczne i redukcjonistyczne. Odrzucają wymiar wertykalny (transcendencję, duszę, Boga), sprowadzając człowieka wyłącznie do wymiaru ziemskiego i biologicznego. Podejrzewają człowieka o to, że jest gorszy, niż twierdzi, a jego religijność czy wzniosłe motywy to jedynie maska.</li><li><b>Karol Marks:</b> Człowiek zredukowany do materii, pracy i determinizmu ekonomicznego; istota uwikłana w pożądanie posiadania bytu i uwarunkowania społeczne.</li><li><b>Zygmunt Freud:</b> Człowiek jako sprytny manipulator i istota zakłamana, rządzona przez nieświadome popędy biologiczno-seksualne (libido), które musi sublimować (np. poprzez twórczość).</li><li><b>Fryderyk Nietzsche:</b> Człowiek napędzany wyłącznie wolą mocy (Wille zur Macht); cała jego natura to dążenie do dominacji i manifestacji siły.</li></ul>\n<h4><span class=\"num\">C.</span> Patrzenie „wprost” / relacyjne (Personalizm chrześcijański)</h4>\n<ul><li><b>Charakterystyka:</b> Bezpośrednie wejście w tajemnicę człowieczeństwa (kim jest człowiek w swojej istocie?), badając go nie w abstrakcyjnej izolacji, lecz w jego żywych relacjach: Ja – Ty (międzyludzkiej) oraz Ja – Bóg.</li><li><b>Postać kluczowa / pomost:</b> Myśl rozwijana m.in. w polskim środowisku krakowskim (z udziałem m.in. ks. prof. Józefa Tischnera czy kard. Karola Wojtyły), łącząca metafizykę z doświadczeniem osoby.</li></ul>\n<h4><span class=\"num\">2.</span> Filozofia Dramatu (Nurt ks. Józefa Tischnera)</h4>\n<h4><span class=\"num\">A.</span> Człowiek jako uczestnik dramatu</h4>\n<p>Człowiek nie jest statycznym przedmiotem badania ani biernym widzem na „scenie” świata – jest czynnym aktorem w wielkim dramacie obejmującym stworzenie, grzech, upadek oraz odkupienie.</p>\n<h4><span class=\"num\">B.</span> Czas dramatyczny a czas matematyczny</h4>\n<ul><li><b>Czas fizykalno-matematyczny:</b> Jednorodny, mechaniczny pomiar ruchu (zegar, matematyczna ciągłość).</li></ul>\n<h5>Czas dramatyczny</h5>\n<p>Toczy się między osobami, jest nieodwracalny i wypełniony napięciami.</p>\n<p>Jest radykalnie wychylony ku przyszłości (wymiar eschatologiczny, o którym pisał św. Paweł: „Nasza ojczyzna jest w niebie”). Przeszłość stanowi podłoże, ale to przyszłość, nadzieja i ostateczne spełnienie nadają sens teraźniejszości. (Kościół i życie ludzkie kierują się ku przyszłości, nie unieważniając przeszłości, lecz integrując ją w procesie wzrostu).</p>\n<h4><span class=\"num\">C.</span> Świadomość bytu (rzeczy) vs Świadomość osoby</h4>\n<ul><li><b>Świadomość bytu (intencjonalna obiektywizacja):</b> Traktowanie otaczającego świata i innych ludzi jak przedmiotów („rzeczy” na scenie), które można analizować, kontrolować lub obsobaczyć.</li><li><b>Świadomość osoby (Relacja personalna):</b> Drugi człowiek staje przede mną nie jako obojętny obiekt, lecz jako roszczenie moralne. Jego obecność budzi w nas poczucie obowiązku i wzywa do odpowiedzi („Gdzie jesteś?”). W ujęciu dramatycznym: „W twoim ręku jest moja zguba i ocalenie, a w moim ręku twoja”.</li></ul>\n<h4><span class=\"num\">3.</span> Filozofia Dialogu: Dwa rodzaje dialogu</h4>\n<h4><span class=\"num\">A.</span> Dialog dialektyczny (wewnętrzny / platoński)</h4>\n<p>Ruch myśli, ścieranie się sprzecznych racji i argumentów w obrębie jednego umysłu (wewnętrzna rozmowa duszy ze sobą, logika dedukcyjna).</p>\n<h4><span class=\"num\">B.</span> Dialog interpersonalny (biblijny / personalistyczny)</h4>\n<p>Rzeczywiste, faktyczne spotkanie dwóch odrębnych wolności (Ja – Ty lub Bóg – Człowiek).</p>\n<ul><li><b>Warunek konieczny:</b> Wzajemny wybór i uznanie godności oraz wartości drugiego człowieka (nie ma autentycznego dialogu tam, gdzie drugiego traktuje się instrumentalnie).</li><li><b>Wzorzec biblijny:</b> Przymierze z Abrahamem (gdzie Bóg wchodzi w historię przez wybór i zaproszenie do relacji) oraz fundamentalne pytanie Boga skierowane do Adama w raju: „Gdzie jesteś?” – pytanie o obecność i relację, a nie o abstrakcyjną definicję geograficzną czy biologiczną.</li></ul>\n<h4><span class=\"num\">4.</span> Horyzont Agatologiczny: Dobro, Zło i Nieszczęście</h4>\n<ul><li><b>Horyzont agatologiczny (od gr. agathon – dobro):</b> Fundament i płaszczyzna, na której rozgrywa się ludzkie życie i dialog. Człowiek w swoich wyborach nieustannie porusza się w polu napięcia między dobrem a złem.</li></ul>\n<p>Krytyka tradycyjnej definicji zła jako czystego braku (privatio boni): Choć w ujęciu klasycznym zło bywa definiowane jako brak dobra, w egzystencjalnym dramacie człowieka zło jawi się jako realna, agresywna siła, z którą trzeba toczyć realną walkę.</p>\n<ul><li><b>Kluczowe rozróżnienie:</b> Zło kontra Nieszczęście</li></ul>\n<h5>Zło (charakter dialogiczny i intencjonalny)</h5>\n<p>Rodzi się wyłącznie w relacji wolnych osób.</p>\n<ul><li><b>Jest świadome, celowe i zamierzone</b> – stanowi akt, w którym człowiek dobrowolnie wyrządza krzywdę drugiemu człowiekowi.</li></ul>\n<h5>Nieszczęście (poziom natury i „sceny”)</h5>\n<p>Obejmuje trzęsienia ziemi, powodzie, katastrofy naturalne, choroby czy niezawinione tragiczne wypadki (np. potrącenie pieszego przez kierowcę jadącego w pełni przepisowo).</p>\n<ul><li><b>W nieszczęściu nie ma intencji zła ani moralnej winy</b> – wynika ono ze skończoności, kruchości i ograniczeń ludzkiej kondycji w świecie materialnym.</li></ul>"}, {"t": "Wykład 2 – notatka szczegółowa", "html": "<div class=\"eyebrow\">FILOZOFIA CZŁOWIEKA – Wykład: Personalizm Chrześcijański, Filozofia Dramatu i Horyzont Agatologiczny</div>\n<h4><span class=\"num\">1.</span> Sposoby rozumienia człowieka</h4>\n<p>Każda refleksja nad człowiekiem zakłada jakieś wstępne przerozumienie (horyzont wyjściowy), które w toku formacji, nauki i filozofii ulega pogłębieniu lub weryfikacji. Wyróżnia się trzy główne podejścia:</p>\n<ul><li><b>Podejście obiektywizujące (statystyczne / naukowe):</b> Traktuje człowieka jak przedmiot badania, obiekt biologiczny lub element statystyk.</li><li><b>Podejście hermeneutyczne:</b> Opiera się na poszerzaniu wstępnego rozumienia człowieka w miarę wchodzenia w głąb doświadczenia i refleksji.</li><li><b>Podejście maieutyczne (Sokratejskie):</b> Sokrates jako „akuszer mądrości” – poprzez stawianie pytań pomaga uczniom „narodzić się” w dyskusji i odsłonić prawdę o człowieku (gr. genese-polis – narodzić się razem, wydobyć prawdę w relacji dialogicznej).</li></ul>\n<h4><span class=\"num\">2.</span> Trzy perspektywy w antropologii filozoficznej</h4>\n<ul><li>W historii myśli chrześcijańskiej i europejskiej wykrystalizowały się trzy sposoby patrzenia na człowieka:</li></ul>\n<h4><span class=\"num\">A.</span> Perspektywa „od góry” (np. św. Augustyn)</h4>\n<ul><li><b>Założenie:</b> Człowiek jest obrazem Boga.</li><li><b>Metoda:</b> Punktem wyjścia jest Bóg; w głąb istoty człowieka wchodzi się przez odniesienie do Stwórcy, szukając w człowieku śladów Boga (np. Wyznania: „Niespokojne jest serce nasze, dopóki nie spocznie w Tobie”).</li></ul>\n<h4><span class=\"num\">B.</span> Perspektywa „od dołu” – Filozofowie Podejrzeń</h4>\n<p>Reprezentowana przez myślicieli XIX/XX wieku, takich jak Karol Marks (interesy, baza ekonomiczna), Zygmunt Freud (pożądania, nieświadomość, libido) oraz Fryderyk Nietzsche (wola mocy).</p>\n<ul><li><b>Założenie:</b> Człowiek jest gorszy, niż mu się wydaje; jest istotą zakłamaną, pełną skrywanych popędów i redukowaną do wymiaru czysto ziemskiego/biologicznego (homo faber), z odrzuceniem wymiaru wertykalnego (Boga).</li></ul>\n<h4><span class=\"num\">C.</span> Perspektywa „wprost” – Personalizm i Filozofia Dramatu (m.in. ks. Józef Tischner, kard. Karol Wojtyła)</h4>\n<ul><li><b>Badanie człowieka wprost w jego relacjach</b> – nie jako martwy przedmiot, lecz jako osoba uczestnicząca w dramacie istnienia.</li></ul>\n<p>Filozofia ta odróżnia się od zdrowego rozsądku tym, że nie zadowala się powierzchownym stwierdzeniem („to jest krzesło i koniec”), lecz pyta o istotę bytu, stawiając w centrum relację: Bóg – człowiek – świat.</p>\n<h4><span class=\"num\">3.</span> Filozofia Dramatu i Koncepcja Osoby</h4>\n<ul><li><b>Idea osoby jako pomost:</b> Chrześcijański personalizm połączył grecką myśl ontologiczną z biblijną wizją człowieka jako relacji.</li><li><b>Wymiar dramatyczny:</b> Życie ludzkie to dramat pełen napięć, wyborów i relacji.</li><li><b>Kluczowa formuła relacyjna:</b> „Ja jestem sobą dzięki tobie” – człowiek staje się w pełni osobą nie w samotności, lecz we wspólnocie i poprzez wzajemne odniesienie do drugiego Ty.</li><li><b>Czas dramatyczny:</b> W przeciwieństwie do matematycznego czasu fizyki przyrodoznawstwa, czas dramatyczny jest skierowany ku przyszłości (wybory, nadzieja, eschatologia), nie unieważnia przeszłości, lecz integruje ją w horyzoncie dokonywania się człowieka.</li></ul>\n<h4><span class=\"num\">4.</span> Świadomość intencjonalna a Roszczenie Drugiego Człowieka</h4>\n<ul><li><b>Stosunek obiektywizacji intencjonalnej:</b> Kiedy patrzymy na świat wokół nas (przedmioty, narzędzia, a czasem niestety także na drugiego człowieka), traktujemy je jak obiekty poddane naszej manipulacji (urzeczowienie).</li><li><b>Drugi człowiek jako Roszczenie:</b> W personalizmie chrześcijańskim drugi człowiek stający przede mną nie jest obojętnym przedmiotem – staje jako roszczenie. Budzi w nas poczucie moralnego obowiązku i wzywa do odpowiedzi („Gdzie jesteś?” – fundamentalne pytanie Boga skierowane do człowieka).</li></ul>\n<h4><span class=\"num\">5.</span> Horyzont Agatologiczny: Zło kontra Nieszczęście</h4>\n<p>Wprowadzone (m.in. w myśli inspirowanej przez ks. Tischnera) pojęcie horyzontu agatologicznego (od gr. agatos – dobro) bada napięcie między dobrem a złem. Niezwykle ważne jest rozróżnienie dwóch pojęć, które często są ze sobą mylone:</p>\n<h5>Nieszczęście</h5>\n<p>Ma charakter czysto losowy.</p>\n<p>Brak w nim celowości, złej woli i świadomego zamierzenia (np. klęski żywiołowe: trzęsienie ziemi, powódź; albo nieszczęśliwy wypadek drogowy, w którym kierowca jechał zgodnie z przepisami, lecz doszło do tragedii).</p>\n<p>Nieszczęście nie jest moralnym złem.</p>\n<h5>Zło</h5>\n<p>Ma charakter dialogiczny i personalny.</p>\n<ul><li><b>Jest świadome i zamierzone</b> – zakłada wolny wybór, celowe działanie wymierzone w drugiego człowieka, niszczenie relacji i sprzeciw wobec dobra.</li></ul>"}, {"t": "Wykład 3 – dobro i zło a wolność, rodzaje więzi, źródła personalizmu", "html": "\n<div class=\"eyebrow\">FILOZOFIA CZŁOWIEKA – Wykład 3</div>\n<div class=\"topic\"><span>Temat</span>Wolność jako warunek dobra i zła, dobra wola (Kant), rodzaje więzi między ludźmi, chrześcijańskie źródła personalizmu</div>\n<h4><span class=\"num\">1.</span> Dobro i zło a wolność</h4>\n<ul>\n<li><b>Nie ma zła ani dobra bez wolności.</b> Dobro i zło moralne pojawiają się tylko tam, gdzie jest wolny wybór osoby.</li>\n<li><b>Na scenie nie ma zła</b> – na poziomie „sceny” (natury, świata rzeczy) zdarzają się nieszczęścia, ale zło rodzi się dopiero między osobami (por. wykład 2: zło dialogiczne a nieszczęście).</li>\n<li>Dobro i zło rozgrywają się w <b>horyzoncie agatologicznym</b> (gr. <i>agathon</i> – dobro) – <b>Tischner</b>.</li>\n</ul>\n<h4><span class=\"num\">2.</span> Dobra wola – Kant</h4>\n<ul>\n<li>Według <b>Kanta</b> nie można pomyśleć niczego, co bez ograniczenia mogłoby być uważane za dobre – z wyjątkiem <b>dobrej woli</b>.</li>\n<li>Nic nie jest bardziej nieograniczenie dobre niż dobra wola.</li>\n</ul>\n<h4><span class=\"num\">3.</span> Jaki rodzaj więzi łączy ludzi?</h4>\n<div class=\"table-wrap\"><table class=\"nt\"><thead><tr><th>Ujęcie</th><th>Więź</th></tr></thead><tbody>\n<tr><td><b>Bez osoby</b></td><td>nie ma żadnej więzi – <b>samotność</b>; człowiek jest zdany na siebie</td></tr>\n<tr><td><b>Liczne ukryte więzi</b></td><td><b>fatum</b> – przeznaczenie (ślepy los, który wiąże ludzi bez ich wiedzy i woli)</td></tr>\n<tr><td><b>Więź łaski</b></td><td>więź pochodząca <b>od Boga</b> – daru, a nie konieczności</td></tr>\n</tbody></table></div>\n<h4><span class=\"num\">4.</span> Źródła personalizmu</h4>\n<ul>\n<li><b>Personalizm</b> ma źródło już w <b>pierwszych wiekach chrześcijaństwa</b> – rodził się w kontekście religijnym.</li>\n<li>Człowiek rozumiany jako osoba pochodząca od Boga, przez Niego chciana i powołana.</li>\n<li><b>Osoba jest bytem otwartym</b> – na drugiego człowieka i na Boga.</li>\n<li>Pytanie na kolejny wykład: <b>jak rozumiano osobę w starożytności?</b></li>\n</ul>\n<div class=\"rule\"><b>Na następny tydzień:</b> przypomnieć sobie <b>teatr grecki</b> (osoba – maska aktora: gr. <i>prosopon</i>, łac. <i>persona</i>).</div>\n"}], "fprz": [{"t": "Zasady zaliczenia i literatura", "html": "<ul><li><b>Filozofia przyrody</b> – zasady zaliczenia i literatura</li><li>Warunki zaliczenia</li></ul>\n<h5>2 × wypracowanie (500 słów) na tematy z wykładów – 2 × 25% (łącznie 50%)</h5>\n<ul><li><b>termin:</b> 30.11 termin: 31.12</li></ul>\n<h5>1 × wypracowanie (1500 słów) – 30%</h5>\n<ul><li><b>Termin:</b> 28.01.2027</li><li><b>Quiz</b> – 10%</li><li><b>Uczestnictwo w zajęciach</b> – 10%</li><li>Literatura</li></ul>\n<h5>Podręcznik podstawowy</h5>\n<ul><li><b>Elementy filozofii przyrody</b> – Michał Heller</li></ul>\n<h5>Lektury dodatkowe</h5>\n<ul><li><b>Filozofia przyrody</b> – Michał Heller</li><li>Mała księga kosmologii</li><li>Richard P. Feynman</li></ul>\n<p>What Is Real?</p>"}, {"t": "Wykład 1 – filozofia nauki (6.10.2026)", "html": "<ul><li><b>Wykład 1:</b> Filozofia nauki</li></ul>\n<div class=\"meta\">🗓 Wtorek, 6 października 2026, 09:58</div>\n<ul><li>Filozofia wymaga pytań</li><li>Esej o nałogach</li></ul>\n<p>Filozofia nauki pokazuje nie tylko co odkryła, ale dlaczego można to uznać za naukę.</p>\n<p>Przedmiotem badania jest nauka, ale stawiane pytania mają charakter filozoficzny.</p>\n<ul><li>Czas i przestrzeń</li></ul>"}, {"t": "Wykład 1 – materiały z prezentacji (PDF)", "html": "<h5>Zasady zaliczenia przedmiotu</h5>\n<p>Student ma do napisania dwa wypracowania po 500 słów na tematy z wykładów.</p>\n<p>Wymagane jest również jedno dłuższe wypracowanie na 1500 słów.</p>\n<p>W skład oceny wchodzi także quiz składający się z 10 pytań z wykładów.</p>\n<p>Uczestnictwo w wykładach stanowi 10% końcowej oceny.</p>\n<h5>Zakres tematyczny kursu</h5>\n<p>Wprowadzenie do filozofii przyrody i określenie jej koncepcji.</p>\n<p>Zagadnienia związane z problematyką czasu i przestrzeni.</p>\n<p>Analiza struktury materii oraz wprowadzenie do kosmologii.</p>\n<p>Zagadnienia dotyczące życia, ewolucji oraz statusu informacji jako elementu natury.</p>\n<h5>Filozofia przyrody a filozofia nauki</h5>\n<p>Filozofia przyrody (traktowana jako ontologia) stawia fundamentalne pytanie „Jaki jest świat?” i bada materię, ruch, czas, przestrzeń oraz przyczynowość.</p>\n<p>Filozofia nauki (łącząca epistemologię i ontologię) skupia się wokół pytania „Jak poznajemy świat?” oraz bada metody naukowe, teorie, dowody i granice poznania.</p>\n<h5>Koncepcje czasu w ujęciu historycznym</h5>\n<p>Platon w dialogu Timajos definiuje czas jako „ruchomy obraz wieczności”, który powstał równocześnie ze światem materialnym.</p>\n<p>Czas u Platona jest ściśle powiązany z regularnym i cyklicznym ruchem ciał niebieskich, które wyznaczają miarę dni, miesięcy i lat.</p>\n<p>Arystoteles powiązuje czas z pojęciem ruchu i zmiany rozumianego jako przejście od możliwości do aktu.</p>\n<p>Arystotelesowska definicja określa czas jako „ilość ruchu ze względu na przed i po”, odróżniając go od samego ruchu m.in. ze względu na powszechność występowania i brak własnej prędkości.</p>\n<h5>Ewolucja pojęcia przestrzeni</h5>\n<p>W starożytności przestrzeń nie miała abstrakcyjnego charakteru i była postrzegana jako miejsce (topos u Arystotelesa, który odrzucał istnienie próżni) lub matryca (chōra u Platona).</p>\n<p>Średniowieczna scholastyka przejęła wizję kosmosu jako zbioru jakościowych „miejsc naturalnych”, podtrzymując dogmat o braku próżni (horror vacui).</p>\n<p>Przełom XIV wieku przyniósł spekulacje na temat przestrzeni urojonej (spatium imaginarium), a renesans (Mikołaj z Kuzy, Giordano Bruno) doprowadził do koncepcji nieskończonej i jednorodnej przestrzeni.</p>\n<p>Kartezjusz utożsamił przestrzeń z materią jako rzecz rozciągłą (res extensa), uznając, że świat stanowi całkowicie wypełnione plenum bez próżni.</p>\n<h5>Literatura podstawowa i dodatkowa</h5>\n<p>Podstawowym podręcznikiem do zajęć jest książka Michała Hellera i Tadeusza Pabjana pt. Elementy filozofii przyrody.</p>\n<p>Jako lektury dodatkowe wskazano m.in. dzieła Michała Hellera, Wernera Heisenberga, Carla Rovelliego, Seana Carrolla, Stephena Hawkinga czy Rogera Penrose'a.</p>"}, {"t": "Czas, przestrzeń i ruch – od Platona do Newtona i Leibniza", "html": "<div class=\"eyebrow\">FILOZOFIA PRZYRODY / FILOZOFIA NAUKI</div>\n<div class=\"topic\"><span>Temat</span>Ewolucja pojęcia czasu, przestrzeni i ruchu – od Platona i Arystotelesa do Newtona i Leibniza</div>\n<h4><span class=\"num\">1.</span> Świat form a świat zmiany – koncepcja czasu u Platona</h4>\n<ul><li><b>Matematyczność wszechświata:</b> Świat form/idei cechuje wieczność i niezmienność, natomiast świat materialny to domena nieustannego stawania się, zmiany i przemijania.</li></ul>\n<h5>Platon (Timajos)</h5>\n<ul><li><b>Demiurg</b> – boski budowniczy/architekt, który porządkuje pierwotną materię, wzorując się na wiecznym, niezmiennym świecie form.</li></ul>\n<p>Czas jako „ruchomy obraz wieczności” (eikon kineton tes aionos): Świat materialny nie może uczestniczyć w wieczności bezpośrednio, dlatego demiurg powołał czas. Czas i świat powstały równocześnie.</p>\n<p>Miarą czasu są regularne obroty ciał niebieskich (dni, miesiące, lata).</p>\n<h5>Koncepcje czasu w kulturach</h5>\n<ul><li><b>Czas cykliczny:</b> Dominujący w kosmologiach starożytnych (Grecja, Indie, Majowie, tradycja chińska). Wywodzi się z powtarzalności cykli przyrody i orbit planetarnych.</li><li><b>Czas linearny:</b> Ufundowany w tradycji judeochrześcijańskiej – posiada absolutny początek (akt stworzenia creatio ex nihilo), nieodwracalny bieg przez historię i ukierunkowanie ku ostatecznemu wypełnieniu (eschatologia).</li></ul>\n<h4><span class=\"num\">2.</span> Przełom nowożytny: Od Arystotelesa do Newtona (Alexandre Koyré)</h4>\n<h5>Alexandre Koyré (Od zamkniętego świata do nieskończonego wszechświata)</h5>\n<p>Rewolucja naukowa nie polegała wyłącznie na odkryciu nowych faktów empirycznych, lecz na fundamentalnej zmianie ontologicznego obrazu świata.</p>\n<p>Zastąpienie skończonego, jakościowego i zhierarchizowanego kosmosu greckiego przez nieskończony, zgeometryzowany i jednorodny wszechświat nowożytny.</p>\n<ul><li><b>Odrzucenie teleologii:</b> Usunięcie z opisu przyrody arystotelesowskich przyczyn celowych na rzecz przyczyn sprawczych i praw mechaniki.</li><li><b>Matematyzacja przyrody:</b> Matematyczna idealizacja (linie proste, punkty materialne, ruch bez oporów w próżni) uzyskała prymat nad bezpośrednim, codziennym doświadczeniem zmysłowym.</li></ul>\n<h4><span class=\"num\">3.</span> Ruch i dynamika: Arystoteles vs Newton (1687 r., Principia Mathematica)</h4>\n<ul><li>Zagadnienie Dynamika Arystotelesa Mechanika klasyczna Isaaca Newtona</li><li><b>Pojęcie ruchu Proces ontologiczny</b> – aktualizacja możności (potentia → actus), dążenie ciała do swego „miejsca naturalnego” (np. kamień ku ziemi, dym ku górze). Stan fizyczny – ruch jednostajny prostoliniowy jest stanem fizycznym równoważnym stanowi spoczynku.</li></ul>\n<p>Rola siły Konieczna do nieustannego podtrzymywania każdego ruchu (brak siły = natychmiastowe zatrzymanie). Potrzebna wyłącznie do zmiany stanu ruchu (zmiany wartości prędkości lub kierunku).</p>\n<p>Przestrzeń Zbiór jakościowych, skończonych „miejsc” ciał; brak próżni. Nieskończona, jednorodna, izotropowa; istnieje próżnia.</p>\n<p>Aparat pojęciowy Intuicyjny, jakościowy (ciężar, bodziec, cel). Definicje operacyjne (ścisły przepis pomiaru: masa, pęd, siła).</p>\n<h5>Trzy zasady dynamiki Newtona</h5>\n<ul><li><b>I zasada (bezwładność):</b> Ciało zachowuje stan spoczynku lub ruchu jednostajnego prostoliniowego, dopóki nie zadziała na nie wypadkowa siła zewnętrzna.</li><li><b>II zasada ( F=m⋅a):</b> Przyspieszenie ciała jest wprost proporcjonalne do działającej siły i odwrotnie proporcjonalne do jego masy.</li><li><b>III zasada (akcja i reakcja):</b> Oddziaływania ciał są wzajemne – sile akcji towarzyszy równa co do wartości, lecz przeciwnie skierowana siła reakcji.</li></ul>\n<h4><span class=\"num\">4.</span> Klasyczna zasada względności (Galileusz / Newton)</h4>\n<p>Prawa mechaniki mają tę samą postać we wszystkich inercjalnych układach odniesienia.</p>\n<ul><li><b>Eksperyment myślowy z pociągiem:</b> Za pomocą jakichkolwiek doświadczeń mechanicznych przeprowadzanych wewnątrz zamkniętego układu (np. podrzucenie piłki w poruszającym się jednostajnie pociągu) nie da się rozstrzygnąć, czy układ spoczywa, czy porusza się ruchem jednostajnym prostoliniowym.</li></ul>\n<h4><span class=\"num\">5.</span> Wielki spór metafizyczny o czas i przestrzeń: Newton vs Leibniz</h4>\n<h4><span class=\"num\">A.</span> Koncepcja absolutna (substancjalna / „kontenerowa”) – Isaac Newton</h4>\n<ul><li><b>Przestrzeń absolutna:</b> Istnieje obiektywnie, sama z siebie, niezależnie od ciał materialnych. Jest nieruchomym, nieskończonym, trójwymiarowym „kontenerem/pojemnikiem”, który może być pusty (istnienie próżni). Wszędzie jednakowa (jednorodna i izotropowa).</li><li><b>Czas absolutny:</b> Płynie jednostajnie sam przez się, bez odniesienia do czegokolwiek zewnętrznego. Istnieje absolutna, uniwersalna równoczesność dla całego wszechświata („jeden kosmiczny zegar”).</li></ul>\n<h4><span class=\"num\">B.</span> Koncepcja relacyjna – Gottfried Wilhelm Leibniz</h4>\n<p>Czas i przestrzeń nie są osobnymi substancjami ani „pojemnikami”, lecz strukturą relacji między rzeczami i zdarzeniami:</p>\n<p>Przestrzeń to porządek współistnienia rzeczy (gdyby usunąć wszystkie ciała, nie pozostałaby żadna przestrzeń).</p>\n<ul><li><b>Czas to porządek następstwa zdarzeń (relacje:</b> wcześniej – równocześnie – później; bez zachodzących zmian czas nie istnieje).</li></ul>\n<h5>Dwa argumenty metafizyczne Leibniza przeciw przestrzeni i czasowi absolutnemu</h5>\n<ul><li><b>Zasada racji dostatecznej (principium rationis sufficientis):</b> Bóg nie miałby żadnego rozumnego powodu (racji dostatecznej), aby stworzyć wszechświat przesunięty w przestrzeni absolutnej o metr w bok lub w czasie o godzinę wcześniej, skoro wszystkie relacje wzajemne między rzeczami pozostałyby identyczne.</li></ul>\n<p>Zasada tożsamości rzeczy nierozróżnialnych (principium identitatis indiscernibilium): Dwa stany, które nie różnią się żadną wewnętrzną, uchwytną własnością relacyjną, są w istocie jednym i tym samym stanem.</p>"}, {"t": "Wykład 2 – materiały z prezentacji (PDF)", "html": "<h4><span class=\"num\">1.</span> Informacje organizacyjne i programowe</h4>\n<h5>Zasady zaliczenia przedmiotu</h5>\n<ul><li><b>Dwa wypracowania po 500 słów na tematy z wykładów (terminy:</b> 30.11 oraz 31.12; każde warte</li><li>25%, łącznie</li></ul>\n<p>50%).</p>\n<ul><li><b>Jedno wypracowanie na 1500 słów (termin:</b> 28.01.2027; warte</li></ul>\n<p>30%).</p>\n<p>Quiz składający się z 10 pytań z wykładów ( 10%).</p>\n<p>Uczestnictwo w wykładach ( 10%).</p>\n<ul><li><b>Podstawowa literatura:</b> Podręcznik Elementy filozofii przyrody autorstwa Michała Hellera i Tadeusza Pabjana.</li></ul>\n<h4><span class=\"num\">2.</span> Podsumowanie i kontynuacja zagadnień z wykładu pierwszego</h4>\n<p>Przypomniano podstawowe pytania stawiane w filozofii przyrody oraz relację między naukami empirycznymi (fizyką, kosmologią, biologią) a refleksją filozoficzną.</p>\n<p>Omówiono historyczne koncepcje czasu (Platon jako „ruchomy obraz wieczności”, Arystoteles jako miara ruchu) oraz ewolucję pojęcia przestrzeni – od greckiego pojęcia miejsca (topos u Arystotelesa, odrzucenie próżni) po nowożytną przestrzeń geometryczną.</p>\n<h4><span class=\"num\">3.</span> Mechanika klasyczna i zasady dynamiki Newtona</h4>\n<p>W 1687 roku Izaak Newton opublikował dzieło Philosophiæ Naturalis Principia Mathematica, w którym sformułował trzy zasady dynamiki oraz prawo powszechnego ciążenia.</p>\n<p>Wprowadził definicje operacyjne kluczowych pojęć (takich jak masa, pęd czy siła), które stanowią „przepis na zmierzenie” danej wielkości fizycznej i obowiązują do dzisiaj.</p>\n<h4><span class=\"num\">4.</span> Ontologia ruchu według Alexandre'a Koyrégo</h4>\n<p>Przejście od dynamiki Arystotelesa do dynamiki Newtona zostało zinterpretowane przez historyka nauki Alexandre'a Koyrégo nie jako proste gromadzenie faktów, lecz jako głęboka rewolucja ontologiczna i pojęciowa.</p>\n<h5>Główne aspekty tej rewolucji to</h5>\n<ul><li><b>Dewaloryzacja natury:</b> Odrzucenie arystotelesowskiej teleologii (wyjaśniania ruchu przez cel i dążenie do „miejsca naturalnego”) na rzecz opisu mechanistycznego.</li><li><b>Matematyzacja i idealizacja:</b> Nadanie prymatu abstrakcji matematycznej nad bezpośrednim doświadczeniem zmysłowym (np. posługiwanie się pojęciem idealnej próżni czy nieskończonej linii prostej).</li></ul>\n<h4><span class=\"num\">5.</span> Klasyczna zasada względności (Galileusza)</h4>\n<p>Głosi ona, że prawa mechaniki mają taką samą postać we wszystkich inercjalnych układach odniesienia.</p>\n<p>Ruch jednostajny prostoliniowy przestał być procesem wymagającym ciągłego działania siły podtrzymującej (jak u Arystotelesa) i stał się stanem fizycznym równoważnym spoczynkowi. Przykładowo, doświadczenia mechaniczne wewnątrz poruszającego się ze stałą prędkością pociągu (np. podrzucanie piłki) nie pozwalają odróżnić tego ruchu od spoczynku.</p>\n<h4><span class=\"num\">6.</span> Czas i przestrzeń absolutna u Isaaca Newtona</h4>\n<ul><li><b>Czas absolutny:</b> Płynie równomiernie i z tej samej natury, bez odniesienia do czegokolwiek zewnętrznego; zakłada absolutną równoczesność zdarzeń we wszechświecie ( t′</li></ul>\n<p>=t).</p>\n<ul><li><b>Przestrzeń absolutna:</b> Istnieje niezależnie od materii, ciał fizycznych czy obserwatorów; jest nieruchoma, jednorodna, izotropowa, nieskończona i ma geometrię euklidesową.</li></ul>\n<p>Jako dowód na istnienie rzeczywistego ruchu obrotowego względem przestrzeni absolutnej Newton przywołał słynny eksperyment z obracającym się wiadrem z wodą (wklęsłość powierzchni wody).</p>\n<h4><span class=\"num\">7.</span> Relacyjna koncepcja czasu i przestrzeni Gottfrida Wilhelma Leibniza</h4>\n<p>Gottfried Wilhelm Leibniz sprzeciwił się ujęciu Newtona, twierdząc, że czas i przestrzeń nie posiadają niezależnego statusu ontologicznego, lecz są systemem relacji:</p>\n<p>Przestrzeń to porządek współistnienia rzeczy (ordo coexistendi).</p>\n<p>Czas to porządek następstwa zdarzeń (ordo successionis).</p>\n<p>Leibniz argumentował przeciwko przestrzeni absolutnej za pomocą swoich filozoficznych zasad: zasady racji dostatecznej oraz zasady tożsamości rzeczy nierozróżnialnych (np. argumentując, że przesunięcie całego wszechświata w przestrzeni absolutnej nie zmieniłoby relacji między ciałami, więc taki byt nie ma racji bytu).</p>"}, {"t": "Wykład 2 – czas, przestrzeń, czasoprzestrzeń", "html": "<div class=\"eyebrow\">FILOZOFIA PRZYRODY / FIZYKA WSPÓŁCZESNA – Wykład: Czas, Przestrzeń i Czasoprzestrzeń</div>\n<h4><span class=\"num\">1.</span> Czasoprzestrzeń (Perspektywa relatywistyczna)</h4>\n<ul><li><b>Wiązanie czasu i przestrzeni:</b> Szczególna i ogólna teoria względności (Einstein) pokazuje, że czas i przestrzeń nie są niezależnymi, absolutnymi bytami, lecz dwoma aspektami (własnościami) tej samej struktury – czasoprzestrzeni (czterowymiarowego continuum).</li><li><b>Niezmienniczość interwału (ds²):</b> Długość wektora w czasoprzestrzeni (interwał czasoprzestrzenny) pozostaje niezmienna niezależnie od układu odniesienia (współrzędnych obserwatora), co oznacza, że czas i przestrzeń są ze sobą ściśle powiązane.</li><li><b>Grawitacja a zakrzywienie:</b> Masa i energia zakrzywiają czasoprzestrzeń. Obiekty o wielkich masach (np. galaktyki, czarne dziury) działają jak gigantyczne soczewki grawitacyjne – zakrzywiają bieg światła, co pozwala nam obserwować obiekty kosmiczne, które w normalnych warunkach byłyby zasłonięte (tzw. soczewkowanie grawitacyjne, dające m.in. wielokrotne obrazy tego samego źródła).</li></ul>\n<h4><span class=\"num\">2.</span> Ontologia obiektu w czasie: Enduryzm vs Perdurantyzm</h4>\n<p>W filozofii przyrody i metafizyce istnieje poważny spór o to, jak obiekty fizyczne istnieją i trwają w czasie:</p>\n<ul><li><b>Enduryzm:</b> Obiekt w każdym momencie swojego istnienia jest w całości obecny; zachowuje swoją tożsamość jako całość w kolejnych chwilach czasu.</li><li><b>Perdurantyzm (widmo światła / czterowymiarowa rozciągłość):</b> Obiekt jest rozciągnięty w czasoprzestrzeni. To, co widzimy jako „obiekt”, to w rzeczywistości jego czterowymiarowy trakt (linia świata), będący sumą kolejnych stanów (zdarzeń) w czasie (np. samochód istniejący od godziny 8:00 do 11:00 to całościowy obiekt rozciągnięty w tym przedziale czasoprzestrzennym).</li><li><b>Problem ontologiczny:</b> Czy czterowymiarowa matematyczna reprezentacja obiektu oznacza, że jest on realnym bytem fizycznym, czy tylko użytecznym modelem opisu?</li></ul>\n<h4><span class=\"num\">3.</span> Strzałka Czasu i Termodynamika</h4>\n<p>Prawa fizyki na poziomie mikro (mikroskopowym) są w większości symetryczne względem czasu (równania nie zależą od kierunku upływu czasu). Dlaczego więc w świecie makroskopowym czas płynie w jedną stronę (od przeszłości do przyszłości)?</p>\n<h4><span class=\"num\">A.</span> Termodynamiczna strzałka czasu</h4>\n<ul><li><b>Druga zasada termodynamiki:</b> W układach izolowanych entropia (miara nieuporządkowania / chaosu) zawsze rośnie w czasie.</li></ul>\n<p>Wzrost entropii wyznacza jednoznaczny kierunek procesów makroskopowych (np. rozproszony gaz nie zbiera się samorzutnie z powrotem w jednym rogu pojemnika, choć czysto mechanicznie/statystycznie nie jest to całkowicie wykluczone, a jedynie skrajnie nieprawdopodobne).</p>\n<ul><li><b>Paradoks odwracalności:</b> Skoro prawa mikroskopowe są odwracalne, to skąd bierze się makroskopowa asymetria czasu? Odpowiedź daje mechanika statystyczna – kierunek czasu wiąże się ze wzrostem prawdopodobieństwa (stanów mikroskopowych odpowiadających danemu stanowi makroskopowemu) oraz tzw. warunkiem brzegowym wszechświata (wszechświat musiał zacząć swoją ewolucję w stanie o niezwykle niskiej entropii).</li></ul>\n<h4><span class=\"num\">B.</span> Inne rodzaje strzałek czasu</h4>\n<ul><li><b>Strzałka kosmologiczna:</b> Związana z ekspansją (rozszerzaniem się) wszechświata.</li><li><b>Strzałka psychologiczna:</b> Nasze odczuwanie upływu czasu, pamięć o przeszłości i otwartość na nieznaną przyszłość.</li></ul>\n<h4><span class=\"num\">4.</span> Koncepcje Czasu: Teoria A vs Teoria B</h4>\n<ul><li><b>Teoria A (Czas dynamiczny / presentizm):</b> Zakłada realność \"teraz\". Przeszłość już minęła, przyszłość jeszcze nie nadeszła, a teraźniejszość przesuwa się dynamicznie w czasie.</li><li><b>Teoria B (Czas statyczny / eternalizm):</b> Zakłada, że przeszłość, teraźniejszość i przyszłość współistnieją w strukturze czasoprzestrzeni, a relacje „wcześniej” i „później” są stałymi relacjami porządkującymi zdarzenia (czas jako gotowy, rozciągnięty blok).</li></ul>\n<h4><span class=\"num\">5.</span> Spór o status przestrzeni i czasu: Newton vs Leibniz</h4>\n<h5>W historii filozofii i fizyki ścierały się dwa podejścia do natury przestrzeni i czasu</h5>\n<ul><li><b>Absolutyzm (I. Newton):</b> Przestrzeń i czas istnieją obiektywnie i absolutnie, niezależnie od znajdującej się w nich materii. Przestrzeń to swoiste „naczynie”, w którym dopiero umieszczone są ciała.</li><li><b>Relacjonizm (G. W. Leibniz):</b> Przestrzeń i czas nie są niezależnymi substancjami, lecz systemami relacji między ciałami i zdarzeniami. Nie ma przestrzeni „przed” stworzeniem materii – przestrzeń i czas rodzą się z relacji między obiektami.</li><li>Podsumowanie i Wnioski Metodologiczne</li></ul>\n<p>Współczesna fizyka (szczególnie teoria względności) pokazuje, że zmiany w opisie fizycznym (np. przejście od mechaniki klasycznej do relatywistycznej) mogą radykałnie modyfikować nasz obraz ontologiczny rzeczywistości.</p>"}], "hk": [{"t": "Kościół w Antiochii, misje św. Pawła, Sobór Jerozolimski", "html": "<div class=\"eyebrow\">HISTORIA KOŚCIOŁA / PATROLOGIA</div>\n<div class=\"topic\"><span>Temat</span>Kościół w Antiochii Syryjskiej, Misje św. Pawła i Sobór Jerozolimski</div>\n<h4><span class=\"num\">1.</span> Kontekst historyczno-kulturowy Antiochii</h4>\n<ul><li><b>Geneza miasta:</b> Założona przez Seleukosa I Nikatora (jednego z wodzów Aleksandra Macedońskiego – diadochów), nazwana na cześć jego ojca Antiocha. Kluczowa metropolia hellenistyczna na Bliskim Wschodzie.</li></ul>\n<h5>Tygiel kulturowy i językowy</h5>\n<ul><li><b>Przecięcie szlaków handlowych; współistnienie kultur:</b> syryjskiej, greckiej i semickiej.</li><li><b>Język jako funkcja kultury:</b> Język jest nośnikiem idei i mentalności społeczeństwa; znajomość języków epoki pozwala zrozumieć proces inkulturacji orędzia ewangelicznego.</li></ul>\n<h5>Tło religijno-filozoficzne i społeczne</h5>\n<ul><li><b>Stoicyzm:</b> Wiara w kosmiczny Logos przenikający świat; brak osobowego Boga; cykliczność kosmosu (pożar świata – ekpyrosis i ponowne narodziny, co przypomina pulsacyjne modele kosmologiczne).</li><li><b>Kulty misteryjne:</b> Wprowadzenie w tajemnicę i zjednoczenie z bóstwem przez obrzędy inicjacyjne.</li><li><b>Magia a brak wczesnych ksiąg liturgicznych:</b> Do IV w. unikano spisywania formuł liturgicznych, by nie kojarzyły się one z pogańskimi księgami magicznymi/zaklęciami.</li><li><b>Struktura społeczna i kryzys moralny:</b> Gospodarka oparta na niewolnictwie – niewolnik traktowany przedmiotowo jako rzymskie instrumentum vocale („mówiące narzędzie”), którego pan mógł bezkarnie zabić.</li></ul>\n<h4><span class=\"num\">2.</span> Przełom antiocheński i otwarcie na pogan</h4>\n<ul><li><b>Nowy wymiar Kościoła:</b> Ewangelia początkowo głoszona w synagogach Żydom w diasporze, z czasem dociera do pogan (etnochrześcijan).</li></ul>\n<p>Termin „poganin” (anachronizm historyczny): Łacińskie słowo paganus (wieśniak, mieszkaniec wsi) to pojęcie późniejsze/średniowieczne. W Biblii mówi się po prostu o „narodach” (gentes / goje) w opozycji do Ludu Wybranego.</p>\n<h5>Postacie kluczowe</h5>\n<ul><li><b>Barnaba</b> – rozpoznał otwartość pogan i sprowadził Pawła z Tarsu.</li><li><b>Św. Paweł z Tarsu</b> – wychowany w diasporze, znał aramejski, hebrajski i grekę; łączył rygorystyczne wykształcenie faryzejskie z kulturą hellenistyczną.</li><li><b>Św. Ignacy Antiocheński (zm. ok. 107/110 r.)</b> – jeden z pierwszych biskupów Antiochii, męczennik w Rzymie.</li></ul>\n<p>W Antiochii po raz pierwszy nazwano uczniów Chrystusa chrześcijanami (Christianoi).</p>\n<h4><span class=\"num\">3.</span> Misje św. Pawła i kwestia kanonu Pisma Świętego</h4>\n<ul><li><b>Metoda misyjna:</b> Najpierw głoszenie w synagodze → po odrzuceniu przez większość Żydów → przejście do pogan.</li><li><b>I podróż misyjna:</b> Cypr i Azja Mniejsza.</li><li><b>II podróż misyjna:</b> Macedonia, Achaja (Korynt, Ateny).</li><li><b>III podróż misyjna:</b> Azja Prokonsularna (m.in. Efez).</li></ul>\n<h5>Teologia kanonu biblijnego</h5>\n<p>Paweł napisał prawdopodobnie 3 listy do Koryntian (zachowały się 2).</p>\n<p>O kanoniczności nie decyduje sam fakt napisania listu czy jego ewentualne odnalezienie archeologiczne, lecz rozeznanie i autorytet wspólnoty Kościoła, która pod natchnieniem Ducha Świętego rozpoznaje Słowo Boże (w odróżnieniu np. od islamskiej koncepcji dyktanda z nieba).</p>\n<h4><span class=\"num\">4.</span> Spór o Prawo i tzw. Sobór Jerozolimski (49 r.)</h4>\n<h5>Istota sporu: Napięcie między dwoma nurtami pierwotnego chrześcijaństwa</h5>\n<ul><li><b>Nurt judeochrześcijański (piotrowy):</b> Utrzymanie tradycji świątynnych, obrzezania i całego Prawa Mojżeszowego.</li><li><b>Nurt etnochrześcijański (pawłowy):</b> Usprawiedliwienie człowieka wynika z wiary w Chrystusa i łaski, a nie z zachowywania przepisów Tory.</li></ul>\n<h5>Decyzja zgromadzenia apostolskiego (Dz 15)</h5>\n<ul><li><b>Słynna formuła eklezjalna:</b> „Postanowiliśmy bowiem, Duch Święty i my...”.</li></ul>\n<p>Zwolniono chrześcijan z pogaństwa z obowiązku obrzezania i Prawa Mojżeszowego, nakładając jedynie 4 podstawowe zakazy (tzw. klauzule Jakubowe / prawa przymierza):</p>\n<p>Zakaz spożywania ofiar składanych bożkom (zakaz bałwochwalstwa/apostazji).</p>\n<p>Zakaz spożywania krwi.</p>\n<p>Zakaz spożywania mięsa zwierząt duszonych.</p>\n<p>Zakaz nierządu (porneia).</p>\n<h5>Ewolucja dyscypliny kościelnej (kontekst historyczny)</h5>\n<p>Dekalog (10 przykazań) jako podstawowa norma katechetyczna i spowiedziowa wszedł powszechnie dopiero za reform Karola Wielkiego (przełom VIII/IX w.).</p>\n<p>Odejście od starożytnej pokuty publicznej (jednorazowej) na rzecz spowiedzi usznej (wielokrotnej) sformalizował definitywnie IV Sobór Laterański (1215 r.).</p>\n<h4><span class=\"num\">5.</span> Życie, struktura i eschatologia wczesnych gmin</h4>\n<ul><li><b>Napięcie eschatologiczne:</b> Poczucie natychmiastowej bliskości Paruzji (powtórnego przyjścia Chrystusa za życia pierwszego pokolenia). Stąd aramejski okrzyk liturgiczny: Marana tha (Przyjdź, Panie nasz!).</li><li><b>Urząd i posługa w gminach pawłowych:</b> Struktura oparta na kolegium starszych – prezbiterach (presbyteroi) i biskupach/nadzorcach (episkopoi).</li></ul>\n<h5>Tradycyjne tereny działalności Apostołów</h5>\n<ul><li><b>Andrzej:</b> Tracja, Grecja, Scytia.</li><li><b>Filip:</b> Azja Mniejsza.</li><li><b>Bartłomiej:</b> Arabia Południowa, Indie.</li><li><b>Tomasz:</b> Syria, Persja, Indie.</li><li><b>Mateusz i Juda Tadeusz:</b> Palestyna, Syria, Mezopotamia.</li></ul>"}, {"t": "Ćwiczenia – Sobór Jerozolimski, prawa noachickie, wspólnota stołu", "html": "<div class=\"eyebrow\">HISTORIA KOŚCIOŁA / PATROLOGIA – ĆWICZENIA</div>\n<div class=\"topic\"><span>Temat</span>Sobór Jerozolimski, Prawa Noachickie i Wspólnota Stołu</div>\n<h4><span class=\"num\">1.</span> Prawa noachickie (Przymierze z Noem) jako biblijny punkt odniesienia</h4>\n<ul><li><b>Pojęcie i adresaci:</b> Według tradycji żydowskiej to uniwersalny kodeks moralny dany przez Boga nie tylko Izraelowi, ale całej ludzkości (potomkom Noego, czyli nie-Żydom / narodom).</li><li><b>Symbol:</b> Tęcza – znak przymierza Boga z wszelkim stworzeniem po potopie.</li><li><b>Główne zakazy:</b> Zakaz bałwochwalstwa, bluźnierstwa, morderstwa, kradzieży, niemoralności seksualnej oraz spożywania mięsa odciętego z żywego zwierzęcia (zakaz spożywania krwi jako szacunek dla daru życia).</li><li><b>Stanowiły one w tradycji biblijnej precedens:</b> nie-Żyd nie musiał przyjmować Tory mojżeszowej, by podobać się Bogu – wystarczyło zachowywanie przymierza z Noem.</li></ul>\n<h4><span class=\"num\">2.</span> Przyczyny i podłoże konfliktu w Jerozolimie (Dz 15)</h4>\n<ul><li><b>Kwestia obrzezania:</b> Część nawróconych chrześcijan pochodzenia żydowskiego (zwłaszcza z tradycji faryzejskiej w Jerozolimie) domagała się, aby nawróceni poganie poddawali się obrzezaniu i zachowywali Prawo Mojżeszowe jako warunek zbawienia.</li></ul>\n<h5>Problem „wspólnoty stołu” (commensalitas)</h5>\n<ul><li><b>Spór miał wymiar dogmatyczny i codzienno-praktyczny:</b> czy chrześcijanin Żyd może zasiąść do jednego stołu i spożywać posiłki z chrześcijaninem pochodzenia pogańskiego bez zaciągania nieczystości rytualnej?</li><li><b>Tło historyczne rygoryzmu:</b> Po wojnach machabejskich (w reakcji na przymusową hellenizację) faryzeusze wprowadzili skrajnie rygorystyczne przepisy czystości rytualnej i separacji od pogan jako wyraz wierności Bogu.</li><li><b>Wewnętrzny spór apostolski (incydent w Antiochii):</b> Paweł otwarcie sprzeciwił się Piotrowi (Ga 2), zarzucając mu nieszczerość, gdy ten początkowo jadał z poganami, a po przybyciu ludzi Jakuba zaczął się wycofywać z obawy przed zwolennikami obrzezania.</li></ul>\n<h4><span class=\"num\">3.</span> Postanowienia tzw. Soboru Jerozolimskiego (49 r.)</h4>\n<ul><li><b>Misja do Jerozolimy:</b> Paweł i Barnaba udają się do Jerozolimy, aby przedstawić sprawę Apostołom i starszym.</li><li><b>Decyzja zgromadzenia:</b> Słynna formuła: „Duch Święty i my postanowiliśmy...”.</li></ul>\n<p>Zamiast nakładać na nawróconych pogan ponad 600 szczegółowych przepisów Tory (613 micwot), przyjęto 4 minimalne zalecenia (tzw. klauzule Jakubowe) umożliwiające zachowanie jedności stołu:</p>\n<p>Powstrzymanie się od ofiar składanych bożkom (bałwochwalstwo).</p>\n<p>Powstrzymanie się od krwi (szacunek dla życia / zabójstwo).</p>\n<p>Powstrzymanie się od tego, co uduszone (mięso z krwią / apostazja).</p>\n<ul><li><b>Powstrzymanie się od nierządu (porneia</b> – niemoralność seksualna, związki kazirodcze).</li></ul>\n<h4><span class=\"num\">4.</span> Skutki historyczne i teologiczne</h4>\n<ul><li><b>Uniwersalizm chrześcijaństwa:</b> Chrześcijaństwo nie zostało zamknięte w ciasnych ramach sekty judaizmu (jak faryzeusze, saduceusze czy esseńczycy), lecz stało się religią otwartą na cały świat.</li><li><b>Zniesienie barier rytualnych:</b> Rozbicie barier pokarmowych i obyczajowych umożliwiło jedność stołu i Eucharystii pomiędzy Żydami a poganami.</li></ul>\n<h5>Źródło wczesnej dyscypliny pokutnej</h5>\n<p>Złamanie tych czterech praw w pierwotnym Kościele traktowano jako zerwanie przymierza i grzech ciężki (kapitalny: bałwochwalstwo, zabójstwo, nierząd, apostazja).</p>\n<p>Na tej podstawie rozwinęła się w starożytności instytucja tzw. drugiej pokuty (jednorazowej, publicznej pokuty po chrzcie).</p>\n<ul><li><b>Kontekst historyczno-prawny:</b> Choć chrześcijaństwo odeszło od 613 przepisów Talmudu, z czasem wypracowało własne prawo kanoniczne (współczesny Kodeks Prawa Kanonicznego z 1983 r. liczy 1752 kanony).</li></ul>"}, {"t": "Ćwiczenia – geneza urzędów i sukcesji", "html": "<div class=\"eyebrow\">HISTORIA KOŚCIOŁA / PATROLOGIA – ĆWICZENIA</div>\n<div class=\"topic\"><span>Temat</span>Geneza urzędów, posług i sukcesji w Kościele pierwotnym (Struktura Dwunastu, Siedmiu, Prezbiterzy i Biskupi)</div>\n<h4><span class=\"num\">1.</span> Źródło i charakter władzy w Kościele pierwotnym</h4>\n<ul><li><b>Pochodzenie urzędu:</b> Władza i struktura Kościoła nie mają charakteru czysto demokratycznego ani korporacyjnego. Wywodzą się z mandatu Chrystusa (z powołania i zadania Bożego) oraz przekazywania posługi prawnej w Duchu Świętym.</li><li><b>Kwestia anachronizmu kapłaństwa:</b> W I wieku i na początku II wieku nie mówi się jeszcze o „kapłaństwie” w dzisiejszym, sakramentalno-hierarchicznym znaczeniu (kapłaństwie urzędowym / kultycznym).</li></ul>\n<p>Jezus przyszedł, aby służyć (diakonia), a nie sprawować świecką władzę.</p>\n<p>Zredefiniował On pojęcie ofiary (nie jako rytuał krwawy w świątyni, lecz dar z samego siebie).</p>\n<ul><li><b>Potrzeba organizacji:</b> Wraz z dynamicznym rozrostem gmin chrześcijańskich i wymieraniem naocznych świadków pojawiła się naturalna potrzeba ustrukturyzowania wspólnot, wyłonienia odpowiedzialnych za nauczanie, charytatywną pomoc i zachowanie jedności wiary.</li></ul>\n<h4><span class=\"num\">2.</span> Kolegium Dwunastu i pojęcie „Apostoła”</h4>\n<ul><li><b>Wybranie przed męką – świadkowie zmartwychwstania:</b> Dwunastu zostało wybranych przez Jezusa osobiście jeszcze przed męką i śmiercią, stając się po Zmartwychwstaniu gwarantami ciągłości między ziemską działalnością Jezusa a rodzącym się Kościołem.</li><li><b>Symbolika 12 pokoleń:</b> Grupa 12 nawiązuje wprost do 12 pokoleń Izraela (12 patriarchów) – symbolizuje, że Kościół jest nowym, odnowionym Ludem Bożym opartym na fundamencie obietnic danych Izraelowi.</li></ul>\n<h5>Szerszy zakres terminu „apostoł” (apostolos – wysłannik)</h5>\n<p>Tytuł ten przysługiwał nie tylko ścisłemu gronu Dwunastu, ale także innym powołanym przez Chrystusa misjonarzom (np. św. Paweł, św. Barnaba).</p>\n<h5>Zagadka Junii (Rz 16,7)</h5>\n<ul><li><b>Święty Paweł pisze:</b> „Pozdrówcie Andronika i Junię... którzy cieszą się wielkim poważaniem wśród apostołów”.</li></ul>\n<p>W tradycji patrystycznej I tysiąclecia (np. u Jana Chryzostoma) postać ta jednomyślnie uznawana była za kobietę – Junię. Dopiero w łacińskim średniowieczu (np. u Idziego Rzymianina w XIII w.) zaczęto maskulinizować jej imię do formy „Junias” z racji późniejszego utożsamienia apostolstwa wyłącznie z mężczyznami.</p>\n<h4><span class=\"num\">3.</span> Rozwój posług i urzędów w gminach</h4>\n<h5>Ustanowienie Siedmiu (Dz 6)</h5>\n<p>Powstało w wyniku konfliktu wewnętrznego między chrześcijanami pochodzenia hellenistycznego a hebrajskiego na tle codziennego zaopatrywania wdów przy stole.</p>\n<p>Apostołowie, by nie zaniedbywać posługi słowa i modlitwy, ustanowili Siedmiu mężów cieszących się dobrą sławą – był to historyczny prototyp posługi diakonatu (zarząd dobrami, pomoc ubogim, posługa stołu).</p>\n<h5>Starszyzna (Prezbiterzy – presbyteroi)</h5>\n<p>Instytucja wywodząca się bezpośrednio z żydowskiej tradycji synagogalnej.</p>\n<p>Byli odpowiedzialni za pasterzowanie, ład wspólnotowy oraz rozstrzyganie sporów wewnątrz gminy.</p>\n<h5>Nadzorcy (Biskupi – episkopoi)</h5>\n<p>Pojęcie zapożyczone z greckiego kręgu kulturowego (nadzorca, strażnik).</p>\n<p>W tekstach z I wieku (np. w listach Pawłowych czy Dziejach Apostolskich) terminy prezbiter i episkop były stosowane zamiennie na określenie zwierzchników lokalnego kościoła.</p>\n<h5>Urzędy charyzmatyczne a urzędy stałe</h5>\n<p>Pierwotnie ogromną rolę odgrywały wędrowne posługi charyzmatyczne: prorocy, nauczyciele i ewangeliści, cieszący się wielkim autorytetem w Duchu Świętym.</p>\n<p>Stopniowo, w miarę osłabiania się nurtu charyzmatycznego i pojawiania się fałszywych nauczycieli, ich funkcje przejęły stałe, lokalne urzędy.</p>\n<h4><span class=\"num\">4.</span> Sukcesja apostolska i wykształcenie hierarchii</h4>\n<ul><li><b>Konieczność sukcesji:</b> Po śmierci Apostołów kluczowym kryterium autentyczności wiary stało się zachowanie nauce apostolskiej (apostolicitas) i ciągłości przekazu.</li><li><b>Ryt nałożenia rąk (chirotonia):</b> Ustanawianie na urzędy dokonywało się poprzez rozeznanie wspólnoty, modlitwę oraz gest nałożenia rąk starszych/apostołów jako widzialny znak przekazania daru Ducha i mandatu pasterskiego.</li></ul>\n<h5>Wykształcenie episkopatu monarchicznego</h5>\n<p>Na przełomie II i III wieku ugruntowała się trójstopniowa struktura hierarchiczna: jeden biskup (episkopos) stojący na czele lokalnego Kościoła, wspierany przez kolegium prezbiterów oraz diakonów.</p>\n<p>Wtedy też po raz pierwszy zaczyna się kształtować wyraźne teologiczne rozumienie kapłaństwa hierarchicznego, nawiązujące do wzorców starotestamentalnych.</p>"}, {"t": "Gmina rzymska, Piotr i Paweł, prześladowania (20.10.2026)", "html": "<div class=\"eyebrow\">HISTORIA KOŚCIOŁA / PATROLOGIA – Wykład</div>\n<div class=\"meta\">🗓 Wtorek, 20 października 2026</div>\n<div class=\"topic\"><span>Temat</span>Gmina rzymska, męczeństwo Piotra i Pawła oraz geneza rzymskich prześladowań (Neron, Flawiusze)</div>\n<h4><span class=\"num\">1.</span> Geneza gminy rzymskiej i diaspora żydowska</h4>\n<ul><li><b>Droga napływu:</b> Ewangelia dotarła do stolicy Imperium Rzymskiego za pośrednictwem diaspory żydowskiej (poprzez wspólnoty synagogalne), a nie bezpośrednio od pogan.</li><li><b>Skala diaspory w Rzymie:</b> W mieście liczącym ok. 1 mln mieszkańców społeczność żydowska liczyła 30–50 tysięcy osób skupionych wokół 11–12 synagog.</li><li><b>Edykt cesarza Klaudiusza (ok. 49 r. n.e.):</b> Wygnanie Żydów z Rzymu w wyniku zamieszek wywołanych sporem o „Chrestosa” (zniekształcona grecka forma imienia Chrystus). Świadectwo to potwierdza Swetoniusz oraz Dzieje Apostolskie (Dz 18,2 – spotkanie Pawła w Koryncie z Akwilą i Pryscyllą wygnanymi z Rzymu).</li></ul>\n<h4><span class=\"num\">2.</span> Męczeństwo Apostołów Piotra i Pawła w Rzymie</h4>\n<h5>Św. Piotr</h5>\n<p>Przybył do Rzymu, gdzie poniósł śmierć męczeńską ok. 64/67 r. n.e. (według starożytnej tradycji ukrzyżowany głową w dół na Wzgórzu Watykańskim za panowania Nerona).</p>\n<ul><li><b>Świadectwa archeologiczne:</b> Badania pod Bazyliką św. Piotra potwierdziły istnienie wczesnochrześcijańskiego grobu Piotra na rzymskiej nekropolii, otoczonego kultem od I wieku.</li></ul>\n<h5>Św. Paweł</h5>\n<p>Przebywał w areszcie domowym w Rzymie (ok. 61–63 r.), głosząc Ewangelię bez przeszkód.</p>\n<p>Zginął ok. 67 r. za murami miasta przez ścięcie mieczem (ścięcie przysługiwało mu jako przywilej obywatela rzymskiego).</p>\n<ul><li><b>Fundament rzymski:</b> Obydwaj Apostołowie stali się filarami autorytetu, tradycji i sukcesji Kościoła rzymskiego.</li></ul>\n<h4><span class=\"num\">3.</span> Prześladowanie za Nerona (64 r. n.e.) – Tacyt i Tertulian</h4>\n<ul><li><b>Wielki pożar Rzymu (lipiec 64 r.):</b> Podejrzenia o umyślne podpalenie miasta w celu budowy Złotego Domu (Domus Aurea) padły na samego Nerona. Cesarz, szukając kozła ofiarnego, skierował oskarżenie na wyodrębniającą się z judaizmu grupę chrześcijan.</li></ul>\n<h5>Świadectwo Tacyta (Roczniki, XV, 44)</h5>\n<p>Tacyt określa chrześcijaństwo mianem „zgubnego zabobonu” (exitiabilis superstitio).</p>\n<p>Chrześcijanom zarzucono odium humani generis („nienawiść do rodzaju ludzkiego”) – wyraz ich izolacji od pogańskiego życia publicznego, świąt, teatru i kultów państwowych.</p>\n<ul><li><b>Okrucieństwo egzekucji:</b> zaszywanie w skóry dzikich zwierząt i rozszarpywanie przez psy, krzyżowanie oraz oblewanie smołą i palenie jako nocne „żywe pochodnie” w cesarskich ogrodach.</li></ul>\n<h5>Status prawny prześladowań</h5>\n<p>Za Nerona nie wydano jeszcze ogólnego edyktu prawnego dla całego Imperium. Była to lokalna akcja policyjno-karna w Rzymie, która jednak stworzyła groźny precedens prawny (tzw. institutum Neronianum – według Tertuliana zasada: non licet esse vos – „nie wolno wam istnieć”).</p>\n<h5>Konflikt polityczno-religijny</h5>\n<p>Odrzucenie kultu cesarza i bogów rzymskich odbierano jako zerwanie pax deorum (pokoju z bogami) – Rzymianie wierzyli, że klęski żywiołowe, pożary czy zarazy są karą bogów za bezbożność chrześcijan.</p>\n<h4><span class=\"num\">4.</span> Prześladowania pod koniec I wieku: Dynastia Flawiuszy (Domicjan)</h4>\n<ul><li><b>Domicjan (81–96 n.e.):</b> Żądał dla siebie boskich zaszczytów i oficjalnego tytułowania go Dominus et Deus („Pan i Bóg”).</li><li><b>Zarzuty:</b> Chrześcijan oskarżano o ateizm (brak świątyń, ołtarzy i posągów) oraz przyjmowanie „obyczajów żydowskich”. Represje dotknęły także patrycjuszy i członków rodziny cesarskiej sprzyjających chrześcijaństwu (m.in. konsul Flawiusz Klemens i Flawia Domicella).</li></ul>\n<h4><span class=\"num\">5.</span> Przyczyny wrogości pogańskiego społeczeństwa</h4>\n<h5>Oskarżenia i plotki społeczne</h5>\n<ul><li><b>Ateizm:</b> odmowa czci dla bogów opiekuńczych państwa.</li><li><b>Kanibalizm / ludożerstwo (thyestejskie uczty):</b> zniekształcona przez pogan interpretacja Eucharystii (spożywanie Ciała i Krwi Chrystusa).</li><li><b>Nierząd / kazirodztwo (edypejskie związki):</b> błędne rozumienie chrześcijańskiego pocałunku pokoju i nazywania się „braćmi i siostrami”.</li><li><b>Bojkot życia społecznego:</b> chrześcijanie unikali amfiteatrów (krwawych walk gladiatorów), wyuzdanych sztuk teatralnych oraz uroczystości państwowych powiązanych ze składaniem ofiar pogańskich.</li><li><b>Skutek męczeństwa:</b> Słynna sentencja Tertuliana: Sanguis martyrum semen christianorum („Krew męczenników jest nasieniem chrześcijan”) – cierpienie i heroizm pierwszych wyznawców wbrew intencjom prześladowców przyczyniały się do wzrostu Kościoła.</li></ul>"}, {"t": "Ćwiczenia – konflikt z judaizmem i prześladowania", "html": "<div class=\"eyebrow\">HISTORIA KOŚCIOŁA / PATROLOGIA – Ćwiczenia</div>\n<div class=\"topic\"><span>Temat</span>Źródła konfliktu z judaizmem, świadectwa historyczne i prześladowania w Cesarstwie Rzymskim</div>\n<h4><span class=\"num\">1.</span> Źródła konfliktu między rodzącym się chrześcijaństwem a judaizmem</h4>\n<h5>Konflikt chrystologiczny a monoteizm</h5>\n<p>W ortodoksyjnym judaizmie fundamentem wiary jest absolutny monoteizm (Szema Izrael – „Słuchaj Izraelu, Pan jest jeden”).</p>\n<p>Wyznanie przez chrześcijan bóstwa Jezusa Chrystusa jako Syna Bożego, równego Ojcu, było traktowane przez środowiska faryzejskie i kapłańskie jako zdrada monoteizmu i bluźnierstwo.</p>\n<h5>Autorytet Chrystusa wobec Prawa (Tory)</h5>\n<p>Jezus występował z autorytetem przewyższającym samą literę Prawa Mojżeszowego („Słyszeliście, że powiedziano... a Ja wam powiadam”).</p>\n<p>Odejście od obowiązku obrzezania pogan i zniesienie rygoryzmu rytualnego stanowiło dla judaizmu złamanie przymierza.</p>\n<h5>Nowa teologia Świątyni</h5>\n<p>Świątynia Jerozolimska stanowiła jedyne sanktuarium kultu ofiarniczego.</p>\n<p>Jezus zapowiedział jej zburzenie i odbudowanie w trzy dni (świątynia Jego Ciała), a św. Paweł przeniósł ideę przybytku na wspólnotę wiernych („Czyż nie wiecie, żeście świątynią Boga?”).</p>\n<h5>Tożsamość Nowego Izraela (Verus Israel)</h5>\n<p>Wspólnota chrześcijańska, do której masowo dołączali nawróceni poganie, zaczęła mianować się duchowym, prawdziwym Izraelem i spadkobiercą obietnic Przymierza.</p>\n<h4><span class=\"num\">2.</span> Źródła historyczne potwierdzające prześladowania ze strony judaizmu</h4>\n<h5>Źródła chrześcijańskie</h5>\n<ul><li><b>Dzieje Apostolskie:</b> kamienowanie diakona Szczepana (Dz 7 – protomęczennik); śmierć Jakuba Większego, brata Jana, z rozkazu Heroda Agryppy I (Dz 12).</li><li><b>Listy św. Pawła:</b> najstarsze wzmianki w 1 Liście do Tesaloniczan oraz świadectwo kar biczowania wymierzanych w synagogach (2 Kor 11,24: „pięciokrotnie otrzymałem po czterdzieści uderzeń bez jednego”).</li><li><b>Świadectwa apologetów i pisarzy:</b> św. Justyn Męczennik, Orygenes, św. Epifaniusz.</li></ul>\n<h5>Źródła judaistyczne</h5>\n<p>Dawne dzieje Izraela Józefa Flawiusza (wzmianka o bezprawnym skazaniu i ukamienowaniu Jakuba Sprawiedliwego, biskupa Jerozolimy).</p>\n<ul><li><b>Birkat ha-Minim (błogosławieństwo/przekleństwo minimów):</b> Formuła włączona pod koniec I wieku (po synodzie w Jamnii) do modlitwy Szmone Esre (Osiemnastu Błogosławieństw), nakierowana na wykluczenie i wyklęcie heretyków, w tym nazarejczyków (judeochrześcijan), z synagog.</li></ul>\n<h4><span class=\"num\">3.</span> Stosunek Rzymu do chrześcijan i oskarżenia społeczne</h4>\n<h5>Domus ecclesiae (Kościół domowy)</h5>\n<p>Ze względu na brak legalnego statusu kult chrześcijański nie odbywał się w świątyniach publicznych, lecz w prywatnych domach najzamożniejszych wyznawców (dysponujących obszernymi dziedzińcami i atriami). Właściciele tych domów często zostawali naturalnymi liderami, zarządcami i biskupami gmin.</p>\n<h5>Główne zarzuty pogańskie</h5>\n<ul><li><b>Ateizm:</b> Podstawowe oskarżenie polityczno-religijne – brak posągów, ołtarzy i świątyń oraz odmowa udziału w kulcie bogów państwowych.</li><li><b>Rytualny kanibalizm (uczty tyestejskie):</b> Zniekształcone wyobrażenie o sprawowaniu Eucharystii (pogłoski o zabijaniu dziecka ukrytego w mące i spożywaniu jego krwi i ciała).</li><li><b>Kazirodztwo i rozwiązłość (związki edypejskie):</b> Błędne odczytanie chrześcijańskiego pocałunku pokoju i nazywania się „braćmi i siostrami”.</li><li><b>Mizantropia (odium humani generis):</b> Wycofanie się chrześcijan z widowisk cyrkowych, krwawych walk gladiatorów i niemoralnego teatru.</li><li><b>Magia:</b> Podejrzenie o stosowanie czarów i nielegalnych zaklęć w zamkniętych zgromadzeniach.</li></ul>\n<h4><span class=\"num\">4.</span> Ewolucja prześladowań rzymskich i męczeństwo</h4>\n<ul><li><b>Charakter represji:</b> Od lokalnych i doraźnych interwencji policyjnych (Neron w 64 r., Domicjan pod koniec I w., Marek Aureliusz w II w.) do zorganizowanych, systemowych edyktów ogólnopaństwowych w III i IV wieku.</li></ul>\n<h5>Wielkie prześladowanie za Dioklecjana (303–305 r. n.e.)</h5>\n<h5>Cztery kolejne edykty cesarskie</h5>\n<p>Nakaz zburzenia kościołów i spalenia ksiąg liturgicznych oraz Pisma Świętego.</p>\n<p>Uwięzienie wszystkich kapłanów i biskupów.</p>\n<p>Przymuszanie uwięzionych torturami do złożenia ofiar bogom rzymskim.</p>\n<p>Powszechny nakaz składania ofiar przez wszystkich mieszkańców imperium pod karą śmierci.</p>\n<ul><li><b>Abdykacja Dioklecjana (305 r.):</b> Niespodziewane zrzeczenie się władzy przez cesarza uważającego się za bóstwo (syna Jowisza) doprowadziło do załamania pogańskiej teologii cesarskiej i politycznego chaosu, który utorował drogę do wolności religijnej (Edykt Mediolański 313 r.).</li><li><b>Kluczowi męczennicy:</b> Poza apostołami (jedynie św. Jan zmarł śmiercią naturalną): św. Polikarp, św. Ignacy Antiocheński, św. Perpetua i Felicyta, św. Wawrzyniec, św. Agnieszka.</li><li><b>Sanguis martyrum semen christianorum:</b> Heroizm męczenników stał się najsilniejszym narzędziem ewangelizacji – im surowsze były represje, tym dynamiczniej wzrastała liczba wiernych.</li></ul>"}, {"t": "Kanon, Ojcowie apostolscy, apokryfy, herezje II w.", "html": "<div class=\"eyebrow\">HISTORIA KOŚCIOŁA / PATROLOGIA – Wykład: Ojcowie Apostolscy, Kształtowanie się Kanonu i Kryzysy Doktrynalne (Gnoza, Marcjonizm, Montanizm)</div>\n<h4><span class=\"num\">1.</span> Kształtowanie się Kanonu Pisma Świętego i Ojcowie Apostolscy</h4>\n<p>W okresie postapostolskim Kościół musiał precyzyjnie określić, które teksty stanowią autentyczne świadectwo wiary (Pismo Święte), oraz uporządkować struktury hierarchiczne oparte na sukcesji apostolskiej.</p>\n<h5>Trzy rodzaje kanonów w tradycji chrześcijańskiej</h5>\n<ul><li><b>Kanon krótki</b> – przyjęty przez protestantów.</li><li><b>Kanon średni</b> – tradycyjny kanon katolicki.</li><li><b>Kanon rozszerzony</b> – m.in. w Kościele etiopskim (zawierający m.in. credo rozszerzone etiopskie).</li><li><b>Podstawowe kryterium kanoniczności:</b> Apostolskość (zgodność nauki z tradycją apostolską).</li></ul>\n<h5>Najważniejsi Ojcowie Kościoła i literatura wczesnochrześcijańska</h5>\n<ul><li><b>Klemens Rzymski:</b> Autor Listu do Koryntian (jeden z najstarszych dokumentów interwencji administracyjnej i troski o jedność oraz sukcesję apostolską).</li><li><b>Ignacy Antiocheński:</b> Autor 7 listów pisanych w drodze na męczeństwo; mocno akcentował jedność Kościoła skupionego wokół biskupa.</li><li><b>Polikarp ze Smyrny:</b> Świadek tradycji apostolskiej, znany m.in. ze sporu z Rzymem o datę obchodów Wielkanocy.</li><li><b>Didache (Nauka Dwunastu Apostołów):</b> Najstarszy tekst pozabiblijny (ok. 50 r.), zawierający m.in. „naukę dwóch dróg” (droga życia i droga śmierci) oraz najwcześniejsze świadectwo praktyk liturgicznych (chrzest, Eucharystia w imię Trójcy Świętej).</li><li><b>Hermas (Pasterz):</b> Wczesnochrześcijańska apokalipsa poruszająca problem tzw. pokuty kanonicznej (drugiej pokuty po chrzcie za ciężkie grzechy).</li></ul>\n<h4><span class=\"num\">2.</span> Kryzysy Ideowe: Apokryfy i Herezje (Hairesis)</h4>\n<p>Słowo hairesis pierwotnie oznaczało wybór lub szkołę filozoficzną, dopiero w chrześcijaństwie nabrało negatywnego znaczenia oznaczającego odejście od prawdy (herezję).</p>\n<h4><span class=\"num\">A.</span> Problem Apokryfów i Pseudoepigrafii</h4>\n<ul><li><b>Zjawisko pseudoepigrafii:</b> Przypisywanie fałszywego autorstwa znanych postaci apostolskich w celu nadania tekstom autorytetu i przemycenia własnych treści.</li></ul>\n<p>Apokryfy podważały jednolitość kanonu. W polskiej nauce klasyczne opracowanie tej literatury przedstawił m.in. ks. prof. Marek Starowieyski.</p>\n<h4><span class=\"num\">B.</span> Judeochrześcijaństwo i Ebionici</h4>\n<ul><li><b>Ebionici:</b> Nurt judeochrześcijański (szczególnie silny w pierwszych wiekach), który uważał, że warunkiem zbawienia jest zachowanie prawa mojżeszowego.</li><li><b>Odrzucali boskość Jezusa (głosili adopcjanizm</b> – pogląd, że Jezus był zwykłym człowiekiem, na którego zstąpiła moc Boża w momencie chrztu).</li></ul>\n<p>Używali w Eucharystii wody zamiast wina (dlatego nazywano ich akwalatami).</p>\n<p>Odrzucali listy św. Pawła jako „zdrajcy Zakonu”.</p>\n<h4><span class=\"num\">C.</span> Gnoza i Gnostycyzm</h4>\n<p>Gnoza była potężnym systemem religijno-filozoficznym, który wchodząc w kontakt z chrześcijaństwem, judaizmem czy religiami Wschodu, tworzył synkretyczne systemy (np. Menander, Saturninus).</p>\n<h5>Mit gnostycki</h5>\n<ul><li><b>Istniał doskonały świat duchowy</b> – Pleroma (pełnia) z hierarchią eonów.</li></ul>\n<p>Świat materialny powstał w wyniku błędu (niewiedzy) niższego bóstwa (Sofii), które zapragnęło poznać niepoznawalne.</p>\n<p>Materia jest zmaterializowaną niewiedzą i złem. W materii uwięzione są iskry duchowe (cząstki Pleromy).</p>\n<ul><li><b>Kotwica zbawienia:</b> Zbawienie nie dokonywało się przez wiarę czy łaskę, lecz przez wiedzę (gnosis) – uświadomienie sobie swojego boskiego pochodzenia i ucieczkę od skażonej materii (często wiązało się to z radykalnym rygoryzmem i odrzuceniem małżeństwa).</li></ul>\n<h4><span class=\"num\">D.</span> Marcjonizm</h4>\n<p>Stworzony przez Marcjona, który dokonał radykalnego cięcia w Biblii.</p>\n<h5>Główne założenia</h5>\n<p>Całkowite odrzucenie Starego Testamentu (uznawał Boga Starego Testamentu za boga gniewu, mściwego demiurga).</p>\n<p>Przyjmował jedynie okrojoną Ewangelię Łukasza i wybrane listy Pawła.</p>\n<ul><li><b>Skrajny dualizm:</b> świat materialny jest zły, stworzony przez niższego boga, a prawdziwy Bóg miłosierdzia objawił się dopiero w Jezusie Chrystusie.</li></ul>\n<h4><span class=\"num\">E.</span> Montanizm</h4>\n<p>Ruch charyzmatyczny i proroczy zapoczątkowany przez Montanusa oraz prorokynie Pryscyllę i Maximillę.</p>\n<h5>Cechy ruchu</h5>\n<p>Głosili bliskie, natychmiastowe przyjście Nowego Jeruzalem (Duch Święty miał dokonać pełni objawienia przewyższającej nawet nauczanie Chrystusa).</p>\n<ul><li><b>Skrajny rygoryzm moralny:</b> nakaz surowych postów, zakaz unikania prześladowań (obowiązek szukania męczeństwa).</li></ul>\n<p>Z ruchem tym na pewnym etapie jego życia związał się wybitny pisarze wczesnochrześcijański – Tertulian.</p>"}, {"t": "Sukcesja apostolska i urząd biskupa", "html": ""}], "psych": [{"t": "Wykład 1 – czym jest psychologia (2.10.2026)", "html": "<div class=\"eyebrow\">PSYCHOLOGIA OGÓLNA</div>\n<div class=\"meta\">🗓 Data: 2 X 2026</div>\n<p>„My wiemy, co to oznacza”</p>\n<ul><li>Wprowadzenie do psychologii</li><li><b>Definicja:</b> Psychologia to nauka, która zajmuje się opisem i wyjaśnieniem zachowań i procesów psychicznych.</li><li><b>1879 r. – narodziny nowożytnej psychologii:</b> założenie pierwszego laboratorium psychologicznego (Wilhelm Wundt w Lipsku).</li><li><b>Charakterystyka:</b> Psychologia jest nauką probabilistyczną – opiera się na rachunku prawdopodobieństwa (nigdy nie ma w niej 100% pewności).</li><li><b>Główny cel psychologii:</b> Diagnoza i terapia.</li></ul>\n<p>„Nie można powiedzieć, że ktoś jest już »święty« albo »dojrzały«”.</p>\n<h5>Ewolucja przedmiotu badań</h5>\n<ul><li><b>I etap psychologii:</b> Psychika ⟷ Świadomość (metoda: introspekcja).</li><li><b>II etap:</b> Psychoanaliza (Zygmunt Freud) → Świadomość, Przedświadomość / Podświadomość, Nieświadomość.</li><li>Metodologia psychologii współczesnej</li><li><b>Introspekcja</b> – „spoglądać w głąb”, samoobserwacja własnych stanów psychicznych.</li><li><b>Obserwacja</b> – świadome, systematyczne i planowe spostrzeganie przeżyć wewnętrznych człowieka na podstawie oznak zewnętrznych ( spostrzeganie→interpretacja).</li><li><b>Cechy poprawnej obserwacji:</b> celowa, planowa, selektywna, obiektywna.</li><li><b>Wywiad psychologiczny</b> – prosta rozmowa ukierunkowana na uzyskanie konkretnych informacji.</li></ul>\n<h5>Ankieta – zestaw pytań; jej wartość merytoryczna zależy od</h5>\n<p>sposobu zadawania pytań, warunków i sposobu jej przeprowadzenia (np. kiedy).</p>\n<ul><li><b>Eksperyment</b> – forma obserwacji, w której celowo wywołuje się badane zjawisko, wpływa na jego przebieg i kontroluje zmienne.</li></ul>\n<h5>Testy psychologiczne</h5>\n<p>Kwestionariuszowe (ulepszona ankieta, zazwyczaj pytania zamknięte)</p>\n<ul><li>Skalowe</li></ul>\n<p>Zdań niedokończonych (technika projekcyjna)</p>\n<ul><li>Testy inteligencji</li><li>Analiza wytworów</li><li>Statystyka</li><li><b>(Margines:</b> nawiązanie do Z. Freuda – „Poza zasadą przyjemności” oraz behawioryzmu: reakcja na bodźce psychiczne).</li><li>Historyczne kierunki psychologiczne</li><li><b>2.3.1. Psychologia elementów (strukturalizm)</b> – II poł. XIX w.</li><li><b>Przedstawiciele / spory:</b> Wilhelm Wundt vs szkoła würzburska.</li><li><b>Asocjacja</b> – kojarzenie faktów/zjawisk psychicznych zgodnie z określonymi prawidłami.</li><li><b>Tendencja dominująca</b> – wytworzone i ukierunkowane podczas badania nastawienie poznawcze.</li></ul>\n<h5>Koncepcja Wundta (synteza twórcza)</h5>\n<p>„Wytwór psychiczny, który powstaje z jakiejkolwiek liczby elementów, a więc jest czymś nowym, czymś nieporównywalnym ze swymi składnikami pod względem swych właściwości istotnych.”</p>\n<ul><li>2.3.2. Psychologia aktów</li><li><b>Główny przedstawiciel:</b> Franz Brentano.</li><li><b>Kluczowe założenie:</b> Główną cechą wyróżniającą przedmiot psychologii jest aktywność umysłu skierowana na treść.</li></ul>\n<p>Doświadczenie aktywne i intencjonalne → intencjonalność aktu psychicznego (każdy stan świadomości odnosi się ku jakiemuś przedmiotowi).</p>"}, {"t": "Wykład 1 – rozwinięcie akademickie", "html": "<div class=\"eyebrow\">PSYCHOLOGIA OGÓLNA – ROZSZERZENIE MATERIAŁU</div>\n<h4><span class=\"num\">1.</span> Czym jest psychologia i specyfika jej poznania</h4>\n<ul><li><b>Geneza terminu:</b> Słowo wywodzi się z greki: psyche (ψυχή – dusza, tchnienie życia) oraz logos (λόγος – słowo, nauka, rozum). Początkowo psychologia stanowiła integralną część filozofii (antropologii filozoficznej i teorii poznania).</li></ul>\n<h5>Zadania nauki (Opis i Wyjaśnienie)</h5>\n<ul><li><b>Opis (deskrypcja):</b> Odpowiada na pytanie „jak jest?” – rejestruje faktyczne zachowania, procesy afektywne, dynamikę procesów poznawczych (spostrzeganie, pamięć, myślenie) bez ich wstępnego wartościowania.</li><li><b>Wyjaśnienie (eksplanacja):</b> Odpowiada na pytanie „dlaczego tak się dzieje?” – formułuje hipotezy i teorie wskazujące na związki przyczynowo-skutkowe lub funkcjonalne pomiędzy bodźcami, strukturami biologicznymi, cechami osobowości a zachowaniem.</li></ul>\n<h5>Charakter probabilistyczny</h5>\n<p>W naukach przyrodniczych (jak fizyka klasyczna) zjawiska opisuje się prawami deterministycznymi. Psychologia bada układy otwarte o olbrzymiej złożoności, dlatego formułuje prawa statystyczne / probabilistyczne.</p>\n<p>Oznacza to, że psycholog wnioskuje w kategoriach prawdopodobieństwa wystąpienia określonej reakcji, a nie niezłomnej konieczności. Żadna diagnoza ani predykcja nie ma 100% pewności.</p>\n<h5>Cel praktyczny: Diagnoza i Terapia</h5>\n<ul><li><b>Diagnoza:</b> Identyfikacja mechanizmów funkcjonowania jednostki, jej deficytów, potencjałów rozwojowych, źródeł konfliktów wewnętrznych lub zaburzeń psychicznych.</li><li><b>Terapia:</b> Celowe oddziaływanie mające na celu przywrócenie równowagi psychicznej, integrację osobowości, modyfikację nieadaptacyjnych nawyków i rozwój dojrzałości.</li></ul>\n<h5>Kwestia dojrzałości psychicznej i „świętości”</h5>\n<p>„Nie można powiedzieć, że ktoś jest już dojrzały albo święty” – w psychologii rozwój osobowości jest procesem permanentnym (nie stanem statycznym). Dojrzałość nie jest osiągnięciem raz na zawsze; człowiek w obliczu nowych kryzysów (tzw. kryzysów normatywnych i nienormatywnych) stale redefiniuje swoje mechanizmy adaptacyjne.</p>\n<h4><span class=\"num\">2.</span> Dwa paradygmaty przedmiotu badań</h4>\n<ul><li><b>I etap:</b> Psychika = Świadomość (Introspekcjonizm)</li></ul>\n<p>Dominował od narodzin psychologii eksperymentalnej (1879 r.) do początku XX wieku.</p>\n<p>Utożsamiano zjawiska psychiczne wyłącznie z tym, co jawne, bezpośrednio uświadamiane przez podmiot (świadomy strumień przeżyć).</p>\n<p>Główną metodą badawczą była introspekcja (wgląd we własne stany wewnętrzne).</p>\n<ul><li><b>II etap:</b> Przełom psychoanalityczny (Zygmunt Freud)</li></ul>\n<p>Zygmunt Freud wykazał, że świadomość to jedynie nikły ułamek całego życia psychicznego.</p>\n<p>Wprowadził koncepcję nieświadomości, która w sposób dynamiczny determinuje większość ludzkich motywacji, afektów i symptomów neurotycznych.</p>\n<ul><li><b>Przejście to zrewolucjonizowało psychologię:</b> badacz przestał wierzyć deklaracjom badanego na słowo, a zaczął doszukiwać się ukrytych, nieświadomych sensów za fasadą wypowiedzi i objawów.</li></ul>\n<h4><span class=\"num\">3.</span> Metodologia współczesnych badań psychologicznych</h4>\n<ul><li>Rzetelność w psychologii zależy od ścisłego stosowania triangulacji metodologicznej (łączenia wielu metod):</li></ul>\n<h5>Obserwacja zewnętrzna (ekstrospekcja)</h5>\n<p>Świadome, ustrukturyzowane śledzenie wskaźników behawioralnych (gesty, mimika, czas reakcji, ton głosu, zachowania celowe).</p>\n<h5>Aby obserwacja była naukowa, musi być</h5>\n<ul><li><b>Celowa:</b> podporządkowana z góry określonej hipotezie.</li><li><b>Planowa:</b> realizowana według ustalonego schematu i harmonogramu.</li><li><b>Selektywna:</b> wyodrębniająca z tła tylko zmienne istotne dla badania.</li><li><b>Obiektywna:</b> zredukowana do rejestracji faktów, wyraźnie oddzielona od interpretacji i ocen obserwatora.</li></ul>\n<h5>Introspekcja (samoobserwacja)</h5>\n<p>Metoda historycznie fundamentalna, choć współcześnie traktowana ostrożnie ze względu na subiektywizm, mechanizmy racjonalizacji i zawodność pamięci badanych.</p>\n<h5>Eksperyment psychologiczny</h5>\n<p>Król metod empirycznych. Polega na celowym wywołaniu badanego procesu poprzez manipulację zmienną niezależną (bodziec/warunek) przy jednoczesnej kontroli zmiennych zakłócających i pomiarze zmiennej zależnej (reakcja/zachowanie).</p>\n<h5>Wywiad i rozmowa psychologiczna</h5>\n<p>Metoda jakościowa. Może być ustrukturyzowany, półstrukturalny lub swobodny. Pozwala na nawiązanie kontaktu terapeutycznego i zebranie historii życia (anamnezy).</p>\n<h5>Ankieta i kwestionariusze</h5>\n<p>Służą do badań ilościowych na dużych próbach.</p>\n<p>Kluczowe znaczenie ma poprawność konstrukcji kafeterii pytań (unikanie pytań sugerujących, dwuznacznych, zbyt intymnych na początku) oraz warunki temporalne i środowiskowe badania (np. pora dnia, zmęczenie, poczucie anonimowości).</p>\n<h5>Testy psychologiczne</h5>\n<ul><li><b>Muszą spełniać rygorystyczne kryteria psychometryczne:</b> trafność (mierzy to, co ma mierzyć), rzetelność (dokładność i powtarzalność pomiaru), normalizacja (odniesienie do norm populacyjnych) oraz standaryzacja.</li><li><b>Rodzaje:</b> kwestionariusze osobowościowe, skale szacunkowe, testy zdolności i inteligencji (np. WAIS), testy projekcyjne (np. Test Niedokończonych Zdań Rottera, Rorschach).</li></ul>\n<h5>Analiza wytworów</h5>\n<p>Badanie rysunków, pamiętników, listów, prac plastycznych czy wytworów pracy zawodowej pacjenta – szczególnie cenna w psychologii dziecięcej i klinicznej.</p>\n<h5>Statystyka</h5>\n<p>Aparat matematyczny weryfikujący istotność statystyczną obserwowanych różnic lub korelacji (np. testy t-Studenta, korelacja Pearsona, analiza czynnikowa, regresja).</p>\n<h4><span class=\"num\">4.</span> Historyczne szkoły psychologiczne</h4>\n<h4><span class=\"num\">A.</span> Psychologia elementów (Strukturalizm) – Wilhelm Wundt (1879 r.)</h4>\n<ul><li><b>Geneza:</b> Założenie przez Wundta pierwszego na świecie Instytutu Psychologii Eksperymentalnej na Uniwersytecie w Lipsku w 1879 roku uznaje się za oficjalną cezurę oddzielenia psychologii od filozofii.</li><li><b>Główne założenie:</b> Życie psychiczne składa się z elementarnych, nierozkładalnych „cegiełek” – prostych wrażeń zmysłowych (sensations) oraz elementarnych uczuć (feelings).</li><li><b>Asocjacjonizm:</b> Elementy te łączą się w złożone struktury (idee, wyobrażenia) za pomocą mechanizmów kojarzenia (styczność w czasie i przestrzeni, podobieństwo, kontrast).</li><li><b>Koncepcja twórczej syntezy (schöpferische Synthese):</b> Wundt podkreślał, że psychika to nie zwykła suma składników. Całość posiada jakość nową, emergentną, której nie da się wyprowadzić z prostej addycji jej elementów (cytat z notatki: produkt psychiczny jest czymś nowym, nieporównywalnym ze swoimi składnikami).</li><li><b>Spór ze Szkołą Würzburską (Oswald Külpe i współpracownicy):</b> Badacze z Würzburga wykazali ograniczenia Wundtowskiego atomizmu, udowadniając eksperymentalnie istnienie tzw. myślenia nienaocznego (aktów myślenia pozbawionych zmysłowych obrazów) oraz znaczenie tendencji dominującej / nastawienia (Aufgabe), która steruje przebiegiem kojarzeń wbrew czystemu asocjacjonizmowi.</li></ul>\n<h4><span class=\"num\">B.</span> Psychologia aktów – Franz Brentano (1874 r.)</h4>\n<ul><li><b>Opozycja do Wundta:</b> Austriacki filozof i psycholog Franz Brentano opublikował w 1874 r. przełomowe dzieło „Psychologia z empirycznego punktu widzenia”. Sprzeciwił się wundtowskiemu redukowaniu psychiki do biernych treści i elementów.</li><li><b>Akt vs Treść:</b> Brentano odróżnił treść psychiczną (np. widziany kolor czerwony, usłyszany dźwięk) od aktu psychicznego (samo widzenie, słyszenie, pragnienie, sądzenie). Prawdziwym przedmiotem psychologii są dynamiczne czynności/akty umysłu, a nie martwe treści.</li></ul>\n<h5>Koncepcja Intencjonalności (intentio)</h5>\n<p>Fundamentalna cecha każdego zjawiska psychicznego odróżniająca je bezwzględnie od zjawisk fizycznych.</p>\n<ul><li>Każdy akt psychiczny charakteryzuje się „skierowaniem ku przedmiotowi” (intencjonalnym odniesieniem):</li><li><b>Kiedy spostrzegamy</b> – zawsze spostrzegamy coś.</li><li><b>Kiedy miłujemy</b> – zawsze miłujemy kogoś / coś.</li><li><b>Kiedy wątpimy</b> – zawsze wątpimy w coś.</li></ul>\n<p>Koncepcja ta stała się bezpośrednim fundamentem fenomenologii Edmunda Husserla oraz wpłynęła na całą europejską myśl humanistyczną i psychologię postaci (Gestalt).</p>"}, {"t": "Psychoanaliza Freuda i behawioryzm (9.10.2026)", "html": "<ul><li><b>Wykład</b> – Piątek, 9 października 2026, 07:59</li></ul>\n<h4><span class=\"num\">1.</span> Topograficzny model aparatu psychicznego (Metafora góry lodowej)</h4>\n<ul><li>Freud podzielił ludzki umysł na trzy poziomy dostępności treści psychicznych dla świadomego „ja”:</li></ul>\n<h5>Świadomość (wierzchołek góry lodowej)</h5>\n<p>Niewielka część psychiki znajdująca się ponad powierzchnią wody.</p>\n<p>Obejmuje bieżące myśli, percepcje zmysłowe, intencje i odczucia, z których bezpośrednio zdajemy sobie sprawę w danym momencie.</p>\n<h5>Przedświadomość (warstwa tuż pod powierzchnią)</h5>\n<p>Treści, które w tej chwili nie znajdują się w centrum uwagi, ale nie są zablokowane.</p>\n<p>Uświadamiamy je sobie bez trudu dopiero wtedy, gdy pojawi się taka potrzeba lub odpowiedni impuls (np. przypomnienie sobie numeru telefonu, daty urodzin czy wiedzy nabytej na poprzednim wykładzie).</p>\n<h5>Nieświadomość (masywna podstawa góry lodowej)</h5>\n<p>Największa i zarazem najbardziej determinantna część aparatu psychicznego.</p>\n<p>Składa się z wypartych popędów, lęków, traumatycznych wspomnień i pierwotnych impulsów, do których bezpośredni dostęp jest zablokowany przez cenzurę psychiczną.</p>\n<ul><li><b>Jest to „podstawa góry”, o którą</b> – niczym Titanic – człowiek może się rozbić, jeśli siły nieświadome przejmą kontrolę lub dojdzie do gwałtownego konfliktu wewnętrznego. Treści te determinują ludzkie wybory, sny, objawy nerwicowe oraz przejęzyczenia (lapsusy freudowskie).</li></ul>\n<h4><span class=\"num\">2.</span> Strukturalny model osobowości (Id – Ego – Superego)</h4>\n<p>W późniejszym etapie Freud uzupełnił model topograficzny o model strukturalny, w którym osobowość stanowi dynamiczną arenę ścierających się sił:</p>\n<ul><li>Instancja Główna zasada Rola i charakterystyka psychologiczna Przykłady z notatek</li></ul>\n<p>Id (Ono)</p>\n<p>Zasada przyjemności (lustprinzip)</p>\n<p>Całkowicie nieświadomy „kocioł wrzących popędów”, siła biologiczna, popęd życia (Eros) i popęd śmierci (Thanatos). Dąży do natychmiastowego zaspokojenia bez względu na reguły społeczne czy logikę. Człowiek bywa niewolnikiem Id.</p>\n<ul><li>„Zjedz golonkę!”</li><li>„Chcę auto za 150 tys. zł!”</li></ul>\n<p>Ego (Ja)</p>\n<p>Zasada realności (realitätsprinzip)</p>\n<p>Świadomy i racjonalny negocjator/rozjemca. Równoważy impulsywne żądania Id z restrykcyjnymi nakazami Superego i wymaganiami świata zewnętrznego. Działa w oparciu o system wartości, strategię i narzędzia poznawcze (bez nich jest bezradne wobec nacisków).</p>\n<ul><li>„Poczekaj, przyjdzie Wielkanoc”</li><li>„O, tu jest auto za 50 tys. zł (na to nas stać)”</li></ul>\n<p>Superego (Nad-ja)</p>\n<ul><li>Zasada powinności / moralności</li></ul>\n<p>Wewnętrzny sędzia, cenzor i sumienie ukształtowane w procesie wychowania, socjalizacji oraz interioryzacji norm rodzicielskich i kulturowych. Może funkcjonować skrajnie: od subtelnej oceny (waga apteczna) po bezwzględną, miażdżącą surowość (waga kolejowa).</p>\n<ul><li>„Nie jedz – jest Wielki Piątek, obowiązuje post ścisły!”</li><li>„Za drogie, to nieodpowiedzialne!”</li></ul>\n<h4><span class=\"num\">3.</span> Mechanizmy obronne Ego</h4>\n<p>Gdy kompromis między Id, Superego a rzeczywistością staje się niemożliwy, Ego doświadcza lęku (neurotycznego, moralnego lub realnego). Aby chronić się przed dezintegracją, uruchamia nieświadome mechanizmy obronne:</p>\n<h5>Wyparcie (represja)</h5>\n<p>Podstawowy i najbardziej pierwotny mechanizm obronny.</p>\n<p>Polega na aktywnym wypychaniu ze świadomości do nieświadomości bolesnych wspomnień, traum, zakazanych myśli i impulsów budzących lęk. Wyparte treści nadal jednak wywierają presję energetyczną.</p>\n<h5>Zaprzeczenie (denial)</h5>\n<p>Odmowa uznania obiektywnie istniejącej rzeczywistości, faktów lub uczuć, które są zbyt bolesne do zaakceptowania (np. ignorowanie diagnozy śmiertelnej choroby, odrzucanie faktu własnego uzależnienia).</p>\n<h5>Projekcja</h5>\n<p>Nieświadome przypisywanie własnych, nieakceptowanych cech, wad, pragnień lub wrogich uczuć innym osobom.</p>\n<ul><li><b>Człowiek zamiast uznać:</b> „Czuję nienawiść”, twierdzi: „To on mnie nienawidzi i prowokuje”.</li></ul>\n<h5>Racjonalizacja</h5>\n<p>Pozornie logiczne, społecznie akceptowalne usprawiedliwianie własnych zachowań, błędów lub porażek, maskujące prawdziwe (często niskie) motywy.</p>\n<ul><li><b>Kwaśne winogrona:</b> dewaluowanie celu, którego nie udało się osiągnąć („Wcale mi na tym awansie nie zależało, to stanowisko i tak jest bez sensu”).</li><li><b>Słodkie cytryny:</b> wmawianie sobie, że niekorzystna, niechciana sytuacja, w której się znaleźliśmy, w rzeczywistości jest wspaniała i pożądana („Dobrze, że to stare auto się popsuło, przynajmniej więcej spaceruję”).</li></ul>\n<h5>Sublimacja</h5>\n<p>Jedyny w pełni dojrzały i twórczy mechanizm obronny.</p>\n<p>Przekierowanie nieakceptowanych społecznie popędów (głównie agresywnych i seksualnych) na cele społecznie cenione, artystyczne, naukowe lub użyteczne.</p>\n<ul><li><b>Przykład z wykładu:</b> popęd agresji ukierunkowany destrukcyjnie czyni z kogoś przestępcę (nożownika), podczas gdy zsublimowany w precyzyjną pracę manualną ratuje życie (chirurg).</li></ul>\n<h5>Przemieszczenie (wyładowanie uczuć)</h5>\n<p>Skierowanie reakcji emocjonalnej (najczęściej gniewu) na obiekt zastępczy, bezpieczniejszy lub słabszy, ponieważ bezpośredni sprawca frustracji jest zbyt groźny (np. szef).</p>\n<ul><li><b>Przykład z wykładu:</b> pracownik skarcony przez przełożonego wraca do domu i wyładowuje frustrację na żonie i dzieciach.</li></ul>\n<h5>Regresja</h5>\n<p>Cofnięcie się w sytuacji stresu do zachowań, reakcji i mechanizmów charakterystycznych dla wcześniejszego stadium rozwoju psychoseksualnego (np. dorosły obrażający się jak dziecko, tupanie nogami, płacz, utrata samodzielności).</p>\n<h5>Identyfikacja</h5>\n<p>Przejmowanie cech, postaw lub wartości innych jednostek bądź potężnych instytucji, by podnieść własną samoocenę, zyskać poczucie bezpieczeństwa lub osiągnąć wymierne korzyści psychologiczne.</p>\n<h5>Izolacja (izolacja afektu)</h5>\n<p>Rozdzielenie poznawczego aspektu zdarzenia (faktów, myśli) od ładunku emocjonalnego.</p>\n<p>Człowiek relacjonuje traumatyczne wydarzenie w sposób chłodny, medyczny, pozbawiony jakichkolwiek uczuć.</p>\n<h4><span class=\"num\">4.</span> Kontekst alternatywny: Behawioryzm a Psychoanaliza</h4>\n<ul><li>W opozycji do analizy głębi psychiki (procesów nieświadomych) stoi podejście behawioralne:</li></ul>\n<h5>Paradygmat Bodziec → Reakcja ( S→R)</h5>\n<p>Psychologia powinna badać wyłącznie obiektywnie obserwowalne zachowanie, odrzucając spekulacje o „duszy”, Id czy Superego jako nienaukowe.</p>\n<p>Zachowanie człowieka jest kształtowane przez środowisko poprzez system wzmocnień: nagrody (wzmocnienia pozytywne) oraz kary.</p>\n<p>Moralność i dyscyplina w tym ujęciu wynikają z zewnętrznej kalkulacji: „Przestrzegam prawa, bo boję się mandatu/więzienia”, „Uczeń uczy się dla oceny lub ze strachu przed uwagą”.</p>\n<h5>Edward Thorndike i Prawo Efektu (Law of Effect)</h5>\n<p>Zachowania, po których następuje stan satysfakcji (nagroda), mają tendencję do utrwalania się i częstszego powtarzania.</p>\n<p>Zachowania przynoszące dyskomfort lub karę ulegają wygaszeniu. Jest to fundament warunkowania instrumentalnego i uczenia się u ludzi oraz zwierząt.</p>\n<h4><span class=\"num\">5.</span> Wytyczne organizacyjne do ćwiczeń</h4>\n<p>Zagadnienia z psychoanalizy i behawioryzmu mają być opanowane z pamięci.</p>\n<ul><li><b>Forma zajęć:</b> burza mózgów oraz praktyczna analiza mechanizmów w konkretnych sytuacjach życiowych.</li></ul>"}, {"t": "Jung, Adler, Horney – psychologia głębi", "html": "<div class=\"eyebrow\">PSYCHOLOGIA – Psychologia Głębi, Adler i Psychoanaliza Kulturowa</div>\n<div class=\"topic\"><span>Temat</span>Struktura osobowości według Junga, teleologia Adlera oraz lęk i potrzeby neurotyczne u Karen Horney</div>\n<h4><span class=\"num\">1.</span> Carl Gustav Jung i Struktura Psychiki</h4>\n<ul><li>Jung wyróżnił strukturę ludzkiej psychiki opartą na świadomości oraz dwóch poziomach nieświadomości:</li><li><b>Ego (świadomość):</b> Centrum naszej osobowości, uświadomione myśli, tożsamość oraz imię i nazwisko.</li><li><b>Podświadomość (nieświadomość) indywidualna:</b> Obszar obejmujący to, co zostało wyparte ze świadomości (złe doświadczenia, błędy, popełnione grzechy, ukrywane emocje).</li><li><b>Podświadomość (nieświadomość) zbiorowa:</b> Najgłębsza warstwa psychiki zawierająca to, co odziedziczone po przodkach – nie tylko ludzkich, ale także ślady dziedzictwa zwierzęcego.</li></ul>\n<h5>Główne archetypy w psychologii Junga</h5>\n<ul><li><b>Persona (maska):</b> Osobowość publiczna; wizerunek i rola, jaką człowiek pokazuje na zewnątrz.</li><li><b>Anima i Animus:</b> Nieświadome pierwiastki odmiennej płci obecne w psychice (Anima – kobiecy pierwiastek u mężczyzny; Animus – męski pierwiastek u kobiety).</li><li><b>Cień:</b> Ukryta, ciemna strona osobowości; to, czego człowiek się wstydzi i przed czym się kryje.</li><li><b>Jaźń (Self):</b> Nadrzędny archetyp odpowiedzialny za integrację, stabilność i równowagę całej osobowości.</li><li><b>Wymiary osobowości:</b> Jung wskazał również na podział na ekstrawersję (skierowanie na świat zewnętrzny) oraz introwersję (skierowanie na świat wewnętrzny).</li></ul>\n<h4><span class=\"num\">2.</span> Alfred Adler i Psychologia Indywidualna</h4>\n<ul><li><b>Odejście od Freuda:</b> Adler odrzucił panseksualizm Freuda i za kluczowy czynnik determinujący człowieka uznał celowość (teleologię) oraz wolę mocy.</li><li><b>Poczucie niższości:</b> Każdy człowiek doświadcza w życiu (szczególnie w dzieciństwie) poczucia niższości. Doświadczenie to nie musi być destrukcyjne – przy odpowiednim pokierowaniu staje się ono naturalną trampoliną do sukcesu i rozwoju.</li></ul>\n<h4><span class=\"num\">3.</span> Karen Horney i Psychoanaliza Kulturowa</h4>\n<p>Karen Horney (przedstawicielka psychoanalizy kulturowej) przeniosła akcent z popędów biologicznych na wpływ środowiska społecznego.</p>\n<h5>Trzy wymiary Ja</h5>\n<ul><li><b>Ja realne:</b> Rzeczywiste możliwości i potencjał człowieka.</li><li><b>Ja idealne:</b> Zawyżone, nierealistyczne wyobrażenia i oczekiwania wobec siebie.</li><li><b>Ja aktualne:</b> Zespół aktualnie realizowanych celów.</li><li><b>Neurotyk:</b> Osoba, u której występują drastyczne dysproporcje i wygórowany poziom Ja idealnego.</li><li><b>Lęk podstawowy:</b> Poczucie izolacji i bezsilności jednostki w obliczu potencjalnie wrogiego świata. Powstaje w dzieciństwie na skutek błędów wychowawczych rodziców (np. brak poczucia bezpieczeństwa, nadopiekuńczość lub emocjonalne odrzucenie).</li><li>10 potrzeb neurotycznych</li><li>Horney skategoryzowała 10 potrzeb neurotycznych w trzy główne grupy orientacji interpersonalnej:</li></ul>\n<p>Ku ludziom (np. neurotyczna potrzeba uczucia, uznania oraz potrzeba partnera, który przejmie ster życia).</p>\n<p>Od ludzi (np. potrzeba niezależności, samowystarczalności oraz zamykania swojego życia w wąskich granicach).</p>\n<p>Przeciw ludziom (np. potrzeba władzy, prestiżu, podziwiania oraz wykorzystywania innych).</p>\n<ul><li><b>Uwaga kliniczna:</b> Różnica między potrzebą zdrową a neurotyczną ma charakter ilościowy, a nie jakościowy (np. pragnienie uznania staje się pragnieniem absolutnym i destrukcyjnym).</li></ul>"}, {"t": "Synteza syntez: 4 nurty w 4 słowach; behawioryzm", "html": "\n<div class=\"eyebrow\">PSYCHOLOGIA OGÓLNA – Wykład 30.10.2026</div>\n<div class=\"topic\"><span>Temat</span>„Synteza syntez” – cztery nurty psychologii w czterech słowach; psychoanaliza a psychologia humanistyczna; behawioryzm: zachowanie, nagrody i kary, S–R i S–O–R</div>\n<h4><span class=\"num\">1.</span> Synteza syntez – „jak to wiem, to wiem, czym jest psychologia” <span class=\"tag-exam\">zapamiętać do końca życia</span></h4>\n<p>Prowadzący: z jego uwag trzeba zapamiętać <b>4 słowa</b> – po jednym na każdy nurt.</p>\n<div class=\"table-wrap\"><table class=\"nt\"><thead><tr><th>Nurt</th><th>Słowo-klucz</th><th>O co chodzi</th></tr></thead><tbody>\n<tr><td><b>Psychoanaliza</b> (Freud)</td><td><b>nieświadomość</b></td><td>w człowieku działa to, czego nie jest świadomy; patrzy w przeszłość</td></tr>\n<tr><td><b>Behawioryzm</b></td><td><b>zachowanie</b></td><td>liczy się to, co da się zaobserwować i zmierzyć</td></tr>\n<tr><td><b>Psychologia humanistyczna</b></td><td><b>rozum</b></td><td>człowiek się rozwija, ma możliwości – nie trzeba „cofać się do dzieciństwa”</td></tr>\n<tr><td><b>Psychologia poznawcza</b></td><td><b>rozum</b></td><td>procesy poznawcze, myślenie</td></tr>\n</tbody></table></div>\n<p>Przy tej syntezie: <b>Alfred Adler</b>.</p>\n\n<h4><span class=\"num\">2.</span> Psychoanaliza – „Dziecko jest ojcem człowieka dorosłego”</h4>\n<ul>\n<li>Całą psychoanalizę streszcza jedno zdanie: <b>„Dziecko jest ojcem człowieka dorosłego”</b>. Psychoanaliza <b>patrzy w przeszłość</b>.</li>\n<li>Psychoanalityk pyta o mamę, dzieciństwo, przedszkole, szkołę, miejsce urodzenia – i na tej podstawie wyciąga wszystkie wnioski, <b>tak jakby nie było rozwoju</b>.</li>\n<li><b>Krytyka – „Freud się mylił”:</b> według tego myślenia np. <b>Einstein</b> byłby nikim, bo miał nieudane dzieciństwo i ogromne kłopoty w szkole (według prowadzącego oblał maturę i musiał ją poprawiać; na studia ledwo się dostał dzięki wujkowi fizykowi; po studiach pracował na kolei, a obserwując jeżdżące pociągi, doszedł do teorii względności).</li>\n<li>Gdyby nieudane dzieciństwo przekreślało człowieka, nie należałoby przyjmować do seminarium kleryka po trudnym dzieciństwie. A przecież po to jest <b>6–7 lat formacji</b>, żeby człowiek coś z siebie zrobił.</li>\n</ul>\n<h5>Nieświadomość</h5>\n<ul>\n<li>Dla Freuda najważniejsza była <b>nieświadomość</b> – w człowieku pracuje to, czego nie jest świadomy.</li>\n<li>Dowody na nieświadomość: <b>marzenia senne</b> oraz <b>pomyłki</b> (przejęzyczenia) – mówi się, że człowiek mówi prawdę wtedy, gdy się pomyli, bo informacja z nieświadomości „przeszła do góry”.</li>\n<li>Człowiek jest zdeterminowany przez dwa popędy: <b>popęd seksualny</b> (libido) i <b>popęd śmierci</b>. Stąd według Freuda celibat byłby niemożliwy.</li>\n</ul>\n<h5>Psychologia głębi – następcy Freuda</h5>\n<ul>\n<li>Późniejsi analitycy starali się złagodzić Freuda, ale nadal byli <b>psychologami głębi</b> – czerpali z tego, co jest pod świadomością (podświadomość i nieświadomość).</li>\n<li>Jaźń / <b>self</b> (tożsamość, „ja”) to jakby <b>klej</b>, który skleja poszczególne elementy osobowości, takie jak <b>archetypy</b> (np. persona) – powtórka z Junga.</li>\n</ul>\n\n<h4><span class=\"num\">3.</span> Psychologia humanistyczna – rozwój jest możliwy</h4>\n<ul>\n<li>Psychologia humanistyczna mówi: „wyrzućcie te książki” – po co się cofać do dzieciństwa, skoro jest <b>rozum</b> i w życiu można osiągnąć sukces. Człowiek się <b>rozwija</b>, ma możliwości; nie przestaje się rozwijać.</li>\n<li><b>Michał Anioł</b> został architektem bazyliki św. Piotra po siedemdziesiątce, a pracował do 88. roku życia – mógł powiedzieć „jestem za stary”, ale nie powiedział.</li>\n<li>Przykład z <b>Uniwersytetu Trzeciego Wieku</b> (na inaugurację przyszło prawie 300 osób): seniorka, doktor medycyny, zmarła w wieku 107 lat – do końca chciała się uczyć. Ludzie na emeryturze dalej chcą nad sobą pracować.</li>\n<li>Dygresja duszpasterska: Kościół może stracić seniorów – dzisiejsi seniorzy to pokolenie, które często nie chodziło na religię; trzeba o nich zadbać.</li>\n<li>Są też argumenty za wpływem dzieciństwa (np. dzieci, których ojciec pił) – ale margines rozwoju zawsze istnieje.</li>\n</ul>\n\n<h4><span class=\"num\">4.</span> Behawioryzm – słowo-klucz: ZACHOWANIE</h4>\n<ul>\n<li><b>Zachowanie – najważniejsze słowo!</b> Możemy je <b>formować poprzez nagrody i kary</b>, czyli konsekwencje zachowania:\n<ul><li><b>(+)</b> konsekwencje korzystne i pożyteczne (nagrody),</li>\n<li><b>(−)</b> zagrożenie, dezaprobata grupy, porażka, wyrzucenie z seminarium (kary).</li></ul></li>\n<li><b>Twórcy:</b> Watson, Skinner, Thorndike.</li>\n<li><b>Introspekcja odrzucona:</b> my mierzymy, ważymy, obserwujemy – widzę, że kleryk robi notatki, ale nie wiem, co myśli, i nie jestem w stanie nic o tym powiedzieć.</li>\n</ul>\n<h5>Paradygmat bodziec → reakcja</h5>\n<ul>\n<li><b>Bodziec → Reakcja (S → R)</b> – główny paradygmat behawioryzmu: zależność reakcji od bodźców.</li>\n<li>Między nimi jest <b>„pusta skrzynka”</b> – pytanie, co jest w środku: organizm czy osobowość? Rozszerzenie: <b>Bodziec → Osobowość (Organizm) → Reakcja (S–O–R)</b>.</li>\n<li>Jakie to ma znaczenie dla behawiorysty? <b>Nieistotne</b> – tyle co kolor samochodu dla jego jazdy (liczy się silnik).</li>\n</ul>\n<h5>Skinner, Locke i środowisko</h5>\n<ul>\n<li><b>Skinner</b> – teoria uczenia się.</li>\n<li><b>John Locke – tabula rasa</b> (czysta tablica): środowisko zapisuje tę tablicę, wychowuje nas – nie tylko przełożeni i formatorzy.</li>\n<li>Przykład: bliźniacy – jeden wychowany na Manhattanie, drugi w Amazonii – po 20 latach są kompletnie inni. Taką rolę odgrywa środowisko.</li>\n<li>Człowiek jest kształtowany przez środowisko, ale sam też może na nie oddziaływać – <b>sprzężenie zwrotne</b>.</li>\n</ul>\n<h5>Sterowanie pozytywne i negatywne</h5>\n<ul>\n<li><b>Sterowanie negatywne</b> (stosowanie kary) jest <b>mniej efektywne</b> od <b>sterowania pozytywnego</b> (nagradzania).</li>\n<li><b>Negatywne skutki kary:</b>\n<ul>\n<li><b>Generalizacja hamowania</b> – kara tłumi nie tylko zachowania niepożądane, ale też wiele zachowań dobrych, pozytywnych reakcji.</li>\n<li><b>Zaburzenia emocjonalne</b> – reakcje lękowe, unikanie, lęk, agresja.</li>\n<li><b>Unikanie źródła kary</b> – np. nauczyciel daje kary i upokarza, więc nie chcę mieć z nim kontaktu.</li>\n<li><b>Dostarcza negatywnych wzorców karania</b> – gdy rodzice biją dziecko za agresję w szkole, zamyka to dziecko na rodziców i wzmaga niepożądane zachowania.</li>\n</ul></li>\n<li>Powiązanie: <b>fizjologia Iwana Pawłowa</b> (warunkowanie).</li>\n</ul>\n<p class=\"small muted\">Na początku wykładu dygresja (Szwajcaria jako centrum nauki, Mickiewicz piszący o ojczyźnie na emigracji, szybki rozwój sztucznej inteligencji) – bez związku z materiałem egzaminacyjnym.</p>\n"}], "muzyka": [{"t": "Koło kwintowe i klawiatura (7.10.2026)", "html": "<ul><li>Koło kwintowe i znaki przykluczowe</li></ul>\n<h4><span class=\"num\">1.</span> Tonacje z krzyżykami ( ♯) – ruch zgodnie z ruchem wskazówek zegara (kwinty w górę)</h4>\n<ul><li><b>Kolejność dopisywania krzyżyków:</b> fis, cis, gis, dis, ais, eis, his</li><li><b>C-dur</b> – 0 znaków</li><li><b>G-dur</b> – 1♯ → fis</li><li><b>D-dur</b> – 2♯ → fis, cis</li><li><b>A-dur</b> – 3♯ → fis, cis, gis</li><li><b>E-dur</b> – 4♯ → fis, cis, gis, dis</li><li><b>H-dur</b> – 5♯ → fis, cis, gis, dis, ais</li><li><b>Fis-dur</b> – 6♯ → fis, cis, gis, dis, ais, eis</li><li><b>Cis-dur</b> – 7♯ → fis, cis, gis, dis, ais, eis, his</li></ul>\n<h4><span class=\"num\">2.</span> Tonacje z bemolami ( ♭) – ruch przeciwnie do wskazówek zegara (kwinty w dół / kwarty w górę)</h4>\n<ul><li><b>Kolejność dopisywania bemoli (odwrotność krzyżyków):</b> b, es, as, des, ges, ces, fes</li><li><b>F-dur</b> – 1♭ → b</li><li><b>B-dur</b> – 2♭ → b, es</li><li><b>Es-dur</b> – 3♭ → b, es, as</li><li><b>As-dur</b> – 4♭ → b, es, as, des</li><li><b>Des-dur</b> – 5♭ → b, es, as, des, ges</li><li><b>Ges-dur</b> – 6♭ → b, es, as, des, ges, ces</li><li><b>Ces-dur</b> – 7♭ → b, es, as, des, ges, ces, fes</li></ul>\n<h4><span class=\"num\">3.</span> Klawiatura fortepianowa (oktawa: C–D–E–F–G–A–H)</h4>\n<ul><li><b>Białe klawisze:</b> C, D, E, F, G, A, H</li></ul>\n<h5>Czarne klawisze</h5>\n<ul><li><b>Układ podwójny (2 klawisze):</b> Cis / Des, Dis / Es</li><li><b>Układ potrójny (3 klawisze):</b> Fis / Ges, Gis / As, Ais / B</li><li><b>Półtony naturalne (brak czarnego klawisza pomiędzy):</b> E – F oraz H – C</li></ul>"}], "wloski": [{"t": "Zajęcia – stany, czasowniki -are, słownictwo codzienne", "html": "<div class=\"eyebrow\">JĘZYK WŁOSKI – Notatka z zajęć: Stany fizyczne/emocjonalne, Czasowniki i Słownictwo codzienne</div>\n<h4><span class=\"num\">1.</span> Wyrażanie stanów i samopoczucia (Essere i Avere)</h4>\n<ul><li>W języku włoskim część stanów wyrażamy czasownikiem essere (być), a część czasownikiem avere (mieć):</li></ul>\n<h5>Z essere (być + przymiotnik)</h5>\n<ul><li><b>essere stanchi</b> – być zmęczonym essere tristi – być smutnym</li><li><b>essere felici</b> – być szczęśliwym essere arrabbiati – być zły / wściekłym</li><li><b>essere contento</b> – zadowolony</li></ul>\n<h5>Z avere (mieć + rzeczownik)</h5>\n<ul><li><b>avere freddo</b> – odczuwać zimno (być zimno)</li><li><b>avere caldo</b> – odczuwać ciepło (być ciepło)</li><li><b>avere fame</b> – być głodnym (mieć głód)</li><li><b>avere sete</b> – być spragnionym (mieć pragnienie)</li></ul>\n<h4><span class=\"num\">2.</span> Odmiana czasowników regularnych na -are (np. lavorare – pracować)</h4>\n<h5>Na zajęciach powtarzano odmianę czasowników w czasie teraźniejszym (presente indicativo)</h5>\n<p>Osoba Końcówka Przykład (lavorare)</p>\n<p>io (ja) -o lavoro (pracuję)</p>\n<p>tu (ty) -i lavori (pracujesz)</p>\n<ul><li>lui / lei / Lei (on / ona / Pan, Pani) -a</li></ul>\n<p>lavora (pracuje)</p>\n<p>noi (my) -iamo lavoriamo (pracujemy)</p>\n<p>voi (wy) -ate lavorate (pracujecie)</p>\n<p>loro (oni / one) -ano lavorano (pracują)</p>\n<ul><li><b>Inne przydatne czasowniki:</b> finire (kończyć), parlare (rozmawiać), comprare (kupować).</li></ul>\n<h4><span class=\"num\">3.</span> Przydatne słownictwo i zwroty z dialogu (Pierwszy dzień w pracy)</h4>\n<ul><li><b>allora</b> – więc / zatem come stai? – jak się masz?</li><li><b>molto</b> – bardzo casa mia – mój dom / mój dom rodzinny</li><li><b>buongiorno</b> – dzień dobry pronto – słucham (przy odbiorze telefonu)</li><li><b>domani</b> – jutro oggi – dzisiaj dove – gdzie</li><li><b>un amico di lavoro</b> – kolega z pracy una collega – koleżanka z pracy</li></ul>\n<h4><span class=\"num\">4.</span> Przydatne konstrukcje do autoprezentacji</h4>\n<ul><li><b>Imię:</b> Mi chiamo Kacper / Sono Kacper</li><li><b>Pochodzenie / Narodowość:</b> Sono di Cieszyn / Sono polacco</li><li><b>Studia:</b> Studio teologia / filosofia / psicologia</li></ul>\n<p>Przykładowy typowy odpowiednik „Jana Kowalskiego” we Włoszech: Mario Rossi.</p>"}, {"t": "Zajęcia (z wcześniejszego opisu) – avere, liczby 20–30, przedstawianie się, czasowniki -are", "html": "\n<div class=\"eyebrow\">JĘZYK WŁOSKI – opis zajęć</div>\n<ul>\n<li>Czasownik <b>avere</b> (mieć) – odmiana i zwroty (avere fame, sete, freddo, caldo).</li>\n<li>Liczby <b>20–30</b> (venti, ventuno, ventidue … trenta) – patrz zakładka „Liczebniki”.</li>\n<li><b>Przedstawianie się</b>: Mi chiamo…, Sono di…, Sono polacco, Studio teologia…</li>\n<li>Dialog z podręcznika (w gazecie / pierwszy dzień w pracy – Gianna).</li>\n<li>Czasowniki regularne na <b>-are</b> (lavorare, parlare, comprare) – patrz „Gramatyka”.</li>\n</ul>\n"}, {"t": "Kolokwium 4.11.2026 – zakres i materiały z prezentacji", "html": "\n<div class=\"eyebrow\">JĘZYK WŁOSKI – test na najbliższych zajęciach</div>\n<div class=\"topic\"><span>Zakres</span>Cała <i>Unità introduttiva</i> (strony 5–14) + materiał z zadań domowych + materiał realizowany na zajęciach</div>\n<h4><span class=\"num\">1.</span> Co będzie na teście</h4>\n<ul>\n<li>alfabet, literowanie, zasady wymowy</li>\n<li>liczebniki główne od 0 do 30</li>\n<li>zdania twierdzące, przeczące i pytające</li>\n<li>podstawowe formuły powitania (Ciao, Buongiorno, Buonasera, Salve, Come stai?)</li>\n<li>przedstawianie się i przedstawianie kogoś (imię, narodowość, wiek)</li>\n<li>zaimki podmiotu (io, tu, lui, lei, Lei, noi, voi, loro)</li>\n<li>przymiotniki i rzeczowniki w l. poj. i mnogiej, podstawowe reguły zgodności rzeczownika z przymiotnikiem</li>\n<li>odmiana czasowników <b>essere</b>, <b>avere</b> i <b>chiamarsi</b> w czasie teraźniejszym trybu oznajmującego (presente indicativo)</li>\n<li>rodzajniki określone w l. poj. i mn.</li>\n</ul>\n<h4><span class=\"num\">2.</span> Z zajęć (slajdy)</h4>\n<h5>Che cosa vedi? + articoli</h5>\n<p>Opis obrazków z rodzajnikiem: <i>la macchina, il ragazzo, la studentessa, l'ufficio, il pallone…</i></p>\n<h5>Di dov'è questa targa?</h5>\n<ul>\n<li>BO 4782J – IT · WA 79B32 – PL · AR 7361M – E · KR 28A35 – PL · MI 2693F – IT · BWH 5234 – D</li>\n<li>Odpowiedź: <b>Questa targa è italiana / polacca / spagnola / tedesca / francese…</b></li>\n</ul>\n<h5>Liczenie</h5>\n<ul><li><b>+</b> più · <b>–</b> meno · <b>=</b> uguale · <b>:</b> diviso</li></ul>\n<h5>Pytania do rozmowy</h5>\n<ul><li>Come ti chiami? · Di dove sei? · Quanti anni hai? · Che cosa studi?</li></ul>\n<h5>Regole – wymowa</h5>\n<div class=\"table-wrap\"><table class=\"nt\"><tbody>\n<tr><td><b>ci</b> – cappuccino</td><td><b>ce</b> – Versace</td><td><b>gi</b> – Caravaggio</td><td><b>ge</b> – gelato</td></tr>\n<tr><td><b>ch</b> – espresso macchiato</td><td><b>gh</b> – spaghetti</td><td><b>gn</b> – lasagne</td><td><b>gli</b> – tagliatelle</td></tr>\n<tr><td><b>sc + i</b> – prosciutto</td><td><b>sc + e</b> – scena</td><td><b>_s_</b> – Pisa</td><td></td></tr>\n</tbody></table></div>\n<h5>Essere o avere</h5>\n<ul><li>Lei è stanca · Lei è triste · Lui è felice · Lei è arrabbiata</li></ul>\n<h5>LAVORARE</h5>\n<ul><li>io lavor-o · tu lavor-i · lui/lei/Lei lavor-a · noi lavor-iamo · voi lavor-ate · loro lavor-ano</li></ul>\n<h5>Zdania twierdzące, przeczące, pytające</h5>\n<ul>\n<li><b>twierdzące:</b> Tu sei stanca.</li>\n<li><b>przeczące:</b> Tu non sei stanca.</li>\n<li><b>pytające:</b> (Tu) Sei stanca?</li>\n<li><b>odpowiedź:</b> Sì, sono stanca. / No, non sono stanca.</li>\n</ul>\n<h5>Przedstawianie się i przedstawianie kogoś</h5>\n<ul>\n<li><b>O sobie:</b> Mi chiamo… Sono polacco/a / ucraino/a / bielorusso/a… Sono di (miasto = città). Studio… Ho … anni. Il mio numero di telefono è…</li>\n<li><b>O kimś:</b> Questo è (imię męskie) / Questa è (imię żeńskie). Lui/lei si chiama… Lui è / Lei è (narodowość). Lui/lei ha … anni.</li>\n</ul>\n<h4><span class=\"num\">3.</span> Zadanie domowe</h4>\n<ul><li><b>A casa:</b> Esercizi 10–14, p. 8–10.</li></ul>\n<h4><span class=\"num\">4.</span> Materiali extra per praticare</h4>\n<ul>\n<li><b>Ćwiczenia z zajęć:</b> <a href=\"https://learningapps.org/display?v=p8effiptt26\" target=\"_blank\" rel=\"noopener\">LearningApps</a> · <a href=\"https://wordwall.net/it/resource/28368554/italiano-l2/espressioni-con-essere-e-avere\" target=\"_blank\" rel=\"noopener\">Wordwall – espressioni con essere e avere</a> · <a href=\"https://learningapps.org/display?v=p31oegwjn26\" target=\"_blank\" rel=\"noopener\">LearningApps – liczenie</a> · <a href=\"https://www.youtube.com/watch?v=TYtdYslLY9I\" target=\"_blank\" rel=\"noopener\">piosenka (YouTube)</a></li>\n<li><b>Essere:</b> <a href=\"https://www.culturaitaliana.eu/blog/esercizi/grammatica-e-lessico/livello-a/verbo-essere/\" target=\"_blank\" rel=\"noopener\">culturaitaliana.eu</a> · <a href=\"https://lingua.com/it/italiano/grammatica/coniugazione-verbo-essere/\" target=\"_blank\" rel=\"noopener\">lingua.com</a></li>\n<li><b>Avere:</b> <a href=\"https://lingua.com/it/italiano/grammatica/coniugazione-verbo-avere/\" target=\"_blank\" rel=\"noopener\">lingua.com</a> · <a href=\"https://www.culturaitaliana.eu/blog/esercizi/grammatica-e-lessico/livello-a/verbo-avere/\" target=\"_blank\" rel=\"noopener\">culturaitaliana.eu</a></li>\n<li><b>Chiamarsi:</b> <a href=\"https://learningapps.org/watch?v=p8htytxon17\" target=\"_blank\" rel=\"noopener\">LearningApps</a> · <a href=\"https://wordwall.net/it/resource/76168050/verbo-chiamarsi\" target=\"_blank\" rel=\"noopener\">Wordwall</a></li>\n<li><b>Essere, avere, chiamarsi:</b> <a href=\"https://wordwall.net/pl/resource/5393926/completiamo-le-frasi-essere-avere-chiamarsi\" target=\"_blank\" rel=\"noopener\">Wordwall – completiamo le frasi</a></li>\n<li><b>Numeri:</b> <a href=\"https://wordwall.net/resource/9621430/italian/italian-numbers-1-30\" target=\"_blank\" rel=\"noopener\">Wordwall 1–30</a> · <a href=\"https://wordwall.net/resource/92427069/italian/italian-numeri-0-30\" target=\"_blank\" rel=\"noopener\">Wordwall 0–30</a></li>\n<li><b>Rodzajniki określone:</b> <a href=\"https://lingua.com/it/italiano/grammatica/articoli-derterminativi/\" target=\"_blank\" rel=\"noopener\">lingua.com</a> · <a href=\"https://www.italianoinonda.net/e131\" target=\"_blank\" rel=\"noopener\">italianoinonda.net</a></li>\n<li><b>Liczba mnoga:</b> <a href=\"https://www.impariamoitaliano.com/plur03.htm\" target=\"_blank\" rel=\"noopener\">impariamoitaliano – plur03</a> · <a href=\"https://www.impariamoitaliano.com/plur04.htm\" target=\"_blank\" rel=\"noopener\">plur04</a></li>\n<li><b>Zgodność rzeczownika z przymiotnikiem:</b> <a href=\"https://www.parlo-italiano.it/risorse/esercizi-sulla-concordanza-tra-aggettivi-e-sostantivi/\" target=\"_blank\" rel=\"noopener\">parlo-italiano.it</a></li>\n</ul>\n<div class=\"tip\"><b>W aplikacji przećwiczysz:</b> Gramatyka → lekcje 1, 1a, 2, 4, 5, 8, 9, 11 · Ćwiczenia → „Chiamarsi, essere, avere”, „Rodzajnik określony”, „Liczba mnoga”, „Essere czy avere?”, „Rachunki po włosku”, „Liczebniki” · Słownictwo → „Alfabet i literowanie”, „Przedstawianie się”, „Liczenie i tablice rejestracyjne”.</div>\n"}, {"t": "Skrypt powtórkowy – Unità introduttiva (na kolokwium 4.11.2026)", "html": "<div class=\"eyebrow\">JĘZYK WŁOSKI – skrypt powtórkowy na kolokwium 4.11.2026</div>\n<h4><span class=\"num\">1.</span> Wprowadzenie i fonetyka (Unità Introduttiva, str.\n5–14)</h4>\n<h5>Alfabet i literowanie (Lo spelling)</h5>\n<p>Włoski alfabet składa się z <strong>21 liter podstawowych</strong>\noraz <strong>5 liter obcych</strong> (używanych głównie w wyrazach\nzapożyczonych z innych języków):</p>\n<ul>\n<li><strong>Litery podstawowe:</strong> A (a), B (bi), C (ci), D\n(di), E (e), F (effe), G (gi), H (acca), I (i), L (elle), M (emme), N\n(enne), O (o), P (pi), Q (cu), R (erre), S (esse), T (ti), U (u), V\n(vu), Z (zeta).</li>\n<li><strong>Litery obce / znaki specjalne:</strong> J (i lunga), K\n(cappa), W (doppia vu), X (ics), Y (ipsilon / i greca).</li>\n</ul>\n<h5>Zasady wymowy (Regole di pronuncia)</h5>\n<p>Prawidłowa wymowa we włoskim zależy od połączeń samogłosek i\nspółgłosek. Oto kluczowe reguły fonetyczne:</p>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Głoska / Połączenie</strong></th>\n<th><strong>Wymowa [PL]</strong></th>\n<th><strong>Przykłady z wymową</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>c + i</strong></td>\n<td>[cz]</td>\n<td>cappuccino, ciao, cinema</td>\n</tr>\n<tr>\n<td><strong>c + e</strong></td>\n<td>[cze]</td>\n<td>Versace, cena, cellulare</td>\n</tr>\n<tr>\n<td><strong>ch + i / e</strong></td>\n<td>[k]</td>\n<td>espresso macchiato, chiave, perché</td>\n</tr>\n<tr>\n<td><strong>g + i</strong></td>\n<td>[dż]</td>\n<td>Caravaggio, giardino, giorno</td>\n</tr>\n<tr>\n<td><strong>g + e</strong></td>\n<td>[dże]</td>\n<td>gelato, gente</td>\n</tr>\n<tr>\n<td><strong>gh + i / e</strong></td>\n<td>[g]</td>\n<td>spaghetti, Margherita, colleghi</td>\n</tr>\n<tr>\n<td><strong>sc + i</strong></td>\n<td>[sz]</td>\n<td>prosciutto, scivoli</td>\n</tr>\n<tr>\n<td><strong>sc + e</strong></td>\n<td>[sze]</td>\n<td>scena, scendere</td>\n</tr>\n<tr>\n<td><strong>gn</strong></td>\n<td>[ń]</td>\n<td>lasagne, insegnante, spagnolo, lavagna</td>\n</tr>\n<tr>\n<td><strong>gl</strong></td>\n<td>[gl]</td>\n<td>glossario, inglese</td>\n</tr>\n<tr>\n<td><strong>gli</strong></td>\n<td>[li] – miękkie, jak „lj”</td>\n<td>tagliatelle, figlio, famiglia, bottiglia</td>\n</tr>\n<tr>\n<td><strong>s (między samogłoskami)</strong></td>\n<td>[z]</td>\n<td>Pisa, casa, musica, rosa</td>\n</tr>\n<tr>\n<td><strong>z / zz</strong></td>\n<td>[c / dz / cc]</td>\n<td>zero, zaino, azione, canzone, pizza, mezzo</td>\n</tr>\n</tbody>\n</table></div>\n<h4><span class=\"num\">2.</span> Słownictwo i codzienna komunikacja</h4>\n<h5>Podstawowe formuły powitania i zwroty\ngrzecznościowe</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Zwrot włoski</strong></th>\n<th><strong>Tłumaczenie polskie</strong></th>\n<th><strong>Kontekst i sposób użycia</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Ciao!</strong></td>\n<td>Cześć! / Pa!</td>\n<td>Nieformalne (na powitanie i pożegnanie)</td>\n</tr>\n<tr>\n<td><strong>Buongiorno!</strong></td>\n<td>Dzień dobry!</td>\n<td>Formalne i nieformalne (rano / do popołudnia)</td>\n</tr>\n<tr>\n<td><strong>Buon pomeriggio!</strong></td>\n<td>Dzień dobry!</td>\n<td>Formalne i nieformalne (po południu)</td>\n</tr>\n<tr>\n<td><strong>Buonasera!</strong></td>\n<td>Dobry wieczór!</td>\n<td>Formalne i nieformalne (wieczorem)</td>\n</tr>\n<tr>\n<td><strong>Salve!</strong></td>\n<td>Witaj! / Cześć!</td>\n<td>Uniwersalne / półformalne</td>\n</tr>\n<tr>\n<td><strong>Piacere!</strong></td>\n<td>Miło mi!</td>\n<td>Używane przy przedstawianiu się</td>\n</tr>\n<tr>\n<td><strong>Come stai?</strong></td>\n<td>Jak się masz?</td>\n<td>Nieformalne pytanie o samopoczucie</td>\n</tr>\n<tr>\n<td><strong>Come sta?</strong></td>\n<td>Jak się Pan/Pani miewa?</td>\n<td>Formalne pytanie o samopoczucie</td>\n</tr>\n<tr>\n<td><strong>Arrivederci!</strong></td>\n<td>Do widzenia!</td>\n<td>Pożegnanie formalne i półformalne</td>\n</tr>\n<tr>\n<td><strong>A presto!</strong></td>\n<td>Do zobaczenia wkrótce!</td>\n<td>Pożegnanie nieformalne</td>\n</tr>\n<tr>\n<td><strong>A dopo!</strong></td>\n<td>Do zobaczenia później!</td>\n<td>Pożegnanie nieformalne</td>\n</tr>\n<tr>\n<td><strong>Buona giornata!</strong></td>\n<td>Miłego dnia!</td>\n<td>Życzenie przy pożegnaniu</td>\n</tr>\n<tr>\n<td><strong>Buona serata!</strong></td>\n<td>Miłego wieczoru!</td>\n<td>Życzenie przy pożegnaniu</td>\n</tr>\n<tr>\n<td><strong>Alla prossima!</strong></td>\n<td>Do następnego razu!</td>\n<td>Pożegnanie</td>\n</tr>\n</tbody>\n</table></div>\n<p>Odpowiedzi na pytanie <strong>Come stai?</strong> (Jak się\nmasz?):</p>\n<ul>\n<li><strong>Bene, grazie.</strong> – Dobrze, dziękuję.</li>\n<li><strong>Così, così.</strong> – Tak sobie.</li>\n<li><strong>Male.</strong> – Źle.</li>\n</ul>\n<h5>Przedstawianie siebie oraz innych osób</h5>\n<h5>Autopresentazione (Przedstawianie siebie)</h5>\n<ul>\n<li><strong>Mi chiamo...</strong> – Nazywam się...</li>\n<li><strong>Sono polacco / polacca.</strong> – Jestem Polakiem /\nPolką. (narodowości z zajęć: ucraino/a, bielorusso/a, americano/a,\naustraliano/a, spagnolo/a, brasiliano/a, marocchino/a, italiano/a,\nargentino/a, tedesco/a, svizzero/a, inglese)</li>\n<li><strong>Sono di Cracovia.</strong> – Jestem z Krakowa. (Wzór:\nSono di + miasto)</li>\n<li><strong>Studio psicologia / teologia / giornalismo...</strong> –\nStudiuję psychologię / teologię / dziennikarstwo...</li>\n<li><strong>Ho ... anni.</strong> – Mam ... lat.</li>\n<li><strong>Il mio numero di telefono è...</strong> – Mój numer\ntelefonu to...</li>\n</ul>\n<h5>Presentare qualcuno (Przedstawianie innej\nosoby)</h5>\n<ul>\n<li><strong>Questo è... [r. męski]</strong> – To jest... (np. Questo\nè Paolo.)</li>\n<li><strong>Questa è... [r. żeński]</strong> – To jest... (np. Questa\nè Maria.)</li>\n<li><strong>Lui / Lei si chiama...</strong> – On / Ona nazywa\nsię...</li>\n<li><strong>Lui / Lei è polacco / polacca.</strong> – On / Ona jest\nPolakiem / Polką.</li>\n<li><strong>Lui / Lei ha ... anni.</strong> – On / Ona ma ...\nlat.</li>\n</ul>\n<h5>Liczebniki główne od 0 do 30 (I numeri da 0 a\n30)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Liczba</strong></th>\n<th><strong>Włoski</strong></th>\n<th><strong>Liczba</strong></th>\n<th><strong>Włoski</strong></th>\n<th><strong>Liczba</strong></th>\n<th><strong>Włoski</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>0</strong></td>\n<td>zero</td>\n<td><strong>11</strong></td>\n<td>undici</td>\n<td><strong>21</strong></td>\n<td>ventuno</td>\n</tr>\n<tr>\n<td><strong>1</strong></td>\n<td>uno</td>\n<td><strong>12</strong></td>\n<td>dodici</td>\n<td><strong>22</strong></td>\n<td>ventidue</td>\n</tr>\n<tr>\n<td><strong>2</strong></td>\n<td>due</td>\n<td><strong>13</strong></td>\n<td>tredici</td>\n<td><strong>23</strong></td>\n<td>ventitré</td>\n</tr>\n<tr>\n<td><strong>3</strong></td>\n<td>tre</td>\n<td><strong>14</strong></td>\n<td>quattordici</td>\n<td><strong>24</strong></td>\n<td>ventiquattro</td>\n</tr>\n<tr>\n<td><strong>4</strong></td>\n<td>quattro</td>\n<td><strong>15</strong></td>\n<td>quindici</td>\n<td><strong>25</strong></td>\n<td>venticinque</td>\n</tr>\n<tr>\n<td><strong>5</strong></td>\n<td>cinque</td>\n<td><strong>16</strong></td>\n<td>sedici</td>\n<td><strong>26</strong></td>\n<td>ventisei</td>\n</tr>\n<tr>\n<td><strong>6</strong></td>\n<td>sei</td>\n<td><strong>17</strong></td>\n<td>diciassette</td>\n<td><strong>27</strong></td>\n<td>ventisette</td>\n</tr>\n<tr>\n<td><strong>7</strong></td>\n<td>sette</td>\n<td><strong>18</strong></td>\n<td>diciotto</td>\n<td><strong>28</strong></td>\n<td>ventotto</td>\n</tr>\n<tr>\n<td><strong>8</strong></td>\n<td>otto</td>\n<td><strong>19</strong></td>\n<td>diciannove</td>\n<td><strong>29</strong></td>\n<td>ventinove</td>\n</tr>\n<tr>\n<td><strong>9</strong></td>\n<td>nove</td>\n<td><strong>20</strong></td>\n<td>venti</td>\n<td><strong>30</strong></td>\n<td>trenta</td>\n</tr>\n<tr>\n<td><strong>10</strong></td>\n<td>dieci</td>\n<td></td>\n<td></td>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></div>\n<p><strong>Działania matematyczne (Operazioni matematiche):</strong> +\npiù (plus) | - meno (minus) | = uguale (równa się) | : diviso (podzielić\nprzez)</p>\n<div class=\"table-wrap\"><table class=\"nt\">\n<tbody>\n<tr>\n<td><strong>Przykłady pytań z liczebnikami:<br />\n</strong>• Qual è il tuo numero di telefono? – Jaki jest Twój numer\ntelefonu?<br />\nOdpowiedź: Il mio numero di telefono è zero-sei-otto...<br />\n• Quanti anni hai? – Ile masz lat?<br />\nOdpowiedź: Ho venti anni. (Mam 20 lat.)</td>\n</tr>\n</tbody>\n</table></div>\n<h4><span class=\"num\">3.</span> Gramatyka języka włoskiego</h4>\n<h5>Zaimki osobowe podmiotu (Pronomi personali\nsoggetto)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Zaimek włoski</strong></th>\n<th><strong>Znaczenie polskie</strong></th>\n<th><strong>Liczba (Numero)</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>io</strong></td>\n<td>ja</td>\n<td>pojedyncza (singolare)</td>\n</tr>\n<tr>\n<td><strong>tu</strong></td>\n<td>ty</td>\n<td>pojedyncza (singolare)</td>\n</tr>\n<tr>\n<td><strong>lui</strong></td>\n<td>on</td>\n<td>pojedyncza (singolare)</td>\n</tr>\n<tr>\n<td><strong>lei</strong></td>\n<td>ona</td>\n<td>pojedyncza (singolare)</td>\n</tr>\n<tr>\n<td><strong>Lei</strong></td>\n<td>Pan / Pani (forma grzecznościowa)</td>\n<td>pojedyncza (singolare)</td>\n</tr>\n<tr>\n<td><strong>noi</strong></td>\n<td>my</td>\n<td>mnoga (plurale)</td>\n</tr>\n<tr>\n<td><strong>voi</strong></td>\n<td>wy</td>\n<td>mnoga (plurale)</td>\n</tr>\n<tr>\n<td><strong>loro</strong></td>\n<td>oni / one</td>\n<td>mnoga (plurale)</td>\n</tr>\n</tbody>\n</table></div>\n<h5>Budowa zdań: twierdzące, przeczące i pytające</h5>\n<p>W języku włoskim przeczenie tworzymy stawiając partykułę\n<strong>non</strong> bezpośrednio przed czasownikiem. Oto schemat budowy\nzdań:</p>\n<ul>\n<li><strong>Zdanie twierdzące (Frase affermativa):</strong> Tu sei\nstanca. (Jesteś zmęczona.)</li>\n<li><strong>Zdanie przeczące (Frase negativa):</strong> Tu non sei\nstanca. (Nie jesteś zmęczona.)</li>\n<li><strong>Zdanie pytające (Frase interrogativa):</strong> Sei\nstanca? (Czy jesteś zmęczona?) [tworzone intonacją]</li>\n<li><strong>Odpowiedzi (Risposte):</strong> Sì, sono stanca. (Tak,\njestem zmęczona.) / No, non sono stanca. (Nie, nie jestem\nzmęczona.)</li>\n</ul>\n<h5>Odmiana czasowników w presente indicativo</h5>\n<h5>Czasownik posiłkowy 1 – essere (być)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Zaimek</strong></th>\n<th><strong>Forma czasownika</strong></th>\n<th><strong>Przykład zdania z tłumaczeniem</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>io</strong></td>\n<td><strong>sono</strong></td>\n<td>Io sono polacco. (Ja jestem Polakiem.)</td>\n</tr>\n<tr>\n<td><strong>tu</strong></td>\n<td><strong>sei</strong></td>\n<td>Di dove sei? (Skąd jesteś?)</td>\n</tr>\n<tr>\n<td><strong>lui / lei / Lei</strong></td>\n<td><strong>è</strong></td>\n<td>Lei è stanca. (Ona jest zmęczona.)</td>\n</tr>\n<tr>\n<td><strong>noi</strong></td>\n<td><strong>siamo</strong></td>\n<td>Noi siamo studenti. (My jesteśmy studentami.)</td>\n</tr>\n<tr>\n<td><strong>voi</strong></td>\n<td><strong>siete</strong></td>\n<td>Voi siete italiani? (Wy jesteście Włochami?)</td>\n</tr>\n<tr>\n<td><strong>loro</strong></td>\n<td><strong>sono</strong></td>\n<td>Loro sono brasiliani. (Oni są Brazylijczykami.)</td>\n</tr>\n</tbody>\n</table></div>\n<h5>Czasownik posiłkowy 2 – avere (mieć)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Zaimek</strong></th>\n<th><strong>Forma czasownika</strong></th>\n<th><strong>Przykład zdania z tłumaczeniem</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>io</strong></td>\n<td><strong>ho</strong></td>\n<td>Ho venti anni. (Mam 20 lat.)</td>\n</tr>\n<tr>\n<td><strong>tu</strong></td>\n<td><strong>hai</strong></td>\n<td>Quanti anni hai? (Ile masz lat?)</td>\n</tr>\n<tr>\n<td><strong>lui / lei / Lei</strong></td>\n<td><strong>ha</strong></td>\n<td>Lui ha ventidue anni. (On ma 22 lata.)</td>\n</tr>\n<tr>\n<td><strong>noi</strong></td>\n<td><strong>abbiamo</strong></td>\n<td>Noi abbiamo fame. (Jesteśmy głodni.)</td>\n</tr>\n<tr>\n<td><strong>voi</strong></td>\n<td><strong>avete</strong></td>\n<td>Voi avete freddo? (Czy jest wam zimno?)</td>\n</tr>\n<tr>\n<td><strong>loro</strong></td>\n<td><strong>hanno</strong></td>\n<td>Loro hanno molti amici. (Oni mają wielu przyjaciół.)</td>\n</tr>\n</tbody>\n</table></div>\n<h5>Czasownik zwrotny – chiamarsi (nazywać się)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Zaimek</strong></th>\n<th><strong>Forma czasownika</strong></th>\n<th><strong>Przykład zdania z tłumaczeniem</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>io</strong></td>\n<td><strong>mi chiamo</strong></td>\n<td>Mi chiamo Marco. (Nazywam się Marco.)</td>\n</tr>\n<tr>\n<td><strong>tu</strong></td>\n<td><strong>ti chiami</strong></td>\n<td>Come ti chiami? (Jak się nazywasz?)</td>\n</tr>\n<tr>\n<td><strong>lui / lei / Lei</strong></td>\n<td><strong>si chiama</strong></td>\n<td>Lei si chiama Maria. (Ona nazywa się Maria.)</td>\n</tr>\n<tr>\n<td><strong>noi</strong></td>\n<td><strong>ci chiamiamo</strong></td>\n<td>Noi ci chiamiamo Rossi. (Nazywamy się Rossi.)</td>\n</tr>\n<tr>\n<td><strong>voi</strong></td>\n<td><strong>vi chiamate</strong></td>\n<td>Come vi chiamate? (Jak się nazywacie?)</td>\n</tr>\n<tr>\n<td><strong>loro</strong></td>\n<td><strong>si chiamano</strong></td>\n<td>Loro si chiamano Anna e Paolo. (Oni nazywają się Anna i Paolo.)</td>\n</tr>\n</tbody>\n</table></div>\n<h5>Wzór odmiany czasowników regularnych I koniugacji (-are) na\nprzykładzie lavorare (pracować)</h5>\n<p><strong>•</strong> io <strong>lavor-o</strong> | tu\n<strong>lavor-i</strong> | lui/lei/Lei <strong>lavor-a</strong> | noi\n<strong>lavor-iamo</strong> | voi <strong>lavor-ate</strong> | loro\n<strong>lavor-ano</strong></p>\n<div class=\"table-wrap\"><table class=\"nt\">\n<tbody>\n<tr>\n<td><strong>Kluczowe wyrażenia z essere oraz avere (Ważne zagadnienie na\nkolokwium!):<br />\n</strong>• Essere + przymiotnik (zgodność rodzaju i liczby):<br />\n- essere stanco/a/i/e (być zmęczonym)<br />\n- essere triste/i (być smutnym)<br />\n- essere felice/i (być szczęśliwym)<br />\n- essere arrabbiato/a/i/e (być złym, wściekłym)<br />\n<br />\n• Avere + rzeczownik (forma rzeczownika NIEODMIENNA!):<br />\n- avere freddo (odczuwać zimno)<br />\n- avere caldo (odczuwać gorąco)<br />\n- avere fame (być głodnym)<br />\n- avere sete (chcieć pić)</td>\n</tr>\n</tbody>\n</table></div>\n<h5>Rzeczowniki i przymiotniki: rodzaj, liczba oraz reguły\nzgodności</h5>\n<h5>Reguły tworzenia liczby mnogiej (Singolare →\nPlurale)</h5>\n<ul>\n<li><strong>Rodzaj męski (Maschile):</strong> Końcówka -o → -i\n(ragazzo → ragazzi, libro → libri, treno → treni) oraz -e → -i (studente\n→ studenti, pesce → pesci).</li>\n<li><strong>Rodzaj żeński (Femminile):</strong> Końcówka -a → -e\n(ragazza → ragazze, casa → case, finestra → finestre) oraz -e → -i\n(chiave → chiavi, notte → notti, lezione → lezioni).</li>\n</ul>\n<h5>Rzeczowniki szczególne / nieodmienne</h5>\n<ul>\n<li><strong>Nieodmienne (akcent na ostatnią samogłoskę lub\nspółgłoskę):</strong> la città → le città, il caffè → i caffè, il bar →\ni bar, lo sport → gli sport.</li>\n<li><strong>Rzeczowniki na -ema (rodzaju męskiego):</strong> il\nproblema → i problemi.</li>\n<li><strong>Oboczności fonetyczne (zachowanie brzmienia):</strong>\nl'amico → gli amici, l'amica → le amiche, la chitarra → le\nchitarre.</li>\n</ul>\n<h5>Zgodność rzeczownika z przymiotnikiem\n(Concordanza)</h5>\n<p>Przymiotnik w języku włoskim zawsze dopasowuje się do rzeczownika pod\nwzględem rodzaju i liczby:</p>\n<ul>\n<li><strong>ragazzo italiano</strong> → ragazzi italiani</li>\n<li><strong>ragazza italiana</strong> → ragazze italiane</li>\n<li><strong>casa nuova</strong> → case nuove</li>\n<li><strong>borsa rossa</strong> → borse rosse</li>\n<li><strong>Federica è bella.</strong> → Federica e Gabriella sono\nbelle.</li>\n</ul>\n<h5>Podstawowe pary przymiotników przeciwstawnych</h5>\n<ul>\n<li><strong>alto (wysoki)</strong> ↔︎ basso (niski)</li>\n<li><strong>nuovo (nowy)</strong> ↔︎ vecchio (stary)</li>\n<li><strong>aperto (otwarty)</strong> ↔︎ chiuso (zamknięty)</li>\n<li><strong>bello (ładny)</strong> ↔︎ brutto (brzydki)</li>\n<li><strong>piccolo (mały)</strong> ↔︎ grande (duży)</li>\n<li><strong>moderno (nowoczesny)</strong> ↔︎ antico (starożytny /\nzabytkowy)</li>\n<li><strong>giovane (młody)</strong> ↔︎ anziano (stary / w starszym\nwieku)</li>\n</ul>\n<h5>Rodzajniki określone (Articoli determinativi)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Rodzaj</strong></th>\n<th><strong>L. poj. (Sing.)</strong></th>\n<th><strong>L. mn. (Plur.)</strong></th>\n<th><strong>Reguła stosowania</strong></th>\n<th><strong>Przykłady</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Maschile (Męski)</td>\n<td><strong>il</strong></td>\n<td><strong>i</strong></td>\n<td>Przed większością spółgłosek</td>\n<td>il ragazzo → i ragazzi<br />\nil gatto → i gatti</td>\n</tr>\n<tr>\n<td>Maschile (Męski)</td>\n<td><strong>lo</strong></td>\n<td><strong>gli</strong></td>\n<td>Przed s + spółgłoska, z, gn, ps, x, y</td>\n<td>lo zaino → gli zaini<br />\nlo studente → gli studenti</td>\n</tr>\n<tr>\n<td>Maschile (Męski)</td>\n<td><strong>l'</strong></td>\n<td><strong>gli</strong></td>\n<td>Przed samogłoską</td>\n<td>l'amico → gli amici<br />\nl'aereo → gli aerei</td>\n</tr>\n<tr>\n<td>Femminile (Żeński)</td>\n<td><strong>la</strong></td>\n<td><strong>le</strong></td>\n<td>Przed spółgłoską</td>\n<td>la ragazza → le ragazze<br />\nla casa → le case</td>\n</tr>\n<tr>\n<td>Femminile (Żeński)</td>\n<td><strong>l'</strong></td>\n<td><strong>le</strong></td>\n<td>Przed samogłoską</td>\n<td>l'amica → le amiche<br />\nl'isola → le isole</td>\n</tr>\n</tbody>\n</table></div>\n<h4><span class=\"num\">4.</span> Słowniczek tematyczny (Leksyka z Unità\nIntroduttiva)</h4>\n<h5>Rzeczowniki (Sostantivi)</h5>\n<div class=\"table-wrap\"><table class=\"nt\">\n<thead>\n<tr>\n<th><strong>Słowo włoskie</strong></th>\n<th><strong>Tłumaczenie PL</strong></th>\n<th><strong>Słowo włoskie</strong></th>\n<th><strong>Tłumaczenie PL</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>il libro</strong></td>\n<td>książka</td>\n<td><strong>lo zaino</strong></td>\n<td>plecak</td>\n</tr>\n<tr>\n<td><strong>il quaderno</strong></td>\n<td>zeszyt</td>\n<td><strong>lo stivale</strong></td>\n<td>but z wysoką cholewką / kozak</td>\n</tr>\n<tr>\n<td><strong>la penna</strong></td>\n<td>długopis</td>\n<td><strong>l'albero</strong></td>\n<td>drzewo</td>\n</tr>\n<tr>\n<td><strong>la borsa</strong></td>\n<td>torba</td>\n<td><strong>l'isola</strong></td>\n<td>wyspa</td>\n</tr>\n<tr>\n<td><strong>la bottiglia</strong></td>\n<td>butelka</td>\n<td><strong>la casa</strong></td>\n<td>dom</td>\n</tr>\n<tr>\n<td><strong>il cellulare</strong></td>\n<td>telefon komórkowy</td>\n<td><strong>il ristorante</strong></td>\n<td>restauracja</td>\n</tr>\n<tr>\n<td><strong>il caricatore</strong></td>\n<td>ładowarka</td>\n<td><strong>il museo</strong></td>\n<td>muzeum</td>\n</tr>\n<tr>\n<td><strong>la porta</strong></td>\n<td>drzwi</td>\n<td><strong>la piazza</strong></td>\n<td>plac</td>\n</tr>\n<tr>\n<td><strong>la finestra</strong></td>\n<td>okno</td>\n<td><strong>la lingua</strong></td>\n<td>język</td>\n</tr>\n<tr>\n<td><strong>la chiave (r. żeński)</strong></td>\n<td>klucz</td>\n<td><strong>il calcio</strong></td>\n<td>piłka nożna</td>\n</tr>\n<tr>\n<td><strong>la frase (r. żeński)</strong></td>\n<td>zdanie</td>\n<td><strong>la musica</strong></td>\n<td>muzyka</td>\n</tr>\n<tr>\n<td><strong>la lezione</strong></td>\n<td>lekcja</td>\n<td><strong>l'arte</strong></td>\n<td>sztuka</td>\n</tr>\n<tr>\n<td><strong>lo studente / la studentessa</strong></td>\n<td>student / studentka</td>\n<td><strong>la moda</strong></td>\n<td>moda</td>\n</tr>\n<tr>\n<td><strong>l'insegnante</strong></td>\n<td>nauczyciel / nauczycielka</td>\n<td><strong>il gelato</strong></td>\n<td>lody</td>\n</tr>\n<tr>\n<td><strong>il ragazzo / la ragazza</strong></td>\n<td>chłopiec / dziewczyna</td>\n<td><strong>il cappuccino</strong></td>\n<td>cappuccino</td>\n</tr>\n<tr>\n<td><strong>il gatto</strong></td>\n<td>kot</td>\n<td><strong>l'espresso</strong></td>\n<td>kawa espresso</td>\n</tr>\n<tr>\n<td><strong>il pesce</strong></td>\n<td>ryba</td>\n<td><strong>gli spaghetti</strong></td>\n<td>spaghetti</td>\n</tr>\n<tr>\n<td><strong>il treno</strong></td>\n<td>pociąg</td>\n<td><strong>il prosciutto</strong></td>\n<td>szynka</td>\n</tr>\n<tr>\n<td><strong>la macchina</strong></td>\n<td>samochód</td>\n<td><strong>il parmigiano</strong></td>\n<td>parmezan</td>\n</tr>\n<tr>\n<td><strong>l'autobus</strong></td>\n<td>autobus</td>\n<td><strong>lo zucchero</strong></td>\n<td>cukier</td>\n</tr>\n<tr>\n<td><strong>l'aereo</strong></td>\n<td>samolot</td>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></div>\n<h5>Zaimki pytajne (Interrogativi)</h5>\n<ul>\n<li><strong>Come?</strong> – Jak? (np. Come ti chiami? – Jak masz na\nimię?)</li>\n<li><strong>Di dove?</strong> – Skąd? (np. Di dove sei? – Skąd\njesteś?)</li>\n<li><strong>Che cosa? / Che?</strong> – Co? (np. Che cosa studi? – Co\nstudiujesz?)</li>\n<li><strong>Chi?</strong> – Kto?</li>\n<li><strong>Quanto / quanta / quanti / quante?</strong> – Ile / ilu?\n(np. Quanti anni hai? – Ile masz lat?)</li>\n<li><strong>Qual è...?</strong> – Jaki / Jaka jest...? (np. Qual è il\ntuo numero di telefono?)</li>\n</ul>\n"}], "lacina": [{"t": "Lektorat 12.10.2026 – terminarz kolokwiów, zwroty, zadania domowe", "html": "<h5>Terminarz kolokwiów</h5>\n<ul><li><b>Termin 26.10:</b> Kolokwium z modlitw oraz pytań o znaczenie słów z modlitw: Pater Noster, Ave Maria, Gloria Patri, Signum Crucis.</li><li><b>Termin 16.11:</b> Druga część kolokwium, obejmująca modlitwy Credo oraz Angele Dei.</li></ul>\n<h5>Zwroty grzecznościowe i formuły łacińskie</h5>\n<ul><li>Benedicamus Domino → Szczęść Boże</li><li>Deo Gratias → Bóg zapłać</li><li>Valete studentes / discipuli → żegnajcie / niech wam się powodzi</li></ul>\n<h5>Zagadnienia i słownictwo z modlitw</h5>\n<p>Analiza słownictwa z modlitw (m.in. słowo quotidianum, formy zaimkowe eis → ei, oraz zmiana liczby w zwrocie Requiescant na Requiescat).</p>\n<p>Nacisk na rozumienie znaczenia słów, aby wiedzieć, co się modli.</p>\n<h5>Zadania domowe</h5>\n<p>Posłuchać Gaudeamus igitur.</p>\n<p>Przeczytać z teczki tekst na temat tego, dlaczego warto uczyć się łaciny.</p>\n<h5>Informacje dodatkowe</h5>\n<p>Istnieje możliwość dodatkowego zaliczenia pojęć z teczki.</p>"}, {"t": "21 czasowników z tablicy – formy i koniugacje (opracowanie)", "html": "<h4><span class=\"num\">1.</span> Legenda: Jak rozpoznać koniugację po dwóch pierwszych formach?</h4>\n<p>W łacinie o przynależności czasownika do danej koniugacji decyduje zestawienie 1. formy (1. os. lp. czasu teraźniejszego) z 2. formą (bezokolicznikiem – infinitivus, zakończonym na -re). Na tablicy masz podkreślone na czerwono dokładnie te samogłoski tematowe, które o tym decydują:</p>\n<p>Koniugacja Końcówka 1. formy (Praesens) Końcówka 2. formy (Infinitivus) Temat czasu teraźniejszego Jak ją odróżnić w sekundę?</p>\n<ul><li>I koniugacja -o (z kontrakcji -a-o) -āre (długie a) kończy się na -a-</li></ul>\n<p>W 1. formie jest samo -o (bez -e- lub -i- przed nim), a bezokolicznik ma -are (np. err-o, err-are).</p>\n<ul><li>II koniugacja -eo -ēre (długie e) kończy się na -e-</li><li><b>Klucz:</b> W 1. formie przed -o stoi literka -e- (-eo), a w 2. formie jest -ere (np. hab-eo, hab-ere).</li><li>III koniugacja (spółgłoskowa) -o -ĕre (krótkie e) kończy się na spółgłoskę</li><li><b>Pułapka z II koniugacją:</b> Bezokolicznik też ma -ere, ALE w 1. formie NIE MA -e- przed -o (jest samo -o, np. leg-o, leg-ere, a nie legeo!).</li><li>IV koniugacja -io -īre (długie i) kończy się na -i-</li></ul>\n<p>W 1. formie jest -io, a w bezokoliczniku -ire (np. ven-io, ven-ire).</p>\n<ul><li><b>(Uwaga na przyszłość:</b> istnieje jeszcze koniugacja III na -io, tzw. mieszana, gdzie 1. forma ma -io, a 2. ma -ere, np. capio, capere – ale wśród słówek z tablicy nie ma ani jednego takiego czasownika).</li></ul>\n<h4><span class=\"num\">2.</span> Cztery formy podstawowe i uzasadnienie koniugacji dla każdego słowa</h4>\n<h5>W słownikach łacińskich podaje się 4 formy podstawowe</h5>\n<ul><li><b>Praesens (1. os. lp. czasu teraźniejszego</b> – co robię?)</li><li><b>Infinitivus (bezokolicznik</b> – co robić?)</li><li><b>Perfectum (1. os. lp. czasu przeszłego dokonanego</b> – co zrobiłem?)</li></ul>\n<p>Supinum (rzeczownik odsłowny na -tum/-sum, służący do tworzenia imiesłowów)</p>\n<p>(W nawiasach kwadratowych skorygowałem drobne literówki z pośpiesznego zapisu na tablicy, np. „scribpsis” czy „vinvici”, podając poprawne formy klasyczne).</p>\n<ul><li><b>Koniugacja I (temat na -a-):</b> końcówki -o, -are (standardowe formy przeszłe to -avi, -atum)</li><li><b>erro, errāre, errāvī, errātum</b> – błądzić, tułać się</li></ul>\n<p>Dlaczego I? Bo 1. os. ma -o (erro), a bezokolicznik -are (errare). Temat: erra-.</p>\n<ul><li><b>pecco, peccāre, peccāvī, peccātum</b> – grzeszyć, błądzić</li><li><b>Dlaczego I? Końcówki -o, -are. Temat:</b> pecca-.</li><li><b>servo, servāre, servāvī, servātum</b> – pilnować, zachowywać, ocalać</li><li><b>Dlaczego I? Końcówki -o, -are. Temat:</b> serva-.</li><li><b>sano, sanāre, sanāvī, sanātum</b> – leczyć, uzdrawiać</li><li><b>Dlaczego I? Końcówki -o, -are. Temat:</b> sana-.</li><li><b>creo, creāre, creāvī, creātum</b> – tworzyć, stwarzać</li></ul>\n<p>Dlaczego I? Choć w 1. osobie widać cre-o, to -e- należy tu do rdzenia, a w bezokoliczniku jest wyraźne -are (cre-are). Temat: crea-.</p>\n<ul><li><b>voco, vocāre, vocāvī, vocātum</b> – wołać, wzywać (z dołu tablicy)</li><li><b>Dlaczego I? Końcówki -o, -are. Temat:</b> voca-.</li><li><b>Koniugacja II (temat na -e-):</b> końcówki -eo, -ēre</li><li><b>habeo, habēre, habuī, habitum</b> – mieć, posiadać</li></ul>\n<p>Dlaczego II? W 1. osobie przed -o jest -e- (habeo), a w bezokoliczniku -ēre (habere). Temat: habe-.</p>\n<ul><li><b>fleo, flēre, flēvī, flētum</b> – płakać</li></ul>\n<p>Dlaczego II? 1. osoba kończy się na -eo (fleo), a bezokolicznik na -ēre (flere; na tablicy zapisano podwójne e: fleere, żeby pokazać, że rdzeń fle- łączy się z końcówką -re). Temat: fle-.</p>\n<ul><li>video, vidēre, vīdī, vīsum (na tablicy omyłkowo powtórzono rdzeń: „vidvidi, vidvisum”) – widzieć</li></ul>\n<p>Dlaczego II? 1. osoba ma -eo (video), bezokolicznik -ēre (videre). Temat: vide-.</p>\n<ul><li><b>respondeo, respondēre, respondī, respōnsum</b> – odpowiadać (z dołu tablicy)</li><li><b>Dlaczego II? Końcówki -eo, -ēre. Temat:</b> responde-.</li><li><b>taceo, tacēre, tacuī, tacitum</b> – milczeć (z dołu tablicy)</li><li><b>Dlaczego II? Końcówki -eo, -ēre. Temat:</b> tace-.</li><li><b>Koniugacja III (spółgłoskowa):</b> końcówki -o, -ĕre (spółgłoska przed -o)</li></ul>\n<p>W III koniugacji temat kończy się na spółgłoskę (np. toll-, scrib-, leg-). Ponieważ w łacinie trudno wymówić zbitkę spółgłosek (np. leg-s, leg-t, leg-re), między temat a końcówkę osobową wstawia się spójkę (samogłoskę tematyczną):</p>\n<ul><li>przed -r w bezokoliczniku wchodzi krótkie -e- (leg-e-re),</li><li>w 2. i 3. os. lp. oraz 1. i 2. os. lm. wchodzi -i- (leg-i-s, leg-i-t, leg-i-mus, leg-i-tis),</li></ul>\n<p>w 3. os. lm. wchodzi -u- (leg-u-nt).</p>\n<ul><li><b>tollo, tollĕre, sustulī, sublātum</b> – podnosić, usuwać (czasownik supletywny w formach przeszłych)</li></ul>\n<p>Dlaczego III? W bezokoliczniku jest -ere (tollere), ale w 1. osobie jest samo -o po spółgłosce (toll-o, brak -eo!). Temat: toll-.</p>\n<ul><li><b>scribo, scribĕre, scrīpsī, scrīptum (na tablicy:</b> „scribpsis”) – pisać, rysować</li></ul>\n<p>Dlaczego III? W 1. os. samo -o po spółgłosce (scrib-o), a w bezokoliczniku -ere (scrib-ere). Temat: scrib-.</p>\n<ul><li><b>lego, legĕre, lēgī, lēctum (uwaga:</b> na tablicy pomieszano formy z czasownikiem I koniugacji „lēgo, lēgare, lēgavi, lēgatum – wysyłać posła/wyznaczać”; właściwe „lego, legere – czytać/zbierać” z III koniugacji ma formy: lēgi, lēctum)</li></ul>\n<p>Dlaczego III? Bo jest leg-o (bez -e-), a bezokolicznik ma -ere (legere). Temat: leg-.</p>\n<p>vinco, vincĕre, vīcī, victum (na tablicy dopisano prefiks rdzenia z teraźniejszości: „vinvici, vinvictum” – w klasycznej łacinie w perfectum wypada „n”: vīcī, victum) – zwyciężać</p>\n<p>Dlaczego III? W 1. os. samo -o (vinc-o), w bezokoliczniku -ere (vinc-ere). Temat: vinc-.</p>\n<ul><li><b>eligo, eligĕre, ēlēgī, ēlēctum (na tablicy:</b> „elilegi, elilectum”) – wybierać, zbierać (złożenie ex + lego)</li></ul>\n<p>Dlaczego III? W 1. os. samo -o (elig-o), w bezokoliczniku -ere (elig-ere). Temat: elig-.</p>\n<ul><li><b>pono, ponĕre, posuī, positum</b> – kłaść, stawiać</li></ul>\n<p>Dlaczego III? W 1. os. samo -o (pon-o), w bezokoliczniku -ere (pon-ere). Temat: pon-.</p>\n<ul><li><b>pello, pellĕre, pepulī, pulsum</b> – pędzić, uderzać, wyganiać (z dołu tablicy)</li><li><b>Dlaczego III? Końcówki -o, -ĕre. Temat:</b> pell-.</li><li><b>tango, tangĕre, tetigī, tāctum</b> – dotykać (z dołu tablicy)</li><li><b>Dlaczego III? Końcówki -o, -ĕre. Temat:</b> tang-.</li><li><b>quaero, quaerĕre, quaesīvī, quaesītum</b> – szukać, pytać (z dołu tablicy)</li><li><b>Dlaczego III? Końcówki -o, -ĕre. Temat:</b> quaer-.</li><li><b>surgo, surgĕre, surrēxī, surrēctum</b> – wstawać, podnosić się (z dołu tablicy)</li><li><b>Dlaczego III? Końcówki -o, -ĕre. Temat:</b> surg-.</li><li><b>Koniugacja IV (temat na -i-):</b> końcówki -io, -īre</li><li><b>venio, venīre, vēnī, ventum (na tablicy:</b> „veventum”) – przychodzić, zbliżać się</li></ul>\n<p>Dlaczego IV? W 1. osobie ma -io (venio), a w bezokoliczniku -īre (venire). Temat: veni- (Uwaga: w 3. os. lm. między temat „veni-” a końcówkę „-nt” wchodzi spójka „-u-”, dając: veniunt).</p>\n<ul><li><b>finio, finīre, finīvī, finītum</b> – kończyć, oznaczać granice czegoś</li></ul>\n<p>Dlaczego IV? W 1. osobie ma -io (finio), a w bezokoliczniku -īre (finire). Temat: fini-.</p>\n<h4><span class=\"num\">3.</span> Pełna odmiana wszystkich czasowników (Praesens Indicativi Activi)</h4>\n<h5>Końcówki osobowe strony czynnej dla wszystkich koniugacji są identyczne</h5>\n<ul><li><b>Liczba pojedyncza (Singular):</b> 1. -o (ja), 2. -s (ty), 3. -t (on/ona/ono)</li><li><b>Liczba mnoga (Plural):</b> 1. -mus (my), 2. -tis (wy), 3. -nt (oni/one)</li></ul>\n<h4><span class=\"num\">A.</span> Czasowniki Koniugacji I (temat na -a-)</h4>\n<p>(W 1. os. lp. tematyczne -a- zlewa się z końcówką -o w samo -o; w pozostałych osobach mamy regularne: -as, -at, -amus, -atis, -ant)</p>\n<p>Osoba erro, errare (tułać się)</p>\n<p>pecco, peccare (błądzić)</p>\n<p>servo, servare (pilnować)</p>\n<p>sano, sanare (leczyć)</p>\n<p>creo, creare (tworzyć)</p>\n<p>voco, vocare (wołać)</p>\n<h4><span class=\"num\">1.</span> sg. (ja)</h4>\n<ul><li>erro pecco servo sano creo voco</li></ul>\n<h4><span class=\"num\">2.</span> sg. (ty) erras peccas servas sanas creas vocas</h4>\n<h4><span class=\"num\">3.</span> sg. (on) errat peccat servat sanat creat vocat</h4>\n<h4><span class=\"num\">1.</span> pl. (my) erramus peccamus servamus sanamus creamus vocamus</h4>\n<h4><span class=\"num\">2.</span> pl. (wy) erratis peccatis servatis sanatis creatis vocatis</h4>\n<h4><span class=\"num\">3.</span> pl. (oni) errant peccant servant sanant creant vocant</h4>\n<h4><span class=\"num\">B.</span> Czasowniki Koniugacji II (temat na -e-)</h4>\n<ul><li><b>(We wszystkich osobach utrzymuje się tematyczne -e-:</b> -eo, -es, -et, -emus, -etis, -ent)</li></ul>\n<p>Osoba habeo, habere (mieć)</p>\n<p>fleo, flere (płakać)</p>\n<p>video, videre (widzieć)</p>\n<p>respondeo, respondere (odpowiadać)</p>\n<p>taceo, tacere (milczeć)</p>\n<h4><span class=\"num\">1.</span> sg. (ja)</h4>\n<ul><li>habeo fleo video respondeo taceo</li></ul>\n<h4><span class=\"num\">2.</span> sg. (ty) habes fles vides respondes taces</h4>\n<h4><span class=\"num\">3.</span> sg. (on) habet flet videt respondet tacet</h4>\n<h4><span class=\"num\">1.</span> pl. (my) habemus flemus videmus respondemus tacemus</h4>\n<h4><span class=\"num\">2.</span> pl. (wy) habetis fletis videtis respondetis tacetis</h4>\n<h4><span class=\"num\">3.</span> pl. (oni) habent flent vident respondent tacent</h4>\n<h4><span class=\"num\">C.</span> Czasowniki Koniugacji III (temat spółgłoskowy + spójki -i- / -u-)</h4>\n<ul><li><b>(Końcówki ze spójkami:</b> -o, -is, -it, -imus, -itis, -unt)</li></ul>\n<h3 class=\"part\">Część 1 (z głównej listy):</h3>\n<p>Osoba tollo, tollere (usuwać)</p>\n<p>scribo, scribere (pisać)</p>\n<p>lego, legere (czytać/wyznaczać)</p>\n<p>vinco, vincere (zwyciężać)</p>\n<p>eligo, eligere (wybierać)</p>\n<p>pono, ponere (kłaść)</p>\n<h4><span class=\"num\">1.</span> sg. (ja)</h4>\n<ul><li>tollo scribo lego vinco eligo pono</li></ul>\n<h4><span class=\"num\">2.</span> sg. (ty) tollis scribis legis vincis eligis ponis</h4>\n<h4><span class=\"num\">3.</span> sg. (on) tollit scribit legit vincit eligit ponit</h4>\n<h4><span class=\"num\">1.</span> pl. (my) tollimus scribimus legimus vincimus eligimus ponimus</h4>\n<h4><span class=\"num\">2.</span> pl. (wy) tollitis scribitis legitis vincitis eligitis ponitis</h4>\n<h4><span class=\"num\">3.</span> pl. (oni) tollunt scribunt legunt vincunt eligunt ponunt</h4>\n<h3 class=\"part\">Część 2 (czasowniki z dołu tablicy):</h3>\n<p>Osoba pello, pellere (pędzić)</p>\n<p>tango, tangere (dotykać)</p>\n<p>quaero, quaerere (szukać/pytać)</p>\n<p>surgo, surgere (wstawać)</p>\n<h4><span class=\"num\">1.</span> sg. (ja)</h4>\n<ul><li>pello tango quaero surgo</li></ul>\n<h4><span class=\"num\">2.</span> sg. (ty) pellis tangis quaeris surgis</h4>\n<h4><span class=\"num\">3.</span> sg. (on) pellit tangit quaerit surgit</h4>\n<h4><span class=\"num\">1.</span> pl. (my) pellimus tangimus quaerimus surgimus</h4>\n<h4><span class=\"num\">2.</span> pl. (wy) pellitis tangitis quaeritis surgitis</h4>\n<h4><span class=\"num\">3.</span> pl. (oni) pellunt tangunt quaerunt surgunt</h4>\n<h4><span class=\"num\">D.</span> Czasowniki Koniugacji IV (temat na -i-)</h4>\n<p>(We wszystkich osobach utrzymuje się tematyczne -i-, a w 3. os. lm. dochodzi spójka -u-: -io, -is, -it, -imus, -itis, -iunt)</p>\n<p>Osoba venio, venire (zbliżać się / przychodzić)</p>\n<p>finio, finire (oznaczać granice / kończyć)</p>\n<h4><span class=\"num\">1.</span> sg. (ja)</h4>\n<ul><li>venio finio</li></ul>\n<h4><span class=\"num\">2.</span> sg. (ty) venis finis</h4>\n<h4><span class=\"num\">3.</span> sg. (on) venit finit</h4>\n<h4><span class=\"num\">1.</span> pl. (my) venimus finimus</h4>\n<h4><span class=\"num\">2.</span> pl. (wy) venitis finitis</h4>\n<h4><span class=\"num\">3.</span> pl. (oni) veniunt (uwaga na -iu-!) finiunt (uwaga na -iu-!)</h4>\n<h5>Szybka ściągawka pamięciowa na kolokwium (porównanie 3. os. lp. i 3. os. lm.)</h5>\n<ul><li><b>I kon. (-are):</b> on ma -at (errat), oni mają -ant (errant).</li><li><b>II kon. (-eo, -ere):</b> on ma -et (habet), oni mają -ent (habent).</li><li><b>III kon. (-o, -ere):</b> on ma -it (legit), oni mają -unt (legunt – bez „i”!).</li><li><b>IV kon. (-io, -ire):</b> on ma -it (venit), oni mają -iunt (veniunt – z „i”!).</li></ul>"}]};
+window.AUG_GLOSS=[{"k": "wstep", "title": "Wstęp do filozofii – Wykład 1 (7.10.2026)", "items": [["Dogma (δόγμα)", "twierdzenie lub sformułowane przekonanie; wyrażanie z całą pewnością, że coś takie jest."], ["Doxa (δόξα)", "potoczne przekonanie, mniemanie, subiektywna opinia na temat czegoś."], ["Episteme (ἐπιστήμη)", "wiedza pewna, naukowa i obiektywna; ustalenie stanu rzeczy (że coś jest i jakie jest)."], ["Isagoga (εἰσαγωγή)", "wprowadzenie w podstawowe pojęcia filozoficzne, u samych podstaw filozofii."], ["Meta (μετά)", "to, co dokonuje się razem lub po; ma związek z przemyśleniem (podczas lub po czymś)."], ["Metafilozofia", "filozofia na temat samej filozofii; badanie jej natury, celów i metodologii danej dziedziny."], ["Metanoia (μετάνοια)", "nawrócenie, głęboka przemiana myślenia dokonująca się przez rozum, a nie przez same uczucia."], ["Mistagogia (μυσταγωγία)", "wtajemniczenie, wprowadzenie w doświadczenie duchowe i sakralne po etapie wstępnym."], ["Philosophia (φιλοσοφία)", "od słów phileo (φιλέω – miłuję) oraz sophia (σοφία – mądrość): bezinteresowne dążenie do prawdy i umiłowanie mądrości."], ["Pisteuomen (πιστεύομεν)", "pierwsze słowo chrześcijańskiego Credo: „ustalamy / stwierdzają, że: Jest jeden Bóg...”."], ["Sofiści", "myśliciele, którzy uwodzą ludzi swoją mową; przedkładają retoryczną perswazję nad prawdę obiektywną."], ["Tekna theou (τέκνα θεοῦ)", "zwrot biblijno-filozoficzny: jesteśmy dziećmi Boga, zrodzonymi z Boga."]]}, {"k": "fczl", "title": "Filozofia człowieka i teologia – Wykład 1", "items": [["Pytania antropologiczne Kanta", "logiczna struktura myślenia o człowieku: 1) Co wiem? (pytanie o wiedzę / epistemologia); 2) Co powinienem czynić? (filozofia moralna / etyka); 3) Czego mogę się spodziewać? (pytanie o religijną perspektywę istnienia / nadzieja); 4) Kim jest człowiek? (pytanie antropologiczne; u Heideggera porządek ten bywa odwracany)."], ["Transhumanizm", "dążenie do uczynienia człowieka nieśmiertelnym za pomocą technologii i nauki; tęsknota za nieśmiertelnością błędnie redukowana do wymiaru fizycznego zamiast duchowego."], ["Trzy ciosy w narcyzm ludzkości (Freud)", "kryzysy antropologiczne nowożytności: teoria Kopernika (brak centralnego miejsca we wszechświecie), teoria Darwina (biologiczne pokrewieństwo ze zwierzętami) oraz psychoanaliza Freuda (zawładnięcie ego przez nieświadome popędy)."], ["Zło", "rodzi się z relacji i dialogu, wyrządza je człowiek drugiemu człowiekowi w wyniku wolnego wyboru."], ["Nieszczęście", "zjawisko wynikające z samej natury, na które nie mamy bezpośredniego wpływu (choroby, kataklizmy)."]]}, {"k": "fprz", "title": "Filozofia nauki – Wykład 1 (6.10.2026)", "items": [["Czas i przestrzeń", "fundamentalne kategorie pojęciowe filozofii przyrody i fizyki, stanowiące ramy poznawcze zjawisk materialnych."], ["Filozofia nauki", "dziedzina badająca nie tylko to, co nauka odkryła, ale racje metodologiczne i ontologiczne, dlaczego dane twierdzenia uznaje się za naukowe."]]}, {"k": "logika", "title": "Logika – Wykład 1", "items": [["Kategorie (Organon, ks. 1)", "ogólna teoria rozumu i orzekania."], ["Hermeneutyka (Peri hermeneias, Organon, ks. 2)", "logiczna teoria zdań."], ["Analityki pierwsze (Organon, ks. 3)", "teoria sylogizmu dedukcyjnego."], ["Analityki wtóre (Organon, ks. 4)", "teoria dowodu naukowego i definicji."], ["Topiki (Organon, ks. 5)", "badanie wiedzy prawdopodobnej na sylogizmach."], ["O dowodach sofistycznych (Organon, ks. 6)", "teoria wprowadzania w błąd i obalania sofizmatów."], ["Organon (ὄργανον)", "„narzędzie”; pierwotne określenie pism logicznych Arystotelesa (logika jako powszechne narzędzie myślenia i nauki, a nie samodzielny bytowo dział wiedzy)."], ["Semantyka", "relacja między znakiem a tym, co on oznacza (treść i znaczenie)."], ["Pragmatyka", "relacja między znakiem a jego użytkownikiem/odbiorcą (kontekst użycia)."], ["Syntaktyka", "reguły relacji między samymi znakami."], ["Sofistyczny", "przewrotny, zmierzający celowo do wprowadzenia rozmówcy w błąd."], ["Sylogizm", "podstawowy schemat wnioskowania formalno-dedukcyjnego, w którym z dwóch przesłanek wynika w sposób konieczny wniosek (np. Każdy x jest y, każdy z jest x każde z jest y)."]]}, {"k": "logika", "title": "Logika – Wykład 2 (8.10.2026)", "items": [["Intersubiektywność", "kryterium naukowości oznaczające, że wiedza jest publicznie sprawdzalna, jednoznacznie zakomunikowana i dostępna dla wielu podmiotów."], ["KRZ", "Klasyczny Rachunek Zdań (sformalizowany w nowoczesnej postaci m.in. przez Ludwiga Wittgensteina w 1919 r.)."], ["Logika nazw (nurt arystotelesowski)", "rachunek nazw badający relacje zakresowe między pojęciami."], ["Logika zdań (nurt stoicki)", "rachunek zdań badający relacje prawdziwościowe między całymi zdaniami."], ["Retor vs Sofista", "retor stosuje sztukę pięknej argumentacji w służbie obiektywnej prawdy (np. św. Augustyn), podczas gdy sofista posługuje się nią instrumentalnie dla wygrania dysputy."], ["Subiektywność", "jednostkowe, niewyrażalne wprost doznania i przeżycia wewnętrzne, które same w sobie nie stanowią wiedzy naukowej."], ["NZ (Nazwa / Znak)", "fizyczny, intersubiektywny nośnik znaku."], ["D (Desygnat)", "przedmiot materialny poznawany zmysłowo, oznaczany przez znak."], ["J / Interpretant", "pojęcie, treść myślowa i sposób rozumienia nośnika w umyśle."]]}, {"k": "psych", "title": "Psychologia ogólna – Wykład 1 (2.10.2026)", "items": [["Asocjacja", "mechanizm kojarzenia faktów i wrażeń psychicznych według określonych praw."], ["Intencjonalność aktu psychicznego", "konstytutywna cecha świadomości: każdy akt psychiczny zawsze jest skierowany ku jakiejś treści/przedmiotowi."], ["Introspekcja", "„spoglądanie w głąb”; metoda samoobserwacji własnych stanów psychicznych i świadomościowych."], ["Probabilizm", "charakter wiedzy opartej na rachunku prawdopodobieństwa; w psychologii wyklucza 100% determinizm w diagnozie człowieka."], ["Psychologia aktów (Franz Brentano)", "ujęcie zjawisk psychicznych jako dynamicznych czynności (aktów) umysłu, a nie biernych treści."], ["Psychologia elementów (strukturalizm Wundta)", "rozkładanie procesów psychicznych na elementarne składowe (wrażenia i proste uczucia)."], ["Synteza twórcza (Wundt)", "zasada głosząca, że powstały wytwór psychiczny ma nowe cechy jakościowe, nieporównywalne z prostą sumą jego składowych."], ["Tendencja dominująca (szkoła würzburska)", "nastawienie badawcze ukierunkowujące przebieg myślenia i kojarzeń podczas eksperymentu."]]}, {"k": "psych", "title": "Psychoanaliza i koncepcje osobowości (9.10.2026)", "items": [["Behawioryzm", "kierunek badający wyłącznie obserwowalne zachowanie wedle schematu Bodziec-Reakcja oraz warunkowania nagrodami i karami."], ["Wyparcie (represja)", "aktywne usuwanie bolesnych impulsów ze świadomości."], ["Zaprzeczenie", "odrzucanie faktów ze świata zewnętrznego."], ["Projekcja", "przypisywanie własnych, nieakceptowanych cech innym osobom."], ["Racjonalizacja", "pozorne usprawiedliwianie czynów (kwaśne winogrona – umniejszanie celu nieosiągniętego; słodkie cytryny – wyolbrzymianie zalet sytuacji niechcianej)."], ["Sublimacja", "twórcze przekierowanie popędu na cele społecznie pożyteczne (np. agresji w chirurgię)."], ["Przemieszczenie (wyładowanie)", "skierowanie afektu na obiekt bezpieczniejszy niż rzeczywiste źródło frustracji."], ["Regresja", "powrót w sytuacji kryzysu do zachowań z wcześniejszego stadium rozwojowego."], ["Identyfikacja", "utożsamianie się z autorytetem lub instytucją w celu wzmocnienia poczucia bezpieczeństwa."], ["Izolacja afektu", "oddzielenie faktów poznawczych od ich ładunku emocjonalnego."], ["Prawo Efektu (Thorndike)", "zasada głosząca, że zachowania przynoszące satysfakcję utrwalają się, a zachowania prowadzące do kary wygasają."], ["Id (Ono)", "biologiczny kocioł namiętności kierujący się zasadą przyjemności."], ["Ego (Ja)", "racjonalny mediator kierujący się zasadą realności, równoważący popędy Id i rygoryzmy Superego."], ["Superego (Nad-ja)", "zinternalizowane sumienie i normy społeczne kierujące się zasadą powinności (waga apteczna lub kolejowa)."], ["Topograficzny model umysłu", "trójwarstwowa góra lodowa: świadomość, przedświadomość, nieświadomość."], ["Świadomość", "wierzchołek góry lodowej; aktualne spostrzeżenia i myśli."], ["Przedświadomość", "treści uświadamiane dopiero wtedy, gdy są potrzebne."], ["Nieświadomość", "podstawa góry lodowej; wyparte popędy i traumy decydujące o dynamice zachowania."]]}, {"k": "histfil", "title": "Historia filozofii – Wykład 1", "items": [["Aksjologia", "ogólna nauka o wartościach, obejmująca etykę (dobro moralne) i estetykę (piękno)."], ["Arche (ἀρχή)", "pramateria, ostateczna zasada i osnowa wszelkiego bytu."], ["Logos (λόγος)", "racjonalne, logiczne uzasadnienie stanowiące metodę badawczą filozofii."], ["Polis (πόλις)", "starogreckie miasto-państwo tworzące przestrzeń wolności i racjonalnej debaty obywatelskiej."], ["Theoria (θεωρία)", "bezinteresowna, wolna od praktycyzmu kontemplacja prawdy dla niej samej."], ["Totum (Całość bytu)", "przedmiot filozofii odróżniający ją od nauk wycinkowych (badanie całości rzeczywistości)."]]}, {"k": "teoria", "title": "Teoria poznania – Wykład 1 (5.10.2026)", "items": [["Gnoseologia", "ogólna teoria poznania badająca naturę aktu poznawczego i relację podmiotu do przedmiotu."], ["Granica poznania", "wewnętrzne i zewnętrzne ograniczenia ludzkiego aparatu poznawczego."], ["Kryteriologia", "dyscyplina epistemologiczna badająca sprawdziany i kryteria odróżniania prawdy od fałszu."], ["Trójkąt platoński", "metafizyczno-epistemologiczna relacja: Bóg (wierzchołek/Absolut) oraz Człowiek i Świat (podstawa relacji)."], ["Źródła poznania", "doświadczenie zmysłowe (empiryzm), rozum (racjonalizm) oraz intuicja."]]}, {"k": "teoria", "title": "Teoria poznania – Wykład 2 (Prawda przedpredykatywna i Platon)", "items": [["Anamneza (ἀνάμνησις)", "platońska koncepcja przypomnienia sobie przez duszę wiedzy o wiecznych Ideach, którą oglądała przed uwięzieniem w ciele materialnym."], ["Idea Dobra", "najwyższa w platońskiej hierarchii idea (metaforycznie utożsamiana ze Słońcem), będąca źródłem istnienia, ładu i poznawalności wszystkich pozostałych idei i rzeczy."], ["Prawda ontologiczna", "cecha samego bytu polegająca na jego zgodności z zamysłem twórczym lub własną istotą; autentyczność i pełnia istnienia rzeczy (prawda bytu, w odróżnieniu od prawdy logicznej, która jest cechą zdań)."], ["Prawda przedpredykatywna", "pierwotne, bezpośrednie ujęcie prawdy w doświadczeniu lub intuicji, zanim zostanie ona ujęta w formę gramatycznego sądu (predykacji: „S jest P”). Problem vs Tajemnica (koncepcja m.in. P. Ricœura / G."], ["Problem", "trudność poznawcza, którą umysł stawia przed sobą obiektywnie i którą można wyczerpująco rozwiązać metodami analitycznymi."], ["Tajemnica", "rzeczywistość, w którą podmiot poznający jest osobiście uwikłany i której nie da się wyczerpać w 100% obiektywizującym opisem."], ["Symbol", "wieloznaczny nośnik sensu otwierający na tajemnicę i niewyrażalną wprost głębię rzeczywistości egzystencjalnej/sakralnej."], ["Znak", "arbitralny, jednoznaczny komunikat konwencjonalny wyczerpujący się w czystym odesłaniu do danej informacji (np. znak drogowy)."], ["Zjawisko", "powierzchniowa, zmysłowa manifestacja bytu dostępna w doświadczeniu codziennym."], ["Istota", "wewnętrzny, niezmienny rdzeń determinujący to, czym dany byt z natury jest."]]}, {"k": "fprz", "title": "Filozofia przyrody – Czas, przestrzeń i ruch (Newton vs Leibniz)", "items": [["Czas jako ruchomy obraz wieczności", "platońska definicja czasu jako dynamicznego, podlegającego zmianie odwzorowania statycznej i niezmiennej wieczności świata form."], ["Definicja operacyjna", "definicja pojęcia fizycznego formułowana nie przez cechy jakościowe, lecz jako precyzyjny przepis i procedura pomiarowa określająca sposób zmierzenia danej wielkości (np. masa, siła)."], ["Demiurg (δημιουργός)", "platoński boski rzemieślnik i budowniczy świata, który w dialogu Timajos formuje świat materialny na wzór wiecznych, doskonałych Idei."], ["Inercjalny układ odniesienia", "układ odniesienia, w którym obowiązuje I zasada dynamiki Newtona (układ spoczywający lub poruszający się ruchem jednostajnym prostoliniowym bez przyspieszenia)."], ["Izotropowość i jednorodność przestrzeni", "cechy newtonowskiej przestrzeni absolutnej oznaczające, że posiada ona identyczne właściwości fizyczne we wszystkich punktach (jednorodność) oraz we wszystkich kierunkach (izotropowość)."], ["Koncepcja absolutna (substancjalna) przestrzeni i czasu (Newton)", "ujęcie, w którym przestrzeń i czas istnieją niezależnie od materii i zdarzeń, stanowiąc obiektywny, nieruchomy „pojemnik” oraz uniwersalny strumień trwania."], ["Koncepcja relacyjna przestrzeni i czasu (Leibniz)", "ujęcie, w którym przestrzeń jest jedynie porządkiem współistnienia ciał, a czas – porządkiem następstwa zdarzeń (nie istnieją one jako samodzielne byty poza rzeczami)."], ["Matematyzacja przyrody", "proces epistemologiczny zapoczątkowany w rewolucji naukowej, polegający na przyznaniu pierwszeństwa abstrakcyjnym modelom matematycznym przed potocznym doświadczeniem zmysłowym."], ["Zasada racji dostatecznej (principium rationis sufficientis)", "zasada logiczno-metafizyczna sformułowana przez Leibniza, głosząca, że nic nie dzieje się bez przyczyny lub racji, dla której jest raczej tak, a nie inaczej."], ["Zasada tożsamości rzeczy nierozróżnialnych (principium identitatis indiscernibilium)", "leibnizjańska zasada stanowiąca, że nie mogą istnieć w świecie dwa odrębne byty, które nie różniłyby się między sobą żadną wewnętrzną cechą jakościową."]]}, {"k": "hk", "title": "Historia Kościoła – Kościół apostolski i wczesnochrześcijański", "items": [["Episkopos (ἐπίσκοπος)", "„nadzorca, strażnik”; w Nowym Testamencie urząd we wspólnocie chrześcijańskiej, z którego rozwinął się urząd biskupa."], ["Etnochrześcijanie", "pierwsi chrześcijanie wywodzący się ze środowisk pogańskich (z narodów – gentes), w odróżnieniu od chrześcijan pochodzenia żydowskiego."], ["Instrumentum vocale", "starorzymskie pojęcie prawne definiujące niewolnika jako „mówiące narzędzie” (rzecz mającą zdolność mowy, pozbawioną praw podmiotowych)."], ["Judeochrześcijanie", "wyznawcy Chrystusa pochodzenia żydowskiego, którzy początkowo łączyli wiarę w Ewangelię z zachowywaniem przepisów Tory i obyczajowości świątynnej."], ["Kanon biblijny", "zbiór ksiąg uznanych przez autorytet i wiarę Kościoła za natchnione przez Boga i stanowiące normę wiary i moralności."], ["Klauzule Jakubowe", "4 minimalne zakazy ustalone na zgromadzeniu w Jerozolimie w 49 r. (zakaz bałwochwalstwa, spożywania krwi, mięsa duszonych zwierząt oraz nierządu), umożliwiające wspólne funkcjonowanie judeochrześcijan i etnochrześcijan."], ["Marana tha (מרנא תא)", "aramejskie wołanie wczesnochrześcijańskie oznaczające „Przyjdź, Panie nasz!”, będące wyrazem żywej nadziei na rychłą Paruzję."], ["Paganus (poganin)", "łacińskie określenie mieszkańca wsi/rolnika; w odniesieniu do starożytnych innowierców stanowi anachronizm historyczny (starożytni używali pojęć: narody, goje, hellenowie)."], ["Presbyteros (πρεσβύτερος)", "„starszy”; członek kolegium kierującego lokalną gminą chrześcijańską, z którego wywodzi się kapłaństwo służebne (prezbiterat)."]]}, {"k": "hk", "title": "Historia Kościoła – ćwiczenia (Janek G.)", "items": [["Druga pokuta (secunda paenitentia)", "starożytna dyscyplina kościelna (znana m.in. z Pasterza Hermasa i pism Tertuliana) dopuszczająca tylko jeden raz po chrzcie możliwość publicznej pokuty i pojednania z Kościołem za najcięższe grzechy (bałwochwalstwo, zabójstwo, cudzołóstwo/nierząd)."], ["Faryzeizm (w kontekście starożytnym)", "ruch religijno-społeczny w łonie judaizmu ukształtowany w okresie machabejskim, kładący nacisk na ścisłą czystość rytualną, odrębność od narodów pogańskich oraz skrupulatne przestrzeganie Tory pisanej i ustnej."], ["Kazuistyka (w prawie religijnym)", "drobiazgowe, kazuistyczne rozstrzyganie konkretnych przypadków sumienia i zachowań na podstawie setek szczegółowych przepisów prawno-rytualnych (np. 613 przykazań Tory/Talmudu czy późniejsze kodeksy kanoniczne)."], ["Prawa noachickie (Przymierze noachickie)", "w teologii i tradycji żydowskiej zespół 7 uniwersalnych nakazów moralnych danych przez Boga całej ludzkości (potomkom Noego), stanowiący biblijny fundament pod etykę dla ludzi spoza narodu wybranego (symbolizowany przymierzem tęczy)."], ["Wspólnota stołu (commensalitas)", "wczesnochrześcijański problem wspólnego spożywania posiłków i celebrowania agap oraz Eucharystii przez chrześcijan wywodzących się z judaizmu (związanych żydowskimi przepisami koszerności) i chrześcijan z pogaństwa."]]}, {"k": "hk", "title": "Historia Kościoła – ćwiczenia (Daniel)", "items": [["Apostolos (ἀπόστολος)", "„wysłannik, poseł z pełnomocnictwem”; w Nowym Testamencie początkowo tytuł ścisłego grona Dwunastu (jako naocznych świadków Zmartwychwstania i nowego Izraela), a w szerszym znaczeniu – wędrownych misjonarzy powołanych przez Chrystusa (np. Paweł, Barnaba)."], ["Chirotonia (χειροτονία)", "gest nałożenia rąk połączony z modlitwą konsekracyjną, biblijny i liturgiczny znak udzielenia Ducha Świętego oraz ustanowienia na urząd w Kościele."], ["Episkopat monarchiczny", "model ustroju Kościoła lokalnego, który ustalił się na przełomie I i II wieku (szczególnie widoczny w listach św. Ignacego Antiocheńskiego), polegający na tym, że na czele gminy stoi jeden biskup otoczony radą prezbiterów i wspomagany przez diakonów."], ["Junia (Rz 16,7)", "wczesnochrześcijańska postać wymieniona z uznaniem przez św. Pawła jako „wyróżniająca się wśród apostołów”; w patrystyce jednoznacznie uznawana za kobietę, w późniejszym średniowieczu poddana maskulinizacji do imienia „Junias”."], ["Kolegium Dwunastu", "krąg uczniów ustanowiony przez Jezusa jako symboliczny i eschatologiczny fundament odnowionego Ludu Bożego, odzwierciedlający 12 pokoleń (patriarchów) Izraela."], ["Sukcesja apostolska (successio apostolica)", "nieprzerwana ciągłość przekazywania władzy pasterskiej, nauczania i posługi sakramentalnej od Apostołów do kolejnych biskupów poprzez modlitwę i nałożenie rąk (chirotonię)."], ["Urzędy charyzmatyczne vs lokalne", "rozróżnienie wczesnochrześcijańskie na posługi wędrowne, oparte na bezpośrednim obdarowaniu Ducha (apostolowie, prorocy, nauczyciele), oraz stałe struktury urzędowe związane z lokalną wspólnotą (biskupi, prezbiterzy, diakoni)."], ["Ustanowienie Siedmiu (protodiakonat)", "powołanie w Jerozolimie (Dz 6) siedmiu mężów do zarządu dobrami i troski o ubogich (wspomagańców stołu), stanowiące zaczątek posługi diakońskiej w Kościele."]]}, {"k": "logika", "title": "Logika – Wykład 3 (semiotyka)", "items": [["Błąd kategorialny (naruszenie reguł semantycznych)", "logiczno-językowe przypisanie cechy lub orzecznika do przedmiotu należącego do zupełnie innej kategorii ontologicznej (np. „zielone pojęcie”, „zielony sakrament”)."], ["Conceptus (Pojęcie)", "łaciński odpowiednik greckiego noema; treść myślowa, akt ujęcia istoty rzeczy w umyśle (źródłosłowo tożsame z biologicznym „poczęciem” – zrodzenie myśli w intelekcie)."], ["Denotowanie (desygnowanie / ekstensja)", "funkcja semantyczna polegająca na wskazywaniu przez nazwę zbioru konkretnych przedmiotów (desygnatów) w świecie."], ["Eidos (εἶδος)", "pierwotnie: widok, postać, to co widoczne; u Platona źródłosłów dla Idei, a u Arystotelesa dla Formy (morphe)."], ["Funkcja wyrażania (ekspresywna)", "funkcja pragmatyczna wypowiedzi polegająca na uzewnętrznianiu przez nadawcę jego subiektywnych stanów emocjonalnych lub nastawienia."], ["Język naturalny (etniczny)", "system znakowy ukształtowany historycznie w drodze umowy spontanicznej w ramach danej wspólnoty narodowej/kulturowej."], ["Język sztuczny", "sformalizowany system znaków stworzony celowo i świadomie do określonych zadań naukowych (np. KRZ, algebra, języki programowania)."], ["Konotacja (współoznaczanie / intensja)", "zespół konstytutywnych cech przysługujących desygnatom danej nazwy, tworzący treść pojęcia."], ["Noetyczny (od gr. noema / nous)", "intelektualny, poznawczy, dotyczący czystego myślenia i aktów pojęciowych umysłu (w odróżnieniu od poziomu zmysłowego)."], ["Obiectum (Przedmiot / Desygnat)", "od łac. obicere (rzucać przed, stawiać naprzeciw); to, co stoi naprzeciw podmiotu poznającego w świecie zewnętrznym; stąd: obiektywny = przedmiotowy."], ["Signum (znak w ujęciu św. Tomasza)", "postrzegalny zmysłowo przedmiot lub zjawisko fizyczne, które na mocy relacji poznawczej prowadzi umysł obserwatora do poznania innego, oznaczonego obiektu."], ["Słownik (w sensie logicznym)", "zasób elementarnych, prostych znaków językowych danego systemu językowego."], ["Transparentność znaku", "właściwość polegająca na tym, że znak nie skupia uwagi podmiotu na sobie samym jako przedmiocie fizycznym, lecz odsyła bezpośrednio ku desygnatowi/znaczeniu."], ["Użycie dystrybutywne nazwy", "odniesienie nazwy do poszczególnych elementów klasy z osobna (każdy z osobna posiada daną cechę)."], ["Użycie kolektywne nazwy", "odniesienie nazwy do klasy obiektów traktowanej jako zbiorowa całość (agregat)."], ["Wyrażenie", "w logice: każdy prosty lub złożony znak językowy posiadający określone znaczenie w danym języku."], ["Znak konwencjonalny (arbitralny)", "znak ustanowiony na mocy umowy, zwyczaju lub konwencji kulturowej (właściwa cecha języka ludzkiego)."], ["Znak ikoniczny", "znak, którego relacja z desygnatem opiera się na fizycznym podobieństwie zmysłowym (np. fotografia, ikona, rysunek)."], ["Znak naturalny (oznaka / symptom)", "zjawisko fizyczne powiązane z oznaczanym faktem związkiem przyczynowo-skutkowym wynikającym z praw natury (np. dym dla ognia), a nie z umowy społecznej."], ["Znak prosty", "znak językowy, którego żadna część właściwa nie stanowi samodzielnego znaku tego samego rodzaju (np. pojedynczy wyraz w relacji do liter)."], ["Znak złożony", "znak powstały z połączenia co najmniej dwóch znaków prostych według określonych reguł składniowych."]]}, {"k": "logika", "title": "Logika – Wykład 4 (poziomy języka, prawda, metalogika)", "items": [["Język przedmiotowy (1° stopnia)", "podstawowy język, którego wyrażenia odnoszą się bezpośrednio do świata pozajęzykowego (do przedmiotów, faktów, cech i zdarzeń)."], ["Konwencja T (Schemat Tarskiego)", "warunek materialnej poprawności definicji prawdy mający postać: Zdanie „p” jest prawdziwe wtedy i tylko wtedy, gdy p."], ["Metajęzyk (2° stopnia)", "język wyższego rzędu, w którym mówi się o wyrażeniach, strukturze i regułach języka przedmiotowego."], ["Meta-metajęzyk (3° stopnia)", "język służący do opisu i orzekania o twierdzeniach sformułowanych w metajęzyku."], ["Model (w logice i semantyce)", "struktura matematyczno-pojęciowa, w której wszystkie aksjomaty i twierdzenia danego systemu formalnego stają się zdaniami prawdziwymi (interpretacja języka w świecie obiektów)."], ["Nazwa cudzysłowowa", "metajęzykowe oznaczenie wyrażenia powstałe przez ujęcie go w cudzysłów; odnosi się do samego kształtu/napisu słowa, a nie do jego pozajęzykowego desygnatu."], ["Nierozstrzygalność (Church / Turing)", "brak uniwersalnej procedury algorytmicznej (programu/maszyny Turinga) pozwalającej mechanicznie rozstrzygnąć prawdziwość dowolnego sformułowanego twierdzenia w danej teorii."], ["Niezupełność systemu (Kurt Gödel)", "właściwość niesprzecznego systemu dedukcyjnego polegająca na tym, że istnieją w nim zdania prawdziwe, których nie da się w tym systemie udowodnić ani obalić."], ["Semantyczna definicja prawdy (Alfred Tarski)", "ścisła definicja prawdy dla języków sformalizowanych, wymagająca ostrego rozgraniczenia języka przedmiotowego od metajęzyka w celu wyeliminowania antynomii semantycznych (takich jak paradoks kłamcy)."], ["Twierdzenia limitacyjne (graniczne)", "twierdzenia logiczno-matematyczne (m.in. Gödla, Churcha, Turinga, Tarskiego, Löwenheima-Skolema) wyznaczające obiektywne, nieprzekraczalne granice możliwości dowodowych, obliczeniowych i semantycznych systemów formalnych."]]}, {"k": "wstep", "title": "Wstęp do filozofii – Wykład 2 (Thaumazein, droga Erosa)", "items": [["Dylemat Eutyfrona", "klasyczny problem etyczno-teologiczny z dialogu Platona: czy to, co jest dobre/pobożne, jest miłowane przez bogów dlatego, że jest samo w sobie dobre, czy też jest dobre jedynie dlatego, że bogowie je miłują (pytanie o obiektywność dobra wobec woli Bożej)."], ["Filodoksja (philodoxia)", "miłowanie pozorów, mniemań i zmiennych opinii (doxa); w ujęciu platońskim przeciwieństwo filozofii poszukującej tego, co wieczne, obiektywne i niezmienne."], ["Filozofia jako melete thanatou (ćwiczenie w umieraniu)", "platońska koncepcja z dialogu Fedon, według której filozofowanie polega na stopniowym uniezależnianiu i uwalnianiu duszy od zmysłów, afektów i uwarunkowań ciała na rzecz oglądu czystych prawd."], ["Mutazylizm (al-muʿtazila)", "racjonalistyczna szkoła teologii islamskiej (VIII–X w.), postulująca konieczność rozumowej i alegorycznej interpretacji tekstów objawionych przy użyciu logiki greckiej."], ["Philoxenos (filoksenia)", "cnota gościnności, umiłowanie przybyszów i obcych (przeciwieństwo ksenofobii)."], ["Sofos (σοφός) vs Filosofos (φιλόσοφος)", "dystynkcja pitagorejska: sofos (mędrzec posiadający pełnię wiedzy) to przymiot przysługujący wyłącznie Bogu; człowiek może być jedynie filosofos – miłośnikiem i poszukiwaczem mądrości, której w pełni nie posiada."], ["Thaumazein (θαυμάζειν)", "zdziwienie, zdumienie; według Platona (Teajtet) i Arystotelesa (Metafizyka) pierwotne źródło i początek wszelkiego filozofowania, rodzące się z uświadomienia sobie własnej niewiedzy."], ["Umiejętność demiurgiczna", "zdolność rozumnego, celowego wprowadzania ładu, dobra i harmonii w materię na wzór platońskiego Demiurga."]]}, {"k": "histfil", "title": "Historia filozofii – Wykład 2 (okresy, Tales)", "items": [["Arche wody (Tales z Miletu)", "pierwsza w dziejach kultury europejskiej racjonalna hipoteza ontologiczna uznająca wodę (wilgoć) za pierwotną osnowę, tworzywo i przyczynę życia całej rzeczywistości."], ["Fizjolodzy (fysiologoi – φυσιολόγοι)", "określenie nadane przez Arystotelesa pierwszym przedsokratejskim filozofom jońskim (Tales, Anaksymander, Anaksymenes), którzy badali przyrodę (physis) i szukali w niej materialnego początku (arche)."], ["Hylozoizm (hylezoizm)", "od gr. hyle (ὕλη – materia) oraz zoe (ζωή – życie): pierwotny pogląd wczesnej filozofii przyrody głoszący, że cała materia jest ożywiona, posiada wewnętrzną siłę witalną i zdolność do samoistnego ruchu (przykłady magnesu i bursztynu u Talesa)."], ["Periodyzacja filozofii starożytnej", "podział rozwoju myśli greckiej na pięć faz: kosmologiczną (przedsokratejską), humanistyczną (antropologiczną / Sokrates), systemową (Platon i Arystoteles), hellenistyczną (etyczną) oraz synkretyczną (religijną)."], ["Physis (φύσις)", "natura, przyroda; pierwotna siła i źródło rodzenia się, wzrostu oraz trwania wszelkich bytów widzialnych."], ["Synkretyzm filozoficzno-religijny", "schyłkowy okres filozofii starożytnej (I–VI w. n.e.), charakteryzujący się łączeniem motywów platońskich, arystotelesowskich i stoickich z elementami wierzeń wschodnich, misteriów i teologii chrześcijańskiej (np. neoplatonizm)."]]}, {"k": "histfil", "title": "Historia filozofii – Wykład 3 (Jończycy, Heraklit)", "items": [["Aer / Pneuma (ἀήρ / πνεῦμα)", "powietrze / tchnienie ożywiające; prazasada u Anaksymenesa, łącząca bezkresną przestrzeń z empirycznym tworzywem podtrzymującym życie organiczne kosmosu."], ["Apeiron (ἄπειρον)", "bezkres, bezgraniczność, nieokreśloność; prazasada (arche) wprowadzona przez Anaksymandra z Miletu, oznaczająca wieczną, jakościowo nieokreśloną i ilościowo nieograniczoną materię, z której wyłaniają się przeciwieństwa tworzące świat."], ["Arche jako principium", "ewolucja pojęcia arche: przejście od rozumienia początku jako pierwszego momentu w czasie do ontologicznej zasady, trwałego podłoża i wewnętrznej racji bytu (principium), która trwa niezmiennie w toku wszelkich zmian."], ["Harmonia ukryta", "heraklitejskie pojęcie wyższego, niewidocznego dla powierzchownych zmysłów ładu, który rodzi się ze zjednoczenia i wzajemnego równoważenia się skrajnych przeciwieństw."], ["Hybris (ὕβρις)", "w starożytnej Grecji pycha, zuchwalstwo i przekroczenie miary ludzkiej wobec bogów (w micie Arystofanesa przyczyna rozcięcia ludzi przez Zeusa)."], ["Ironia sokratejska", "postawa pozornej niewiedzy przyjmowana przez Sokratesa w dialogu, polegająca na wstępnym komplementowaniu i przyznawaniu racji oponentowi, by następnie za pomocą pytań odsłonić fałsz jego mniemań (doxa)."], ["Kondensacja i rozrzedzenie (zagęszczenie i rozprężenie)", "mechanizm przemiany materii sformułowany przez Anaksymenesa: rozrzedzenie powietrza tworzy ogień, a jego stopniowe zagęszczenie tworzy wiatr, chmury, wodę, ziemię i kamienie."], ["Logos kosmiczny (u Heraklita)", "obiektywny, rozumny ład i transcendentne prawo rządzące procesem powszechnej zmiany i wyznaczające miarę zapalania się i gaśnięcia ognia."], ["Metoda elenktyczna (elenchos – ἔλεγχος)", "sokratejska metoda negatywna (zbijania), polegająca na doprowadzeniu rozmówcy do aporii (stanu bezradności poznawczej) poprzez wykazanie, że z przyjętych przez niego założeń wynikają wnioski sprzeczne z jego pierwotną tezą."], ["Ogień kosmiczny (pyr aeizoon – πῦρ ἀείζωον)", "u Heraklita arche rzeczywistości rozumiana nie jako surowiec, lecz jako wiecznie żywa siła i uniwersalny ekwiwalent dynamicznej wymiany bytu."], ["Panta rhei (πάντα ῥεῖ)", "„wszystko płynie”; aforystyczne sformułowanie oddające istotę heraklitejskiego wariabilizmu i metafory rzeki (niemożność zatrzymania biegu zjawisk)."], ["Polemos (πόλεμος – wojna / spór)", "walka i napięcie przeciwieństw jako źródło istnienia, dynamiki i ukrytej harmonii wszechświata („Wojna jest ojcem i królem wszechrzeczy”)."], ["Relatywizm cech (u Heraklita)", "wniosek epistemologiczny głoszący, że z powodu powszechnej zmienności żadna rzecz w przyrodzie nie posiada cech stałych i bezwzględnych, a granice między przeciwieństwami są płynne."], ["Wariabilizm (heraklityzm)", "od łac. variabilis (zmienny); doktryna Heraklita z Efezu głosząca, że jedyną stałą cechą bytu jest nieustanna zmiana i stawanie się (stawanie się zamiast trwania)."]]}, {"k": "teoria", "title": "Teoria poznania – Wykład 3 (iluminizm, sceptycyzm, wolność)", "items": [["Dialektyka prawdy i wolności (Hegel)", "teoria ukazująca wzajemne uwarunkowanie: wolność jest konieczna do nieskrępowanego poszukiwania prawdy, lecz bez prawdy (treści poznawczej) staje się ślepą samowolą, prowadzącą do terroru i zniewolenia."], ["Duch obiektywny (u Hegla)", "faza rozwoju Ducha, w której wewnętrzna wolność jednostki urzeczywistnia się w zewnętrznych instytucjach społeczno-prawnych: prawie, moralności i państwie."], ["Ex opere operato", "teologiczna zasada wypracowana w sporze z donatystami, głosząca, że sakramenty przynoszą skutek duchowy na mocy samego ich sprawowania przez Chrystusa, niezależnie od moralnej kondycji czy świętości szafarza."], ["Forma a treść wolności", "rozróżnienie heglowskie: forma to sama potencjalna możliwość wyboru, natomiast treść to obiektywna prawda o przedmiocie wyboru decydująca o autentycznej samorealizacji człowieka."], ["Iluminizm (teoria iluminacji)", "od łac. illuminatio (oświecenie); augustyńska koncepcja epistemologiczna, według której ludzki umysł poznaje konieczne, wieczne i niezmienne prawdy dzięki wewnętrznemu oświeceniu światłem intelektualnym pochodzącym bezpośrednio od Boga."], ["Magister Interior (Wewnętrzny Nauczyciel)", "pojęcie ze św. Augustyna (De Magistro) oznaczające Chrystusa-Logos obecnego w głębi ludzkiej duszy, który jako jedyny prawdziwy Nauczyciel wewnętrznie poucza umysł i uzdalnia go do rozpoznania prawdy."], ["Prawdy wieczne (rationes aeternae)", "w metafizyce augustyńskiej niezmienne idee i wzorce stworzenia istniejące odwiecznie w Bożym Umyśle, na wzór których Bóg powołał świat do bytu i które wszczepił w strukturę rozumu człowieka."], ["Sapientia (mądrość)", "najwyższy, kontemplacyjny ogląd spraw Bożych i wieczności, podporządkowany miłości dobra i ostatecznemu zbawieniu człowieka."], ["Scientia (wiedza)", "racjonalne, dyskursywne poznanie świata doczesnego i zasad doczesnych."], ["Scientia a Sapientia", "augustyńskie rozróżnienie dwóch poziomów poznania."], ["Si fallor, sum", "z łac. „Jeśli się mylę, to jestem”; sformułowany przez św. Augustyna w dziele O Państwie Bożym argument przeciw sceptycyzmowi akademickiemu, stanowiący prekursorską formę kartezjańskiego Cogito ergo sum (fakt błędu lub zwątpienia dowodzi niewątpliwego istnienia podmiotu wątpiącego)."]]}, {"k": "hk", "title": "Historia Kościoła – Kościół w Rzymie i prześladowania", "items": [["Ateizm (jako zarzut antychrześcijański)", "oskarżenie formułowane przez pogan przeciw pierwszym chrześcijanom z powodu braku posągów, widzialnych świątyń, ołtarzy i odmowy oddawania czci bóstwom panteonu rzymskiego."], ["Dominus et Deus", "„Pan i Bóg”; tytuł boski, którego oficjalnego używania domagał się cesarz Domicjan (81–96 n.e.), co doprowadziło do konfliktu z chrześcijanami wyznającymi wyłącznie jedyne bóstwo Chrystusa."], ["Edykt Klaudiusza (49 r. n.e.)", "zarządzenie cesarza Klaudiusza wypędzające Żydów z Rzymu z powodu zamieszek wokół osoby „Chrestosa” (Chrystusa), będące pierwszym świeckim świadectwem obecności chrześcijaństwa w stolicy Imperium."], ["Institutum Neronianum", "formuła prawna przywoływana przez Tertuliana na określenie precedensu zapoczątkowanego przez Nerona w 64 r. n.e., sprowadzająca się do zasady non licet esse vos („nie godzi się, abyście istnieli”), stanowiąca podstawę do karania chrześcijan za samo wyznawanie wiary (nomen christianum)."], ["Odium humani generis", "łac. „nienawiść do rodzaju ludzkiego”; zarzut postawiony chrześcijanom przez Tacyta w Rocznikach, wynikający z ich odmowy uczestnictwa w pogańskich świętach, walkach gladiatorów, niemoralnym teatrze i kulcie cesarza."], ["Pax deorum", "„pokój z bogami”; fundamentalna rzymska koncepcja religijno-polityczna zakładająca, że pomyślność i potęga Imperium zależą od skrupulatnego wypełniania kultu tradycyjnych bóstw (odmowa składania ofiar przez chrześcijan była traktowana jako zerwanie tego pokoju i sprowadzenie klęsk na państwo)."], ["Sanguis martyrum semen christianorum", "formuła Tertuliana z dzieła Apologetyk: „Krew męczenników jest posiewem (nasieniem) chrześcijan”; teologiczne ujęcie faktu, że męczeństwo zamiast niszczyć Kościół, stawało się najskuteczniejszym świadectwem wiary pomnażającym liczbę nawróconych."], ["Superstitio (zabobon / przesąd)", "rzymskie określenie niebezpiecznego, obcego kultu wymykającego się kontroli państwa i naruszającego tradycyjny porządek religijny (religio licita); Tacyt nazwał chrześcijaństwo exitiabilis superstitio (zgubnym zabobonem)."]]}, {"k": "hk", "title": "Historia Kościoła – konflikt z judaizmem, męczeństwo (Kacper Gierat)", "items": [["Birkat ha-Minim (ברכת המינים)", "dosł. „błogosławieństwo dotyczące heretyków” (w istocie klątwa/złorzeczenie); dwunaste błogosławieństwo dodane do żydowskiej modlitwy Amida (Szmone Esre) pod koniec I w. n.e., mające na celu zdemaskowanie i wykluczenie ze zgromadzeń synagogalnych judeochrześcijan (notzrim)."], ["Domus ecclesiae (Kościół domowy)", "prywatne domostwa zamożnych chrześcijan w I–III w., adaptowane na miejsca zgromadzeń liturgicznych, sprawowania Eucharystii i formacji przed epoką publicznych bazylik."], ["Lapsi", "łac. „upadli”; chrześcijanie, którzy w obliczu prześladowań i tortur wyparli się wiary, oddali księgi święte na spalenie (traditores) lub złożyli nakazane ofiary pogańskie (sacrificati, thurificati)."], ["Protomęczennik (Protomartyr)", "tytuł przysługujący św. Szczepanowi, diakonowi ukamienowanemu w Jerozolimie (Dz 7), jako pierwszej osobie, która poniosła śmierć za wiarę w Jezusa Chrystusa."], ["Tetrarchia (w kontekście prześladowań)", "system rządów wprowadzony przez Dioklecjana (dwóch augustów i dwóch cezarów), w ramach którego wydano najkrwawsze, powszechne edykty prześladowcze w latach 303–305 n.e."], ["Uczty tyestejskie i związki edypejskie", "zaczerpnięte z mitologii greckiej zarzuty wysuwane przez pogan przeciw wczesnym chrześcijanom, insynuujące im odpowiednio rytualny kanibalizm (wypaczenie Eucharystii) oraz kazirodztwo (wypaczenie braterskiej miłości agape)."], ["Verus Israel (Nowy / Prawdziwy Izrael)", "wczesnochrześcijańska koncepcja teologiczna, według której Kościół (złożony z nawróconych Żydów i pogan) stał się prawowitym spadkobiercą obietnic i przymierza zawartego przez Boga z Abrahamem."]]}, {"k": "fczl", "title": "Filozofia człowieka – Wykład 2 (personalizm, dramat, dialog)", "items": [["Czas dramatyczny", "w odróżnieniu od zewnętrznego czasu fizyko-matematycznego: wewnętrzny czas relacji międzyludzkich, nieodwracalny, konstytuujący tożsamość osób i ukierunkowany eschatologicznie ku przyszłości."], ["Drugi jako roszczenie (w filozofii spotkania)", "obecność drugiego człowieka, która nie pozwala traktować go obojętnie jak przedmiot, lecz staje się apelem etycznym domagającym się odpowiedzi i odpowiedzialności."], ["Filozofia dramatu (ks. Józef Tischner)", "koncepcja ujmująca ludzkie życie jako otwarty, pełen napięć dramat rozgrywający się na scenie świata w relacji do drugiego człowieka i Boga, skupiony wokół pytań o zbawienie, winę, wierność i zdradę."], ["Horyzont agatologiczny", "od gr. agathon (dobro); przestrzeń spotkania interpersonalnego, w której sens ludzkich wyborów, słów i czynów definiuje się poprzez odniesienie do wartości dobra i zła."], ["Intencjonalna obiektywizacja", "akt świadomości, w którym podmiot poznający ujmuje rzeczywistość (a niekiedy drugiego człowieka) w sposób przedmiotowy, redukując ją do roli biernego obiektu poznania lub użycia."], ["Mistrzowie podejrzeń (Paul Ricœur)", "zbiorcze określenie Karola Marksa, Fryderyka Nietzschego i Zygmunta Freuda, którzy zakwestionowali przejrzystość ludzkiej świadomości, redukując człowieka odpowiednio do interesu ekonomicznego, woli mocy lub nieświadomego popędu seksualnego (libido)."], ["Personalizm chrześcijański", "kierunek antropologiczny uznający osobę ludzką za najwyższą wartość w świecie stworzonym, podkreślający jej nienaruszalną godność, wolność, podmiotowość oraz relacyjny charakter (otwartość na Ty drugiego człowieka i Boga)."], ["Zło dialogiczne", "zło moralne zaistniałe wyłącznie w relacji między wolnymi podmiotami w wyniku świadomego, intencjonalnego wyboru uderzającego w drugą osobę (w opozycji do nieszczęścia naturalnego)."]]}, {"k": "wstep", "title": "Wstęp do filozofii – Wykład 3 (mądrość semicka, eudajmonia, podział nauk)", "items": [["Aitia (αἰτία)", "w filozofii greckiej: przyczyna, powód, ostateczna racja, z powodu której dana rzecz istnieje i jest taka, jaka jest (fundament metafizyki i nauki)."], ["Ethos anthropo daimon (ἦθος ἀνθρώπῳ δαίμων)", "aforystyczna sentencja Heraklita z Efezu oznaczająca: „charakter człowieka jest jego losem (bóstwem opiekuńczym/demonem)”; przekonanie, że o pomyślności lub zgubie człowieka decydują nie ślepe fatum, lecz jego własne nawyki moralne i usposobienie."], ["Eudajmonia (εὐδαιμονία)", "w etyce greckiej (zwłaszcza Arystotelesa): najwyższe dobro i ostateczny cel ludzkiego życia; stan pełnego, harmonijnego rozkwitu osobowego, osiągany przez życie zgodne z rozumem i ćwiczenie się w cnotach (arete)."], ["Erystyka", "sztuka prowadzenia sporów, dyskusji i przekonywania słuchacza, często za pomocą chwytów dialektycznych i argumentacji ukierunkowanej na zwycięstwo w debacie."], ["Filozofia pierwsza (prote philosophia)", "arystotelesowski termin na określenie metafizyki, badającej byt jako byt oraz pierwsze zasady i przyczyny wszelkiego istnienia (przeciwstawiona „filozofii drugiej”, czyli fizyce i matematyce)."], ["Koncepcja poznania wzrokowego (w myśli greckiej)", "specyfika epistemologii greckiej utożsamiającej akt poznania intelektualnego z aktem „widzenia” i „oglądu” (theoria, eidenai, idein)."], ["Mądrość semicka (Hokhma)", "w tradycji biblijnej i żydowskiej: mądrość rozumiana nie jako abstrakcyjna teoria pojęciowa, lecz jako praktyczna postawa życiowa, sztuka moralnego i roztropnego życia w wierności przymierzu z Bogiem i pamięci o własnej tożsamości."], ["Oikonomia (οἰκονομία)", "od oikos (dom) i nomos (prawo): pierwotnie w filozofii arystotelesowskiej nauka o rozumnym zarządzaniu gospodarstwem domowym i zabezpieczaniu potrzeb materialnych wspólnoty rodzinnej."], ["Theoria, Praxis, Poiesis", "arystotelesowski trójpodział ludzkiej wiedzy i aktywności rozumu: theoria, praxis, poiesis."], ["Theoria", "bezinteresowny ogląd prawdy niezmiennej dla niej samej."], ["Praxis", "rozumne działanie moralne, polityczne i społeczne, którego celem jest dobro i szczęście człowieka."], ["Poiesis", "twórcze wytwarzanie dzieł materialnych i artystycznych wedle prawideł sztuki."]]}, {"k": "logika", "title": "Logika – supozycje i antynomie semantyczne", "items": [["Paradoks fryzjera (paradoks Russella)", "antynomia teorii mnogości i logiki pytająca o zbiór wszystkich zbiorów, które nie są swoimi własnymi elementami (ilustrowana postacią wojskowego fryzjera golącego tylko tych, którzy nie golą się sami)."], ["Paradoks kłamcy (antynomia Eubulidesa)", "klasyczny paradoks semantyczny wynikający z samozwrotności języka naturalnego („To zdanie jest fałszywe”), którego rozwiązanie wymaga ścisłego rozdzielenia języka przedmiotowego od metajęzyka."], ["Supozycja materialna (suppositio materialis)", "użycie nazwy na oznaczenie jej samej jako fizycznego napisu lub dźwięku (np. Wyraz „kot” składa się z trzech liter)."], ["Supozycja nazwy (suppositio)", "w scholastycznej i współczesnej semiotyce logicznej: funkcja znaczeniowa nazwy; sposób, w jaki dany wyraz odnosi się do rzeczywistości lub do samego siebie w konkretnym kontekście zdaniowym."], ["Supozycja osobowa (suppositio personalis)", "użycie nazwy w odniesieniu do konkretnego, jednostkowego desygnatu ze świata rzeczywistego (np. Ten czarny kot śpi na parapecie)."], ["Supozycja zwykła (suppositio simplex)", "użycie nazwy na oznaczenie pojęcia ogólnego, formy lub gatunku bez odniesienia do konkretnego osobnika (np. Pies jest gatunkiem ssaka)."], ["Zamknięcie semantyczne języka", "cecha języków naturalnych polegająca na tym, że obok wyrażeń opisujących świat zawierają one także własne predykaty semantyczne (takie jak „prawdziwy”, „fałszywy”), co prowadzi do powstawania antynomii logicznych."]]}, {"k": "logika", "title": "Logika – kategorie semantyczne, zdania, kwantyfikacja", "items": [["Funkcja zdaniowa (matryca zdaniowa)", "wyrażenie zawierające co najmniej jedną zmienną wolną, które staje się zdaniem w sensie logicznym po podstawieniu w miejsce zmiennych odpowiednich stałych lub po związaniu ich kwantyfikatorami."], ["Kategorie semantyczne (Kategorie typów)", "w logice formalnej (zainicjowane m.in. przez Edmunda Husserla i Stanisława Leśniewskiego): podział wszystkich wyrażeń języka na kategorie syntaktyczno-znaczeniowe ze względu na ich rolę w budowie zdań (zdania, nazwy, funktory, operatory)."], ["Kwantyfikator ogólny (duży / uniwersalny – ∀)", "operator logiczny wiążący zmienną, odpowiadający zwrotom: „dla każdego”, „wszyscy”, „żaden”."], ["Kwantyfikator szczegółowy (mały / egzystencjalny – ∃)", "operator logiczny wiążący zmienną, odpowiadający zwrotom: „istnieje taki, że...”, „dla pewnego”, „niektórzy”."], ["Stan rzeczy (jako desygnat zdania)", "fragment rzeczywistości pozajęzykowej, układ przedmiotów i ich relacji lub cech, którego zajście czyni dane zdanie prawdziwym, a niezajście – fałszywym (odpowiedź na pytanie o desygnat zdania)."], ["Zmienna wolna", "zmienna w wyrażeniu lub formule logicznej, która nie znajduje się w zasięgu żadnego kwantyfikatora ani operatora wiążącego."], ["Zdanie kategoryczne", "zdanie stwierdzające bezpośrednio i bezwarunkowo relację zachodzącą między zakresem podmiotu a zakresem orzecznika (S jest P / S nie jest P)."], ["Zdanie modalne", "zdanie zawierające funktor modalny modyfikujący sposób orzekania o stanie rzeczy (np. modalności aletyczne: „musi być”, „może być”; epistemologiczne: „wiem, że”, „przypuszczam, że”)."], ["Zdanie w sensie logicznym", "wyrażenie oznajmujące, które jednoznacznie stwierdza pewien stan rzeczy i któremu na gruncie logiki dwuwartościowej można przypisać dokładnie jedną z dwóch wartości logicznych: prawdę albo fałsz."], ["Zdanie złożone (w ujęciu logicznym)", "zdanie zawierające w swojej strukturze przynajmniej jedno inne zdanie jako część właściwą; w tym sensie negacja zdania prostego („Nieprawda, że p”) jest zawsze zdaniem złożonym."]]}, {"k": "psych", "title": "Psychologia – psychologia głębi (Jung, Adler, Horney)", "items": [["Nieświadomość zbiorowa (Jung)", "uniwersalny, dziedziczony po przodkach pokład psychiki ludzkiej, zawierający pierwotne wyobrażenia i struktury zwane archetypami."], ["Persona (maska)", "jungowski archetyp oznaczający społeczny fasadowy wizerunek, za którym człowiek ukrywa swoją prawdziwą tożsamość."], ["Jaźń / Self (Jung)", "nadrzędny archetyp stanowiący centrum i czynnik integrujący całą strukturę osobowości."], ["Poczucie niższości (Adler)", "powszechny stan świadomości własnych ograniczeń, stanowiący motor napędowy i cel dążeń kompensacyjnych jednostki."], ["Lęk podstawowy (Horney)", "głębokie poczucie osamotnienia, izolacji i bezradności dziecka w świecie dorosłych, będące źródłem późniejszych neuroz."]]}, {"k": "logika", "title": "Logika – nazwy, deskrypcje, funkcje nazwy, zdania kategoryczne", "items": [["Nazwa (ujęcie syntaktyczne)", "wyrażenie, które może być podmiotem lub orzecznikiem prostego zdania typu „x jest y”; w logice nazwami są też przymiotniki i imiesłowy („śpiewa” = „jest śpiewający”)."], ["Nazwa (ujęcie semantyczne)", "wyrażenie znaczące, desygnujące – wskazujące na jakiś przedmiot; funkcja oznaczania przysługuje wyłącznie nazwom."], ["Nazwa prosta", "nazwa, której żadna część właściwa nie jest nazwą (litery nie są częściami znaczącymi)."], ["Nazwa złożona", "nazwa zbudowana za pomocą funktorów nazwotwórczych od argumentów nazwowych lub zdaniowych."], ["Deskrypcja określona", "wyrażenie wskazujące dokładnie jeden przedmiot, np. „najwyższa góra świata”; problem: „obecny król Francji jest łysy”."], ["Deskrypcja nieokreślona", "wyrażenie ogólne, np. „wysoki budynek”."], ["Nazwy sprzeczne", "nazwa i jej negacja nazwowa „nie-” (pies – nie-pies); razem obejmują wszystko, nic nie ma pomiędzy."], ["Nazwy przeciwne", "zwykłe przeciwieństwa (sprawiedliwy – niesprawiedliwy); może istnieć coś pomiędzy."], ["Oznaczanie (desygnowanie)", "nazwa N oznacza przedmiot x wtedy i tylko wtedy, gdy N (przy określonym rozumieniu) jest orzekana prawdziwie o x; zarazem procedura intersubiektywnego sprawdzania."], ["Denotacja (zakres)", "zbiór wszystkich desygnatów nazwy – przeszłych, teraźniejszych i przyszłych."], ["Treść pełna", "zbiór wszystkich cech przysługujących wszystkim desygnatom nazwy; pojęcie idealne – nie znamy jej pozytywnie."], ["Treść pleonastyczna", "powtórzenie tego samego w treści („masło maślane”, „w dniu dzisiejszym”)."], ["Zdanie kategoryczne (a, e, i, o)", "SaP – każde S jest P; SeP – żadne S nie jest P; SiP – pewne S jest P; SoP – pewne S nie jest P (litery z łac. affirmo i nego)."], ["Kategoryczny (w logice)", "orzekający, oznajmujący – nie oznacza konieczności; zdanie konieczne to zdanie apodyktyczne."], ["„Pewien” (w logice)", "co najmniej jeden – znaczenie inne niż potoczne „niektórzy, ale nie wszyscy”."], ["Termin średni (M)", "termin występujący w obu przesłankach sylogizmu; obok terminu mniejszego (S) i większego (P) – w poprawnym sylogizmie są tylko 3 terminy."], ["Parafraza (logiczna)", "przekładanie struktur gramatycznych na strukturę logiczną."]]}, {"k": "logika", "title": "Logika – Wykład 29.10.2026 (cechy, rodzaj i gatunek, podziały nazw)", "items": [["Cechy konstytutywne (istotne)", "cechy tworzące istotę, wyrażone w definicji (człowiek = zwierzę rozumne)."], ["Cechy konsekutywne", "cechy wynikające koniecznie z definicji (cała matematyka to ich wyprowadzanie)."], ["Cechy konieczne niecharakterystyczne", "cechy, które ma każdy desygnat, ale które nie definiują (człowiek ma serce)."], ["Cechy przygodne", "cechy, które mogą być lub nie (student z Polski)."], ["Proprium", "cecha konieczna, właściwa tylko danej nazwie, ale nie tworząca istoty (łac. proprietas)."], ["Prawo odwrotnej proporcjonalności", "im bogatsza treść (więcej cech), tym węższy zakres; uogólnianie = odejmowanie cech, ograniczanie = dodawanie cech."], ["Genus i species", "rodzaj (szerszy) i gatunek (węższy); rodzaj obejmuje wiele gatunków; zapis diagramami Eulera."], ["Nazwy ostre i nieostre", "ostre – łatwo wskazać desygnaty (pies, stół); nieostre – granica rozmyta (szlachetny, żółty/pomarańczowy)."], ["Nazwy wyraźne i niewyraźne", "wyraźne – potrafimy podać cechy (kwadrat); niewyraźne (intuicyjne) – wiemy, ale nie umiemy opisać (pies, religia)."], ["Nazwy konkretne i abstrakcyjne", "konkretne – rzeczy, osoby (substancje); abstrakcyjne – oderwane od podmiotu (sprawiedliwość, biel, relacja, zbiór)."], ["Nazwy analitycznie puste", "wewnętrznie sprzeczne – nie mogą istnieć (koło kwadratowe, żonaty kawaler, większa połowa)."], ["Nazwy empirycznie puste", "niesprzeczne, ale bez desygnatów (Kubuś Puchatek, flogiston, eter)."], ["Nazwa pusta / jednostkowa / ogólna", "0 desygnatów / dokładnie 1 / co najmniej 2; ogólna uniwersalna – nieskończenie wiele."], ["Logika ekstensjonalna", "logika zakresowa – liczy się tylko zakres; nazwy o tym samym zakresie można podstawiać."], ["Coincidentia oppositorum", "średniowieczna technika przekraczania sprzeczności przy mówieniu o Bogu."]]}, {"k": "fczl", "title": "Filozofia człowieka – Wykład 3 (wolność, więzi, personalizm)", "items": [["Wolność jako warunek dobra i zła", "nie ma zła ani dobra bez wolności – moralność pojawia się tylko tam, gdzie jest wolny wybór osoby."], ["„Na scenie nie ma zła”", "na poziomie sceny (natury, świata rzeczy) są nieszczęścia; zło rodzi się dopiero między osobami."], ["Dobra wola (Kant)", "jedyne, co można uznać za dobre bez ograniczenia – nic nie jest bardziej nieograniczenie dobre niż dobra wola."], ["Fatum", "przeznaczenie, ślepy los – ukryte więzi łączące ludzi bez ich wiedzy i woli."], ["Więź łaski", "więź między ludźmi pochodząca od Boga – z daru, a nie z konieczności."], ["Osoba jako byt otwarty", "osoba jest otwarta na drugiego człowieka i na Boga."], ["Źródła personalizmu", "personalizm ma źródło w pierwszych wiekach chrześcijaństwa – rodził się w kontekście religijnym."]]}, {"k": "psych", "title": "Psychologia – synteza syntez i behawioryzm (30.10.2026)", "items": [["Synteza syntez (4 słowa)", "psychoanaliza – nieświadomość; behawioryzm – zachowanie; psychologia humanistyczna – rozum/rozwój; psychologia poznawcza – rozum."], ["„Dziecko jest ojcem człowieka dorosłego”", "zdanie streszczające psychoanalizę – patrzy ona w przeszłość, jakby nie było rozwoju."], ["Psychologia głębi", "nurty czerpiące z tego, co pod świadomością (podświadomość, nieświadomość): Freud i jego następcy (np. Jung)."], ["Psychologia humanistyczna", "nurt podkreślający rozwój i możliwości człowieka; nie trzeba cofać się do dzieciństwa."], ["Paradygmat S–R", "bodziec → reakcja; główny schemat behawioryzmu (zależność reakcji od bodźców)."], ["Pusta (czarna) skrzynka", "to, co między bodźcem a reakcją; dla behawiorysty nieistotne – jak kolor samochodu dla jego jazdy."], ["Schemat S–O–R", "bodziec → organizm/osobowość → reakcja; rozszerzenie schematu S–R."], ["Tabula rasa (Locke)", "umysł jako czysta tablica, którą zapisuje środowisko i wychowanie."], ["Sprzężenie zwrotne", "środowisko kształtuje człowieka, a człowiek oddziałuje na środowisko."], ["Sterowanie pozytywne i negatywne", "kształtowanie zachowania nagrodami (pozytywne) i karami (negatywne); negatywne jest mniej efektywne."], ["Generalizacja hamowania", "skutek kary: tłumi ona nie tylko zachowania niepożądane, ale też wiele dobrych."], ["Negatywne skutki kary", "generalizacja hamowania, zaburzenia emocjonalne (lęk, unikanie, agresja), unikanie źródła kary, negatywne wzorce karania."]]}, {"k": "wstep", "title": "Wstęp do filozofii – Rzym, specyfika filozofii, Jaspers", "items": [["Ars vitae", "sztuka życia – jak żyć dobrze i pięknie, czerpiąc radość z codzienności (stoicy, epikurejczycy)."], ["Ars moriendi", "sztuka umierania – część sztuki życia."], ["Lex", "prawo jako zapis, litera prawa (gr. nomos); w wymiarze regulacyjnym pełni funkcję negatywną – zakazuje i przewiduje sankcje."], ["Ius", "uprzednie wyczucie tego, co należy do prawa, co słuszne; na nim opiera się lex."], ["Iustitia", "sprawiedliwość – cnota oddawania każdemu tego, co mu się należy."], ["Dura lex, sed lex", "„twarde prawo, ale prawo” – powszechność i surowość prawa rzymskiego."], ["Imperator", "ten, który włada w granicach, które sam ustanawia (imperium)."], ["Nasciturus", "„ten, który ma się narodzić” – w prawie rzymskim nienarodzony miał już prawa, np. dziedziczył."], ["Metojkowie", "mieszkańcy żyjący obok polis, z częściowymi prawami."], ["Hetery", "kobiety o innym niż zwykle w Grecji sposobie bycia; część z nich uczyła mężczyzn mądrości (np. Aspazja z Miletu)."], ["Od mitu do logosu", "przejście od teogonii do teologii, antropogonii do antropologii, kosmogonii do kosmologii – polega na krytyce mitu, a nie jego porzuceniu."], ["Katholikos (katolickie)", "powszechne, wszędzie obecne, dotyczące wszystkich – pierwotne znaczenie słowa."], ["Apokalipsa / revelatio", "odsłonięcie, objawienie zamysłu Boga – nie „straszna księga o końcu”."], ["Immanencja", "to, co obecne wszędzie, co pozostaje wewnątrz."], ["Transcendencja", "to, co wykracza, przekracza (łac. transcendere), a zarazem jest obecne w tym, o co pytamy."], ["Transcendentalne", "warunki możliwości czegoś; u Kanta zawsze w odniesieniu do podmiotu (np. warunki możliwości poznania)."], ["Źródła filozofowania (Jaspers)", "psychologiczne źródła postaw filozoficznych: zdziwienie (→ metafizyka), wątpienie (→ np. metoda Kartezjusza) i inne."], ["Wątpienie metodyczne", "metoda Kartezjusza: wątpienie we wszystko, by znaleźć to, czego nie da się podważyć – nie krytykanctwo, lecz test pewności."]]}];
+/* ===== ŁACINA – DANE ===== */
+/* Czasowniki: "1 forma, 2 forma, 3 forma, 4 forma|znaczenie|koniugacja|tag"
+   koniugacje: 1,2,3,3io,4, irr (nieregularne), dep (deponentia), imp (nieosobowe) */
+const LA_TABLE = [ // 23 czasowniki z tablicy (formy z notatki, z iloczasem)
+["erro, errāre, errāvī, errātum","błądzić, tułać się","1"],
+["pecco, peccāre, peccāvī, peccātum","grzeszyć, błądzić","1"],
+["servo, servāre, servāvī, servātum","pilnować, zachowywać, ocalać","1"],
+["sano, sanāre, sanāvī, sanātum","leczyć, uzdrawiać","1"],
+["creo, creāre, creāvī, creātum","tworzyć, stwarzać","1"],
+["voco, vocāre, vocāvī, vocātum","wołać, wzywać","1"],
+["habeo, habēre, habuī, habitum","mieć, posiadać","2"],
+["fleo, flēre, flēvī, flētum","płakać","2"],
+["video, vidēre, vīdī, vīsum","widzieć","2"],
+["respondeo, respondēre, respondī, respōnsum","odpowiadać","2"],
+["taceo, tacēre, tacuī, tacitum","milczeć","2"],
+["tollo, tollĕre, sustulī, sublātum","podnosić, usuwać, gładzić","3"],
+["scribo, scribĕre, scrīpsī, scrīptum","pisać, rysować","3"],
+["lego, legĕre, lēgī, lēctum","czytać, zbierać, wybierać","3"],
+["vinco, vincĕre, vīcī, victum","zwyciężać","3"],
+["eligo, eligĕre, ēlēgī, ēlēctum","wybierać, zbierać","3"],
+["pono, ponĕre, posuī, positum","kłaść, stawiać","3"],
+["pello, pellĕre, pepulī, pulsum","pędzić, uderzać, wyganiać","3"],
+["tango, tangĕre, tetigī, tāctum","dotykać","3"],
+["quaero, quaerĕre, quaesīvī, quaesītum","szukać, pytać","3"],
+["surgo, surgĕre, surrēxī, surrēctum","wstawać, podnosić się","3"],
+["venio, venīre, vēnī, ventum","przychodzić, zbliżać się","4"],
+["finio, finīre, finīvī, finītum","kończyć, oznaczać granice","4"]
+];
+const LA_TABLE_NOTES = {
+ "tollo":"Na tablicy: czasownik supletywny – formy przeszłe z innego rdzenia (sustulī, sublātum).",
+ "scribo":"Na tablicy omyłkowo „scribpsis” – poprawnie scrīpsī.",
+ "lego":"Na tablicy pomieszano z lēgo, lēgāre (I kon.) – „wysyłać posła”. Tu: lego, legĕre (III).",
+ "vinco":"Na tablicy „vinvici” – w perfectum wypada n: vīcī, victum.",
+ "eligo":"Na tablicy „elilegi” – poprawnie ēlēgī (ex + lego).",
+ "video":"Na tablicy „vidvidi” – poprawnie vīdī, vīsum.",
+ "fleo":"Na tablicy „fleere” – rdzeń fle- + -re.",
+ "venio":"Na tablicy „veventum”. W 3. os. lm. wchodzi -u-: veni-u-nt."
+};
+
+const LA_VERBS = `
+amo, amare, amavi, amatum|kochać|1|wzór
+laudo, laudare, laudavi, laudatum|chwalić|1|z notatek
+laboro, laborare, laboravi, laboratum|pracować|1|z notatek
+oro, orare, oravi, oratum|modlić się, prosić|1|kościół
+adoro, adorare, adoravi, adoratum|czcić, adorować|1|kościół
+canto, cantare, cantavi, cantatum|śpiewać|1|
+clamo, clamare, clamavi, clamatum|wołać, krzyczeć|1|
+narro, narrare, narravi, narratum|opowiadać|1|
+paro, parare, paravi, paratum|przygotowywać|1|
+porto, portare, portavi, portatum|nieść|1|
+specto, spectare, spectavi, spectatum|oglądać, patrzeć|1|
+exspecto, exspectare, exspectavi, exspectatum|oczekiwać|1|modlitwy
+habito, habitare, habitavi, habitatum|mieszkać|1|
+ambulo, ambulare, ambulavi, ambulatum|przechadzać się|1|
+pugno, pugnare, pugnavi, pugnatum|walczyć|1|
+libero, liberare, liberavi, liberatum|uwalniać, wybawiać|1|modlitwy
+neco, necare, necavi, necatum|zabijać|1|
+do, dare, dedi, datum|dawać (a krótkie: dăre)|1|modlitwy
+sto, stare, steti, statum|stać|1|
+iuvo, iuvare, iuvi, iutum|pomagać|1|
+lavo, lavare, lavi, lautum|myć|1|
+veto, vetare, vetui, vetitum|zakazywać|1|
+aedifico, aedificare, aedificavi, aedificatum|budować|1|
+cogito, cogitare, cogitavi, cogitatum|myśleć|1|filozofia
+dubito, dubitare, dubitavi, dubitatum|wątpić|1|filozofia
+probo, probare, probavi, probatum|sprawdzać, uznawać, dowodzić|1|filozofia
+nego, negare, negavi, negatum|przeczyć|1|logika
+affirmo, affirmare, affirmavi, affirmatum|stwierdzać, potwierdzać|1|logika
+appello, appellare, appellavi, appellatum|nazywać, wzywać|1|
+nomino, nominare, nominavi, nominatum|nazywać, mianować|1|logika
+significo, significare, significavi, significatum|oznaczać|1|logika
+demonstro, demonstrare, demonstravi, demonstratum|wykazywać, pokazywać|1|logika
+explico, explicare, explicavi, explicatum|wyjaśniać, rozwijać|1|
+interrogo, interrogare, interrogavi, interrogatum|pytać|1|
+rogo, rogare, rogavi, rogatum|prosić, pytać|1|
+existimo, existimare, existimavi, existimatum|sądzić, oceniać|1|
+iudico, iudicare, iudicavi, iudicatum|sądzić, osądzać|1|modlitwy
+regno, regnare, regnavi, regnatum|królować|1|
+impero, imperare, imperavi, imperatum|rozkazywać, władać|1|
+tempto, temptare, temptavi, temptatum|kusić, próbować|1|
+sanctifico, sanctificare, sanctificavi, sanctificatum|uświęcać|1|modlitwy
+glorifico, glorificare, glorificavi, glorificatum|wysławiać|1|kościół
+celebro, celebrare, celebravi, celebratum|sprawować, świętować|1|kościół
+consecro, consecrare, consecravi, consecratum|konsekrować, poświęcać|1|kościół
+praedico, praedicare, praedicavi, praedicatum|głosić; orzekać (stąd praedicatum)|1|logika
+salvo, salvare, salvavi, salvatum|zbawiać, ratować|1|kościół
+iustifico, iustificare, iustificavi, iustificatum|usprawiedliwiać|1|kościół
+illumino, illuminare, illuminavi, illuminatum|oświecać|1|modlitwy
+guberno, gubernare, gubernavi, gubernatum|kierować, sterować|1|modlitwy
+dono, donare, donavi, donatum|darować, obdarzać|1|modlitwy
+mando, mandare, mandavi, mandatum|polecać, powierzać|1|
+muto, mutare, mutavi, mutatum|zmieniać|1|
+numero, numerare, numeravi, numeratum|liczyć|1|
+indico, indicare, indicavi, indicatum|wskazywać|1|
+curo, curare, curavi, curatum|troszczyć się|1|
+festino, festinare, festinavi, festinatum|spieszyć się|1|z notatek
+delecto, delectare, delectavi, delectatum|cieszyć, bawić|1|
+desidero, desiderare, desideravi, desideratum|pragnąć, tęsknić|1|
+spero, sperare, speravi, speratum|mieć nadzieję|1|
+formo, formare, formavi, formatum|kształtować|1|
+signo, signare, signavi, signatum|znaczyć, pieczętować|1|
+tolero, tolerare, toleravi, toleratum|znosić, tolerować|1|
+vito, vitare, vitavi, vitatum|unikać|1|
+visito, visitare, visitavi, visitatum|odwiedzać, nawiedzać|1|
+intro, intrare, intravi, intratum|wchodzić|1|
+nato, natare, natavi, natatum|pływać|1|
+volo, volare, volavi, volatum|latać (nie mylić z volo, velle!)|1|
+lacrimo, lacrimare, lacrimavi, lacrimatum|płakać, łzawić|1|
+memoro, memorare, memoravi, memoratum|przypominać, wspominać|1|
+nuntio, nuntiare, nuntiavi, nuntiatum|zwiastować, ogłaszać|1|kościół
+annuntio, annuntiare, annuntiavi, annuntiatum|zwiastować|1|kościół
+communico, communicare, communicavi, communicatum|udzielać, dzielić się|1|kościół
+confirmo, confirmare, confirmavi, confirmatum|umacniać, bierzmować|1|kościół
+baptizo, baptizare, baptizavi, baptizatum|chrzcić|1|kościół
+sacrifico, sacrificare, sacrificavi, sacrificatum|składać ofiarę|1|kościół
+expio, expiare, expiavi, expiatum|oczyszczać, zadośćuczynić|1|kościół
+incarno, incarnare, incarnavi, incarnatum|wcielać (incarnatus est)|1|modlitwy
+crucio, cruciare, cruciavi, cruciatum|dręczyć, męczyć|1|
+conglorifico, conglorificare, conglorificavi, conglorificatum|współwysławiać|1|modlitwy
+vivifico, vivificare, vivificavi, vivificatum|ożywiać|1|modlitwy
+habeo, habere, habui, habitum|mieć|2|wzór
+studeo, studere, studui, —|starać się, uczyć się|2|z notatek
+moneo, monere, monui, monitum|upominać, przestrzegać|2|wzór
+doceo, docere, docui, doctum|uczyć (kogoś)|2|
+teneo, tenere, tenui, tentum|trzymać|2|
+timeo, timere, timui, —|bać się|2|
+debeo, debere, debui, debitum|musieć, być winnym|2|modlitwy
+sedeo, sedere, sedi, sessum|siedzieć|2|modlitwy
+maneo, manere, mansi, mansum|pozostawać, trwać|2|
+moveo, movere, movi, motum|poruszać|2|filozofia
+iubeo, iubere, iussi, iussum|kazać|2|
+rideo, ridere, risi, risum|śmiać się|2|
+deleo, delere, delevi, deletum|niszczyć, wymazywać|2|
+impleo, implere, implevi, impletum|napełniać|2|
+compleo, complere, complevi, completum|wypełniać, dopełniać|2|
+doleo, dolere, dolui, dolitum|boleć, cierpieć|2|
+valeo, valere, valui, valiturum|być zdrowym, mieć siłę (Valete!)|2|lektorat
+salveo, salvere, —, —|być zdrowym (Salve! Salvete!)|2|lektorat
+placeo, placere, placui, placitum|podobać się|2|
+noceo, nocere, nocui, nocitum|szkodzić|2|
+pareo, parere, parui, paritum|być posłusznym|2|
+careo, carere, carui, cariturum|nie mieć, być pozbawionym|2|
+iaceo, iacere, iacui, —|leżeć|2|
+lateo, latere, latui, —|być ukrytym|2|
+pateo, patere, patui, —|być otwartym|2|
+persuadeo, persuadere, persuasi, persuasum|przekonywać|2|
+suadeo, suadere, suasi, suasum|radzić, doradzać|2|
+torqueo, torquere, torsi, tortum|dręczyć, skręcać|2|
+augeo, augere, auxi, auctum|powiększać|2|
+ardeo, ardere, arsi, arsum|płonąć|2|
+lugeo, lugere, luxi, luctum|opłakiwać|2|
+misceo, miscere, miscui, mixtum|mieszać|2|
+mereo, merere, merui, meritum|zasługiwać|2|
+prohibeo, prohibere, prohibui, prohibitum|powstrzymywać, zakazywać|2|
+exerceo, exercere, exercui, exercitum|ćwiczyć|2|
+contineo, continere, continui, contentum|zawierać, powstrzymywać|2|
+sustineo, sustinere, sustinui, sustentum|podtrzymywać, znosić|2|
+obtineo, obtinere, obtinui, obtentum|otrzymywać, zdobywać|2|
+abstineo, abstinere, abstinui, abstentum|powstrzymywać się|2|
+praebeo, praebere, praebui, praebitum|dostarczać, okazywać|2|
+caveo, cavere, cavi, cautum|strzec się|2|
+faveo, favere, favi, fautum|sprzyjać|2|
+foveo, fovere, fovi, fotum|ogrzewać, pielęgnować|2|
+censeo, censere, censui, censum|sądzić, oceniać|2|
+indulgeo, indulgere, indulsi, indultum|pobłażać, odpuszczać|2|kościół
+pendeo, pendere, pependi, —|wisieć|2|
+luceo, lucere, luxi, —|świecić (lux perpetua luceat)|2|modlitwy
+splendeo, splendere, splendui, —|lśnić|2|
+fulgeo, fulgere, fulsi, —|błyszczeć|2|
+tollo, tollere, sustuli, sublatum|podnosić, gładzić (qui tollis peccata mundi)|3|kościół
+ago, agere, egi, actum|czynić, działać, prowadzić|3|z notatek
+dico, dicere, dixi, dictum|mówić (rozkaz: dic!)|3|
+duco, ducere, duxi, ductum|prowadzić (rozkaz: duc!)|3|
+induco, inducere, induxi, inductum|wprowadzać, wodzić (ne nos inducas)|3|modlitwy
+mitto, mittere, misi, missum|posyłać (Ite, missa est)|3|kościół
+credo, credere, credidi, creditum|wierzyć|3|modlitwy
+vivo, vivere, vixi, victum|żyć|3|
+curro, currere, cucurri, cursum|biec|3|
+cado, cadere, cecidi, casum|padać, upadać|3|
+caedo, caedere, cecidi, caesum|ścinać, zabijać|3|
+claudo, claudere, clausi, clausum|zamykać|3|
+colo, colere, colui, cultum|uprawiać, czcić|3|kościół
+cognosco, cognoscere, cognovi, cognitum|poznawać|3|filozofia
+nosco, noscere, novi, notum|poznawać (novi – znam)|3|
+disco, discere, didici, —|uczyć się|3|
+cresco, crescere, crevi, cretum|rosnąć|3|
+cerno, cernere, crevi, cretum|rozróżniać, dostrzegać|3|
+gero, gerere, gessi, gestum|nosić, prowadzić|3|
+rego, regere, rexi, rectum|rządzić, kierować (rege!)|3|modlitwy
+tego, tegere, texi, tectum|kryć, okrywać|3|
+peto, petere, petivi, petitum|prosić, zmierzać|3|
+relinquo, relinquere, reliqui, relictum|opuszczać, zostawiać|3|
+committo, committere, commisi, commissum|powierzać; popełniać (tibi commissum)|3|modlitwy
+dimitto, dimittere, dimisi, dimissum|odpuszczać, puszczać (dimitte nobis)|3|modlitwy
+remitto, remittere, remisi, remissum|odsyłać, odpuszczać|3|kościół
+promitto, promittere, promisi, promissum|obiecywać|3|
+descendo, descendere, descendi, descensum|zstępować|3|modlitwy
+ascendo, ascendere, ascendi, ascensum|wstępować|3|modlitwy
+defendo, defendere, defendi, defensum|bronić|3|
+incendo, incendere, incendi, incensum|zapalać|3|
+ostendo, ostendere, ostendi, ostentum|ukazywać|3|
+intellego, intellegere, intellexi, intellectum|rozumieć|3|filozofia
+neglego, neglegere, neglexi, neglectum|zaniedbywać|3|
+diligo, diligere, dilexi, dilectum|miłować, cenić|3|kościół
+colligo, colligere, collegi, collectum|zbierać|3|
+emo, emere, emi, emptum|kupować|3|
+redimo, redimere, redemi, redemptum|odkupić|3|kościół
+sumo, sumere, sumpsi, sumptum|brać|3|
+consumo, consumere, consumpsi, consumptum|spożywać, wyczerpać|3|
+contemno, contemnere, contempsi, contemptum|gardzić|3|
+quiesco, quiescere, quievi, quietum|odpoczywać|3|
+requiesco, requiescere, requievi, requietum|odpoczywać (requiescat in pace)|3|modlitwy
+resurgo, resurgere, resurrexi, resurrectum|powstawać, zmartwychwstawać|3|modlitwy
+solvo, solvere, solvi, solutum|rozwiązywać, płacić|3|
+volvo, volvere, volvi, volutum|toczyć|3|
+struo, struere, struxi, structum|budować, układać|3|
+instruo, instruere, instruxi, instructum|pouczać, wyposażać|3|
+statuo, statuere, statui, statutum|ustanawiać|3|
+constituo, constituere, constitui, constitutum|ustanawiać, ustalać|3|
+tribuo, tribuere, tribui, tributum|przydzielać|3|
+metuo, metuere, metui, —|bać się|3|
+induo, induere, indui, indutum|ubierać|3|
+arguo, arguere, argui, argutum|dowodzić, zarzucać|3|logika
+fluo, fluere, fluxi, fluxum|płynąć (omnia fluunt – panta rhei)|3|filozofia
+fundo, fundere, fudi, fusum|lać, wylewać|3|
+frango, frangere, fregi, fractum|łamać|3|kościół
+iungo, iungere, iunxi, iunctum|łączyć|3|
+pingo, pingere, pinxi, pictum|malować|3|
+fingo, fingere, finxi, fictum|kształtować, zmyślać|3|
+traho, trahere, traxi, tractum|ciągnąć|3|
+veho, vehere, vexi, vectum|wieźć|3|
+verto, vertere, verti, versum|obracać|3|
+converto, convertere, converti, conversum|nawracać, obracać|3|kościół
+sino, sinere, sivi, situm|pozwalać|3|
+pasco, pascere, pavi, pastum|paść (stąd pastor)|3|kościół
+bibo, bibere, bibi, —|pić|3|
+condo, condere, condidi, conditum|zakładać (ab Urbe condita)|3|
+trado, tradere, tradidi, traditum|przekazywać, wydawać (traditio)|3|kościół
+reddo, reddere, reddidi, redditum|oddawać|3|
+perdo, perdere, perdidi, perditum|tracić, gubić|3|
+vendo, vendere, vendidi, venditum|sprzedawać|3|
+crucifigo, crucifigere, crucifixi, crucifixum|krzyżować|3|modlitwy
+concipio, concipere, concepi, conceptum|poczynać, pojmować (conceptus)|3io|modlitwy
+capio, capere, cepi, captum|brać, chwytać|3io|wzór
+facio, facere, feci, factum|robić, czynić (rozkaz: fac!)|3io|
+accipio, accipere, accepi, acceptum|przyjmować|3io|kościół
+recipio, recipere, recepi, receptum|przyjmować z powrotem|3io|
+suscipio, suscipere, suscepi, susceptum|podejmować, przyjmować|3io|kościół
+incipio, incipere, incepi, inceptum|zaczynać|3io|
+fugio, fugere, fugi, fugitum|uciekać|3io|
+iacio, iacere, ieci, iactum|rzucać|3io|
+obicio, obicere, obieci, obiectum|rzucać przed, zarzucać (stąd obiectum)|3io|filozofia
+cupio, cupere, cupivi, cupitum|pragnąć|3io|
+rapio, rapere, rapui, raptum|porywać|3io|
+sapio, sapere, sapivi, —|mieć smak; być mądrym (sapientia)|3io|filozofia
+aspicio, aspicere, aspexi, aspectum|spoglądać|3io|
+respicio, respicere, respexi, respectum|oglądać się, zważać|3io|
+conspicio, conspicere, conspexi, conspectum|dostrzegać|3io|
+interficio, interficere, interfeci, interfectum|zabijać|3io|
+perficio, perficere, perfeci, perfectum|doskonalić, dokonywać|3io|
+efficio, efficere, effeci, effectum|sprawiać, wykonywać|3io|
+pario, parere, peperi, partum|rodzić|3io|
+audio, audire, audivi, auditum|słuchać, słyszeć|4|wzór
+dormio, dormire, dormivi, dormitum|spać|4|
+scio, scire, scivi, scitum|wiedzieć (scientia)|4|filozofia
+nescio, nescire, nescivi, nescitum|nie wiedzieć|4|
+sentio, sentire, sensi, sensum|czuć, odczuwać, sądzić|4|
+servio, servire, servivi, servitum|służyć|4|
+munio, munire, munivi, munitum|umacniać|4|
+punio, punire, punivi, punitum|karać|4|
+erudio, erudire, erudivi, eruditum|kształcić|4|
+aperio, aperire, aperui, apertum|otwierać|4|
+operio, operire, operui, opertum|przykrywać|4|
+reperio, reperire, repperi, repertum|znajdować|4|
+invenio, invenire, inveni, inventum|znajdować, wynajdywać|4|
+convenio, convenire, conveni, conventum|schodzić się|4|
+advenio, advenire, adveni, adventum|przybywać (adveniat regnum tuum)|4|modlitwy
+pervenio, pervenire, perveni, perventum|dochodzić, docierać|4|
+custodio, custodire, custodivi, custoditum|strzec (custodi!)|4|modlitwy
+nutrio, nutrire, nutrivi, nutritum|karmić|4|
+vestio, vestire, vestivi, vestitum|ubierać|4|
+impedio, impedire, impedivi, impeditum|przeszkadzać|4|
+sepelio, sepelire, sepelivi, sepultum|grzebać (sepultus est)|4|modlitwy
+haurio, haurire, hausi, haustum|czerpać|4|
+oboedio, oboedire, oboedivi, oboeditum|być posłusznym|4|
+salio, salire, salui, saltum|skakać|4|
+sum, esse, fui, futurus|być|irr|wzór
+possum, posse, potui, —|móc|irr|
+prosum, prodesse, profui, —|przydawać się|irr|
+adsum, adesse, adfui, —|być obecnym (Adsum! – Jestem!)|irr|lektorat
+absum, abesse, afui, —|być nieobecnym|irr|
+eo, ire, ii (ivi), itum|iść (Ite, missa est)|irr|
+redeo, redire, redii, reditum|wracać|irr|
+transeo, transire, transii, transitum|przechodzić|irr|
+pereo, perire, perii, peritum|ginąć|irr|
+exeo, exire, exii, exitum|wychodzić|irr|
+fero, ferre, tuli, latum|nieść, znosić|irr|
+offero, offerre, obtuli, oblatum|ofiarować|irr|kościół
+refero, referre, rettuli, relatum|odnosić, donosić (relatio)|irr|
+volo, velle, volui, —|chcieć|irr|
+nolo, nolle, nolui, —|nie chcieć|irr|
+malo, malle, malui, —|woleć|irr|
+fio, fieri, factus sum|stawać się (fiat voluntas tua)|irr|modlitwy
+nascor, nasci, natus sum|rodzić się (natus ex Maria)|dep|modlitwy
+morior, mori, mortuus sum|umierać (mortuus)|dep|modlitwy
+patior, pati, passus sum|cierpieć (passus)|dep|modlitwy
+loquor, loqui, locutus sum|mówić (locutus est per Prophetas)|dep|modlitwy
+sequor, sequi, secutus sum|iść za, następować|dep|
+confiteor, confiteri, confessus sum|wyznawać (Confiteor)|dep|modlitwy
+misereor, misereri, misertus sum|litować się (miserere nobis)|dep|kościół
+precor, precari, precatus sum|modlić się, prosić|dep|kościół
+hortor, hortari, hortatus sum|zachęcać|dep|
+miror, mirari, miratus sum|dziwić się (thaumazein)|dep|filozofia
+vereor, vereri, veritus sum|czcić, obawiać się|dep|
+utor, uti, usus sum|używać (+ abl.)|dep|
+orior, oriri, ortus sum|powstawać, wschodzić|dep|
+proficiscor, proficisci, profectus sum|wyruszać|dep|
+arbitror, arbitrari, arbitratus sum|sądzić, mniemać|dep|
+meditor, meditari, meditatus sum|rozważać|dep|kościół
+recordor, recordari, recordatus sum|wspominać|dep|
+glorior, gloriari, gloriatus sum|chlubić się|dep|
+dominor, dominari, dominatus sum|panować|dep|
+gaudeo, gaudere, gavisus sum|cieszyć się (półdeponens; Gaudeamus!)|2|lektorat
+licet, licere, licuit|wolno (non licet esse vos)|imp|kościół
+oportet, oportere, oportuit|należy, trzeba|imp|
+`;
+
+/* Rzeczowniki: "mianownik, dopełniacz|rodzaj|znaczenie|deklinacja|tag" */
+const LA_NOUNS = `
+gratia, gratiae|f|łaska|1|modlitwy
+gloria, gloriae|f|chwała|1|modlitwy
+ecclesia, ecclesiae|f|Kościół; zgromadzenie|1|kościół
+anima, animae|f|dusza|1|filozofia
+vita, vitae|f|życie|1|modlitwy
+terra, terrae|f|ziemia|1|modlitwy
+patria, patriae|f|ojczyzna|1|
+familia, familiae|f|rodzina|1|
+filia, filiae|f|córka|1|
+puella, puellae|f|dziewczyna|1|wzór
+aqua, aquae|f|woda|1|
+via, viae|f|droga|1|
+hora, horae|f|godzina|1|modlitwy
+causa, causae|f|przyczyna, sprawa|1|filozofia
+natura, naturae|f|natura|1|filozofia
+scientia, scientiae|f|wiedza, nauka|1|filozofia
+sapientia, sapientiae|f|mądrość|1|filozofia
+philosophia, philosophiae|f|filozofia|1|filozofia
+theologia, theologiae|f|teologia|1|kościół
+doctrina, doctrinae|f|nauka, nauczanie (De doctrina Christiana)|1|kościół
+littera, litterae|f|litera; lm. list, literatura|1|
+lingua, linguae|f|język|1|
+fama, famae|f|wieść, sława|1|
+poena, poenae|f|kara|1|
+culpa, culpae|f|wina (mea culpa)|1|kościół
+ira, irae|f|gniew|1|
+misericordia, misericordiae|f|miłosierdzie|1|kościół
+iustitia, iustitiae|f|sprawiedliwość|1|filozofia
+stella, stellae|f|gwiazda|1|
+luna, lunae|f|księżyc|1|
+silva, silvae|f|las|1|
+insula, insulae|f|wyspa|1|
+mensa, mensae|f|stół|1|
+porta, portae|f|brama|1|
+schola, scholae|f|szkoła|1|
+cena, cenae|f|wieczerza (Cena Domini)|1|kościół
+turba, turbae|f|tłum|1|
+pecunia, pecuniae|f|pieniądze|1|
+victoria, victoriae|f|zwycięstwo|1|
+memoria, memoriae|f|pamięć|1|
+historia, historiae|f|historia|1|
+forma, formae|f|kształt, forma|1|filozofia
+materia, materiae|f|materia|1|filozofia
+essentia, essentiae|f|istota|1|filozofia
+substantia, substantiae|f|substancja|1|filozofia
+existentia, existentiae|f|istnienie|1|filozofia
+conscientia, conscientiae|f|sumienie, świadomość|1|filozofia
+ignorantia, ignorantiae|f|niewiedza|1|
+concupiscentia, concupiscentiae|f|pożądliwość|1|kościół
+paenitentia, paenitentiae|f|pokuta, skrucha|1|kościół
+providentia, providentiae|f|opatrzność|1|kościół
+praesentia, praesentiae|f|obecność|1|
+potentia, potentiae|f|możność, moc|1|filozofia
+sententia, sententiae|f|zdanie, sentencja|1|logika
+laetitia, laetitiae|f|radość|1|
+tristitia, tristitiae|f|smutek|1|
+superbia, superbiae|f|pycha|1|kościół
+invidia, invidiae|f|zazdrość|1|kościół
+avaritia, avaritiae|f|chciwość|1|kościół
+gula, gulae|f|łakomstwo, gardło|1|kościół
+luxuria, luxuriae|f|rozwiązłość|1|kościół
+acedia, acediae|f|lenistwo duchowe|1|kościół
+prudentia, prudentiae|f|roztropność|1|filozofia
+temperantia, temperantiae|f|umiarkowanie|1|filozofia
+diligentia, diligentiae|f|staranność|1|
+iniuria, iniuriae|f|krzywda, bezprawie|1|
+hostia, hostiae|f|ofiara, hostia|1|kościół
+ara, arae|f|ołtarz (ofiarny)|1|kościół
+Scriptura, Scripturae|f|Pismo (secundum Scripturas)|1|modlitwy
+liturgia, liturgiae|f|liturgia|1|kościół
+Eucharistia, Eucharistiae|f|Eucharystia|1|kościół
+Missa, Missae|f|Msza|1|kościół
+parochia, parochiae|f|parafia|1|kościół
+homilia, homiliae|f|homilia|1|kościół
+dominica, dominicae|f|niedziela|1|kościół
+feria, feriae|f|dzień (powszedni)|1|kościół
+vigilia, vigiliae|f|wigilia, czuwanie|1|kościół
+Pascha, Paschae|f|Pascha, Wielkanoc|1|kościół
+quadragesima, quadragesimae|f|Wielki Post (40 dni)|1|kościół
+persona, personae|f|osoba (pierw. maska)|1|filozofia
+differentia, differentiae|f|różnica (differentia specifica)|1|logika
+copula, copulae|f|łącznik (w zdaniu: est)|1|logika
+praemissa, praemissae|f|przesłanka|1|logika
+quidditas, quidditatis|f|istota rzeczy („czym-coś-jest”)|3|filozofia
+poeta, poetae|m|poeta|1|
+nauta, nautae|m|żeglarz|1|
+agricola, agricolae|m|rolnik|1|
+incola, incolae|m|mieszkaniec|1|
+propheta, prophetae|m|prorok|1|modlitwy
+papa, papae|m|papież|1|kościół
+Deus, Dei|m|Bóg|2|modlitwy
+Dominus, Domini|m|Pan|2|modlitwy
+filius, filii|m|syn|2|modlitwy
+servus, servi|m|niewolnik, sługa|2|
+amicus, amici|m|przyjaciel|2|
+inimicus, inimici|m|nieprzyjaciel|2|
+populus, populi|m|lud|2|
+mundus, mundi|m|świat|2|kościół
+animus, animi|m|umysł, duch, odwaga|2|filozofia
+oculus, oculi|m|oko|2|
+locus, loci|m|miejsce|2|filozofia
+annus, anni|m|rok|2|
+ventus, venti|m|wiatr|2|
+equus, equi|m|koń|2|
+lupus, lupi|m|wilk|2|
+agnus, agni|m|baranek (Agnus Dei)|2|kościół
+angelus, angeli|m|anioł|2|modlitwy
+apostolus, apostoli|m|apostoł|2|kościół
+discipulus, discipuli|m|uczeń (Valete, discipuli!)|2|lektorat
+magister, magistri|m|nauczyciel, mistrz (Magister Interior)|2|filozofia
+liber, libri|m|książka|2|
+puer, pueri|m|chłopiec|2|
+ager, agri|m|pole|2|
+vir, viri|m|mężczyzna, mąż|2|
+presbyter, presbyteri|m|prezbiter, starszy|2|kościół
+episcopus, episcopi|m|biskup|2|kościół
+diaconus, diaconi|m|diakon|2|kościół
+clericus, clerici|m|kleryk, duchowny|2|kościół
+Christus, Christi|m|Chrystus|2|modlitwy
+numerus, numeri|m|liczba|2|
+modus, modi|m|sposób, tryb (modus ponens)|2|logika
+terminus, termini|m|granica; termin (logiczny)|2|logika
+circulus, circuli|m|koło, krąg|2|
+syllogismus, syllogismi|m|sylogizm|2|logika
+hortus, horti|m|ogród|2|
+cibus, cibi|m|pokarm|2|
+morbus, morbi|m|choroba|2|
+somnus, somni|m|sen|2|
+murus, muri|m|mur|2|
+campus, campi|m|pole, równina|2|
+fluvius, fluvii|m|rzeka|2|
+nuntius, nuntii|m|posłaniec; nuncjusz|2|kościół
+titulus, tituli|m|napis, tytuł (tituli sepulcrales)|2|lektorat
+psalmus, psalmi|m|psalm|2|kościół
+hymnus, hymni|m|hymn|2|kościół
+infernus, inferni|m|piekło, otchłań (descendit ad inferos)|2|modlitwy
+paradisus, paradisi|m|raj|2|kościół
+diabolus, diaboli|m|diabeł|2|kościół
+purgatorium, purgatorii|n|czyściec|2|kościół
+verbum, verbi|n|słowo (Verbum caro factum est)|2|kościół
+regnum, regni|n|królestwo|2|modlitwy
+caelum, caeli|n|niebo (lm. caeli – niebiosa)|2|modlitwy
+bellum, belli|n|wojna|2|
+templum, templi|n|świątynia|2|
+donum, doni|n|dar|2|
+peccatum, peccati|n|grzech|2|modlitwy
+debitum, debiti|n|dług, wina|2|modlitwy
+saeculum, saeculi|n|wiek, świat (in saecula saeculorum)|2|modlitwy
+principium, principii|n|początek, zasada|2|filozofia
+initium, initii|n|początek|2|
+evangelium, evangelii|n|Ewangelia|2|kościół
+sacramentum, sacramenti|n|sakrament|2|kościół
+mysterium, mysterii|n|tajemnica, misterium|2|kościół
+signum, signi|n|znak|2|logika
+bonum, boni|n|dobro|2|filozofia
+malum, mali|n|zło|2|modlitwy
+consilium, consilii|n|rada, zamiar|2|
+auxilium, auxilii|n|pomoc|2|
+gaudium, gaudii|n|radość|2|
+officium, officii|n|obowiązek, urząd|2|
+studium, studii|n|zapał, studium|2|
+exemplum, exempli|n|przykład|2|
+argumentum, argumenti|n|dowód, argument|2|logika
+obiectum, obiecti|n|przedmiot („rzucone naprzeciw”)|2|filozofia
+subiectum, subiecti|n|podmiot („podłożone”)|2|logika
+praedicatum, praedicati|n|orzecznik|2|logika
+factum, facti|n|czyn, fakt|2|
+fatum, fati|n|los, przeznaczenie|2|
+vinum, vini|n|wino|2|kościół
+aurum, auri|n|złoto|2|
+ferrum, ferri|n|żelazo|2|
+sepulcrum, sepulcri|n|grób|2|lektorat
+testamentum, testamenti|n|testament, przymierze|2|kościół
+iudicium, iudicii|n|sąd; sąd logiczny|2|logika
+martyrium, martyrii|n|męczeństwo|2|kościół
+concilium, concilii|n|sobór, zgromadzenie|2|kościół
+collegium, collegii|n|kolegium|2|kościół
+matrimonium, matrimonii|n|małżeństwo|2|kościół
+seminarium, seminarii|n|seminarium (dosł. rozsadnik)|2|kościół
+canticum, cantici|n|pieśń|2|kościół
+festum, festi|n|święto|2|kościół
+pater, patris|m|ojciec|3|modlitwy
+mater, matris|f|matka|3|modlitwy
+frater, fratris|m|brat|3|
+soror, sororis|f|siostra|3|
+homo, hominis|m|człowiek|3|modlitwy
+rex, regis|m|król|3|
+lex, legis|f|prawo, ustawa (dura lex, sed lex)|3|filozofia
+ius, iuris|n|prawo (jako to, co słuszne)|3|filozofia
+lux, lucis|f|światło|3|modlitwy
+pax, pacis|f|pokój|3|modlitwy
+vox, vocis|f|głos|3|
+crux, crucis|f|krzyż|3|modlitwy
+nox, noctis|f|noc|3|
+mors, mortis|f|śmierć|3|modlitwy
+pars, partis|f|część|3|
+mens, mentis|f|umysł|3|filozofia
+gens, gentis|f|ród, naród; lm. poganie|3|kościół
+urbs, urbis|f|miasto (Urbs – Rzym)|3|
+ars, artis|f|sztuka, umiejętność (ars vitae)|3|filozofia
+caro, carnis|f|ciało (carnis resurrectio)|3|modlitwy
+corpus, corporis|n|ciało|3|filozofia
+nomen, nominis|n|imię, nazwa|3|modlitwy
+tempus, temporis|n|czas|3|filozofia
+genus, generis|n|rodzaj (genus proximum)|3|logika
+opus, operis|n|dzieło (ex opere operato)|3|kościół
+lumen, luminis|n|światło (lumen de lumine)|3|modlitwy
+flumen, fluminis|n|rzeka|3|
+carmen, carminis|n|pieśń, wiersz|3|
+semen, seminis|n|nasienie (semen christianorum)|3|kościół
+sanguis, sanguinis|m|krew|3|kościół
+virgo, virginis|f|dziewica, panna|3|modlitwy
+ordo, ordinis|m|porządek, stan, święcenia|3|kościół
+imago, imaginis|f|obraz (imago Dei)|3|filozofia
+multitudo, multitudinis|f|mnóstwo|3|
+fortitudo, fortitudinis|f|męstwo|3|filozofia
+beatitudo, beatitudinis|f|szczęśliwość, błogosławieństwo|3|filozofia
+veritas, veritatis|f|prawda|3|filozofia
+caritas, caritatis|f|miłość (agape)|3|kościół
+libertas, libertatis|f|wolność|3|filozofia
+voluntas, voluntatis|f|wola|3|modlitwy
+civitas, civitatis|f|państwo, gmina (Civitas Dei)|3|filozofia
+trinitas, trinitatis|f|trójca|3|kościół
+aeternitas, aeternitatis|f|wieczność|3|filozofia
+humanitas, humanitatis|f|człowieczeństwo|3|
+dignitas, dignitatis|f|godność|3|filozofia
+potestas, potestatis|f|władza|3|
+pietas, pietatis|f|pobożność, dobroć (pietate superna)|3|modlitwy
+qualitas, qualitatis|f|jakość (kategoria)|3|filozofia
+quantitas, quantitatis|f|ilość (kategoria)|3|filozofia
+proprietas, proprietatis|f|właściwość (proprium)|3|logika
+virtus, virtutis|f|cnota, moc|3|filozofia
+salus, salutis|f|zbawienie, zdrowie|3|modlitwy
+amor, amoris|m|miłość|3|
+dolor, doloris|m|ból|3|
+timor, timoris|m|strach, bojaźń|3|
+error, erroris|m|błąd|3|filozofia
+labor, laboris|m|trud, praca (a laboribus suis)|3|lektorat
+honor, honoris|m|cześć, zaszczyt|3|
+mos, moris|m|obyczaj (lm. mores)|3|
+flos, floris|m|kwiat|3|
+sol, solis|m|słońce|3|
+mare, maris|n|morze|3|
+animal, animalis|n|zwierzę (animal rationale)|3|filozofia
+ratio, rationis|f|rozum, racja, rachunek|3|filozofia
+oratio, orationis|f|modlitwa, mowa|3|modlitwy
+natio, nationis|f|naród|3|
+creatio, creationis|f|stworzenie|3|kościół
+resurrectio, resurrectionis|f|zmartwychwstanie|3|modlitwy
+remissio, remissionis|f|odpuszczenie|3|modlitwy
+communio, communionis|f|komunia, wspólnota, obcowanie|3|modlitwy
+confessio, confessionis|f|wyznanie, spowiedź|3|kościół
+definitio, definitionis|f|definicja|3|logika
+propositio, propositionis|f|zdanie (logiczne)|3|logika
+conclusio, conclusionis|f|wniosek|3|logika
+suppositio, suppositionis|f|supozycja|3|logika
+intentio, intentionis|f|intencja, zamiar|3|filozofia
+cognitio, cognitionis|f|poznanie|3|filozofia
+passio, passionis|f|męka, doznawanie|3|kościół
+religio, religionis|f|religia|3|kościół
+superstitio, superstitionis|f|zabobon|3|kościół
+traditio, traditionis|f|tradycja, przekazanie|3|kościół
+successio, successionis|f|sukcesja, następstwo|3|kościół
+illuminatio, illuminationis|f|oświecenie|3|filozofia
+quaestio, quaestionis|f|zagadnienie, kwestia|3|filozofia
+relatio, relationis|f|relacja, odniesienie|3|filozofia
+actio, actionis|f|działanie (kategoria)|3|filozofia
+tentatio, tentationis|f|pokusa, pokuszenie|3|modlitwy
+lectio, lectionis|f|czytanie|3|kościół
+ascensio, ascensionis|f|wniebowstąpienie|3|kościół
+assumptio, assumptionis|f|wniebowzięcie|3|kościół
+nativitas, nativitatis|f|narodzenie|3|kościół
+sermo, sermonis|m|mowa, kazanie|3|
+iudex, iudicis|m|sędzia|3|
+dux, ducis|m|wódz|3|
+pastor, pastoris|m|pasterz|3|kościół
+Salvator, Salvatoris|m|Zbawiciel|3|kościół
+Redemptor, Redemptoris|m|Odkupiciel|3|kościół
+Creator, Creatoris|m|Stwórca|3|modlitwy
+factor, factoris|m|sprawca, stworzyciel (factorem caeli)|3|modlitwy
+auctor, auctoris|m|twórca, autor|3|
+doctor, doctoris|m|nauczyciel, doktor|3|kościół
+peccator, peccatoris|m|grzesznik|3|modlitwy
+debitor, debitoris|m|dłużnik, winowajca|3|modlitwy
+imperator, imperatoris|m|wódz, cesarz|3|
+martyr, martyris|m|męczennik, świadek|3|kościół
+confessor, confessoris|m|wyznawca|3|kościół
+sacerdos, sacerdotis|m|kapłan|3|kościół
+pontifex, pontificis|m|kapłan, papież (Pontifex Maximus)|3|kościół
+custos, custodis|m|stróż|3|modlitwy
+cor, cordis|n|serce (Sursum corda)|3|kościół
+os, oris|n|usta, twarz|3|
+caput, capitis|n|głowa|3|
+iter, itineris|n|droga, podróż|3|
+finis, finis|m|koniec, cel|3|modlitwy
+ignis, ignis|m|ogień|3|filozofia
+panis, panis|m|chleb|3|modlitwy
+civis, civis|m|obywatel|3|
+hostis, hostis|m|wróg|3|
+navis, navis|f|statek|3|
+avis, avis|f|ptak|3|
+ovis, ovis|f|owca|3|kościół
+canis, canis|m/f|pies|3|
+mons, montis|m|góra|3|
+fons, fontis|m|źródło|3|
+iuvenis, iuvenis|m|młodzieniec|3|
+senex, senis|m|starzec|3|
+mulier, mulieris|f|kobieta, niewiasta|3|modlitwy
+uxor, uxoris|f|żona|3|
+parens, parentis|m/f|rodzic|3|
+infans, infantis|m/f|dziecko|3|
+princeps, principis|m|pierwszy, władca|3|
+aetas, aetatis|f|wiek, epoka|3|
+hiems, hiemis|f|zima|3|
+aestas, aestatis|f|lato|3|
+ver, veris|n|wiosna|3|
+rus, ruris|n|wieś|3|
+ens, entis|n|byt|3|filozofia
+accidens, accidentis|n|przypadłość|3|filozofia
+venter, ventris|m|brzuch, łono (fructus ventris tui)|3|modlitwy
+requies, requietis|f|odpoczynek (Requiem aeternam)|3|modlitwy
+baptisma, baptismatis|n|chrzest|3|modlitwy
+dogma, dogmatis|n|dogmat|3|kościół
+altare, altaris|n|ołtarz|3|kościół
+calix, calicis|m|kielich|3|kościół
+spiritus, spiritus|m|duch, tchnienie|4|modlitwy
+fructus, fructus|m|owoc|4|modlitwy
+manus, manus|f|ręka|4|
+sensus, sensus|m|zmysł, sens|4|filozofia
+actus, actus|m|akt (actus et potentia)|4|filozofia
+usus, usus|m|użycie|4|
+casus, casus|m|przypadek, upadek|4|
+gradus, gradus|m|stopień|4|
+exercitus, exercitus|m|wojsko|4|
+senatus, senatus|m|senat|4|
+motus, motus|m|ruch|4|filozofia
+status, status|m|stan|4|
+cultus, cultus|m|kult, uprawa|4|kościół
+domus, domus|f|dom (Domus ecclesiae)|4|kościół
+cornu, cornus|n|róg|4|
+intellectus, intellectus|m|intelekt, rozum|4|filozofia
+affectus, affectus|m|uczucie, afekt|4|filozofia
+habitus, habitus|m|sprawność, nawyk; strój|4|filozofia
+conceptus, conceptus|m|pojęcie; poczęcie|4|logika
+adventus, adventus|m|przyjście, Adwent|4|kościół
+res, rei|f|rzecz, sprawa|5|filozofia
+dies, diei|m|dzień (tertia die)|5|modlitwy
+fides, fidei|f|wiara|5|kościół
+spes, spei|f|nadzieja|5|kościół
+species, speciei|f|gatunek, wygląd (species)|5|logika
+facies, faciei|f|twarz, oblicze|5|
+meridies, meridiei|m|południe|5|
+Iesus, Iesu|m|Jezus (odmiana nieregularna: Iesum, Iesu)|irr|modlitwy
+`;
+
+/* Przymiotniki: "formy|znaczenie|typ(12 / 3)|tag" */
+const LA_ADJ = `
+bonus, bona, bonum|dobry|12|
+malus, mala, malum|zły|12|
+magnus, magna, magnum|wielki|12|
+parvus, parva, parvum|mały|12|
+multus, multa, multum|liczny, wiele|12|
+altus, alta, altum|wysoki, głęboki|12|
+longus, longa, longum|długi|12|
+novus, nova, novum|nowy|12|
+antiquus, antiqua, antiquum|dawny, starożytny|12|
+verus, vera, verum|prawdziwy|12|modlitwy
+falsus, falsa, falsum|fałszywy|12|logika
+sanctus, sancta, sanctum|święty|12|modlitwy
+beatus, beata, beatum|błogosławiony, szczęśliwy|12|kościół
+benedictus, benedicta, benedictum|błogosławiony|12|modlitwy
+plenus, plena, plenum|pełny (gratia plena)|12|modlitwy
+unicus, unica, unicum|jedyny|12|modlitwy
+unigenitus, unigenita, unigenitum|jednorodzony|12|modlitwy
+aeternus, aeterna, aeternum|wieczny|12|modlitwy
+perpetuus, perpetua, perpetuum|wieczysty, nieustanny|12|modlitwy
+supernus, superna, supernum|niebiański, górny|12|modlitwy
+divinus, divina, divinum|boski|12|kościół
+humanus, humana, humanum|ludzki|12|
+christianus, christiana, christianum|chrześcijański|12|kościół
+catholicus, catholica, catholicum|powszechny, katolicki|12|modlitwy
+apostolicus, apostolica, apostolicum|apostolski|12|modlitwy
+Romanus, Romana, Romanum|rzymski|12|
+Graecus, Graeca, Graecum|grecki|12|
+Latinus, Latina, Latinum|łaciński|12|
+Polonus, Polona, Polonum|polski|12|
+iustus, iusta, iustum|sprawiedliwy|12|filozofia
+dignus, digna, dignum|godny|12|
+quotidianus, quotidiana, quotidianum|codzienny, powszedni [kwotidianus]|12|modlitwy
+mortuus, mortua, mortuum|martwy, umarły|12|modlitwy
+vivus, viva, vivum|żywy|12|modlitwy
+carus, cara, carum|drogi, miły|12|
+clarus, clara, clarum|jasny, sławny|12|
+laetus, laeta, laetum|radosny|12|
+firmus, firma, firmum|mocny, stały|12|
+certus, certa, certum|pewny|12|filozofia
+incertus, incerta, incertum|niepewny|12|
+necessarius, necessaria, necessarium|konieczny|12|logika
+proprius, propria, proprium|własny, właściwy (proprium)|12|logika
+doctus, docta, doctum|uczony|12|
+albus, alba, album|biały|12|
+caecus, caeca, caecum|ślepy|12|
+mirus, mira, mirum|dziwny, zadziwiający|12|
+superbus, superba, superbum|pyszny|12|
+benignus, benigna, benignum|łaskawy|12|
+pius, pia, pium|pobożny|12|kościół
+impius, impia, impium|bezbożny|12|
+obscurus, obscura, obscurum|ciemny, niejasny|12|
+totus, tota, totum|cały|12|
+solus, sola, solum|sam, jedyny|12|
+nullus, nulla, nullum|żaden|12|
+alius, alia, aliud|inny|12|
+liber, libera, liberum|wolny|12|filozofia
+miser, misera, miserum|nieszczęsny, nędzny|12|
+pulcher, pulchra, pulchrum|piękny|12|filozofia
+niger, nigra, nigrum|czarny|12|
+sacer, sacra, sacrum|święty, poświęcony|12|kościół
+ruber, rubra, rubrum|czerwony|12|
+dexter, dextera, dexterum|prawy (ad dexteram – po prawicy)|12|modlitwy
+sinister, sinistra, sinistrum|lewy|12|
+noster, nostra, nostrum|nasz|12|modlitwy
+vester, vestra, vestrum|wasz|12|
+meus, mea, meum|mój|12|
+tuus, tua, tuum|twój|12|modlitwy
+suus, sua, suum|swój|12|
+summus, summa, summum|najwyższy|12|
+optimus, optima, optimum|najlepszy (Deo Optimo Maximo)|12|lektorat
+maximus, maxima, maximum|największy|12|lektorat
+minimus, minima, minimum|najmniejszy|12|
+pessimus, pessima, pessimum|najgorszy|12|
+ultimus, ultima, ultimum|ostatni|12|
+omnis, omne|każdy, wszelki; lm. wszyscy|3|modlitwy
+omnipotens, omnipotentis|wszechmogący|3|modlitwy
+fortis, forte|dzielny, silny|3|
+brevis, breve|krótki|3|
+gravis, grave|ciężki, poważny|3|
+levis, leve|lekki|3|
+facilis, facile|łatwy|3|
+difficilis, difficile|trudny|3|
+similis, simile|podobny|3|
+utilis, utile|użyteczny|3|
+nobilis, nobile|szlachetny|3|
+mortalis, mortale|śmiertelny|3|filozofia
+immortalis, immortale|nieśmiertelny|3|filozofia
+humilis, humile|pokorny, niski|3|kościół
+tristis, triste|smutny|3|
+dulcis, dulce|słodki|3|
+visibilis, visibile|widzialny|3|modlitwy
+invisibilis, invisibile|niewidzialny|3|modlitwy
+rationalis, rationale|rozumny|3|filozofia
+universalis, universale|ogólny, powszechny|3|logika
+particularis, particulare|szczegółowy|3|logika
+singularis, singulare|jednostkowy, pojedynczy|3|logika
+spiritualis, spirituale|duchowy|3|
+corporalis, corporale|cielesny|3|
+naturalis, naturale|naturalny|3|filozofia
+communis, commune|wspólny|3|
+fidelis, fidele|wierny (pro fidelibus defunctis)|3|modlitwy
+crudelis, crudele|okrutny|3|
+talis, tale|taki|3|
+qualis, quale|jaki|3|
+consubstantialis, consubstantiale|współistotny|3|modlitwy
+celer, celeris, celere|szybki|3|
+acer, acris, acre|ostry|3|
+ingens, ingentis|ogromny|3|
+sapiens, sapientis|mądry (homo sapiens)|3|filozofia
+prudens, prudentis|roztropny|3|
+potens, potentis|potężny|3|
+felix, felicis|szczęśliwy|3|
+audax, audacis|śmiały|3|
+vetus, veteris|stary|3|
+pauper, pauperis|ubogi|3|
+dives, divitis|bogaty|3|
+par, paris|równy|3|
+memor, memoris|pamiętający|3|
+melior, melius|lepszy (stopień wyższy od bonus)|3|
+peior, peius|gorszy (od malus)|3|
+maior, maius|większy (od magnus)|3|
+minor, minus|mniejszy (od parvus)|3|
+`;
+
+/* Inne: "słowo|znaczenie|kategoria" */
+const LA_OTHER = `
+ego|ja|zaimek
+tu|ty|zaimek
+nos|my, nas|zaimek
+vos|wy, was|zaimek
+mihi|mi, mnie (cel.)|zaimek
+me|mnie (bier./narz.)|zaimek
+mei|mnie (dop.); mój|zaimek
+tibi|tobie|zaimek
+te|ciebie, tobą|zaimek
+nobis|nam, nami|zaimek
+is, ea, id|on, ona, ono; ten|zaimek
+eius|jego, jej|zaimek
+eis (iis)|im|zaimek
+ei|jemu, jej|zaimek
+hic, haec, hoc|ten (tutaj)|zaimek
+ille, illa, illud|tamten|zaimek
+iste, ista, istud|ten (twój)|zaimek
+ipse, ipsa, ipsum|sam, osobiście|zaimek
+idem, eadem, idem|ten sam|zaimek
+qui, quae, quod|który|zaimek
+cuius|którego (dop.)|zaimek
+quem|którego (bier.)|zaimek
+quis, quid|kto, co|zaimek
+nemo|nikt|zaimek
+nihil (nil)|nic|zaimek
+aliquis, aliquid|ktoś, coś|zaimek
+a, ab (+abl.)|od, przez|przyimek
+ad (+acc.)|do, ku, przy|przyimek
+ante (+acc.)|przed|przyimek
+apud (+acc.)|u, przy|przyimek
+circa (+acc.)|około, wokół|przyimek
+contra (+acc.)|przeciw|przyimek
+cum (+abl.)|z, razem z|przyimek
+de (+abl.)|o, z, od|przyimek
+e, ex (+abl.)|z, ze|przyimek
+in (+acc.)|do, na (kierunek)|przyimek
+in (+abl.)|w, na (miejsce)|przyimek
+inter (+acc.)|między|przyimek
+ob (+acc.)|z powodu|przyimek
+per (+acc.)|przez|przyimek
+post (+acc.)|po, za|przyimek
+prae (+abl.)|przed|przyimek
+pro (+abl.)|za, dla, zamiast|przyimek
+propter (+acc.)|z powodu, dla|przyimek
+sine (+abl.)|bez|przyimek
+sub (+abl./acc.)|pod|przyimek
+super (+acc.)|nad, ponad|przyimek
+supra (+acc.)|ponad, powyżej|przyimek
+trans (+acc.)|przez, za|przyimek
+ultra (+acc.)|poza, dalej niż|przyimek
+secundum (+acc.)|według|przyimek
+coram (+abl.)|wobec, w obecności|przyimek
+et|i, a|spójnik
+-que|i (dołączane: Filioque)|spójnik
+atque, ac|i, oraz|spójnik
+sed|ale, lecz|spójnik
+aut|albo (rozłącznie)|spójnik
+vel|lub (nierozłącznie)|spójnik
+nec, neque|ani, i nie|spójnik
+nam|bowiem|spójnik
+enim|bowiem, przecież|spójnik
+ergo|więc, zatem (cogito, ergo sum)|spójnik
+igitur|zatem (Gaudeamus igitur)|spójnik
+itaque|a więc|spójnik
+quia|ponieważ|spójnik
+quod|że, ponieważ|spójnik
+cum (spójnik)|gdy, ponieważ|spójnik
+si|jeśli (si fallor, sum)|spójnik
+nisi|jeśli nie, chyba że (nil nisi bene)|spójnik
+ut|aby, żeby; jak|spójnik
+ne|żeby nie (ne nos inducas)|spójnik
+sicut|jak, tak jak|spójnik
+tamen|jednak|spójnik
+autem|zaś, natomiast|spójnik
+etiam|także, nawet|spójnik
+quoque|też|spójnik
+vero|zaś; zaiste|spójnik
+dum|dopóki, podczas gdy|spójnik
+donec|dopóki nie|spójnik
+quamquam|chociaż|spójnik
+non|nie|przysłówek
+nunc|teraz|przysłówek
+semper|zawsze|przysłówek
+numquam|nigdy|przysłówek
+hodie|dziś|przysłówek
+cras|jutro|przysłówek
+heri|wczoraj|przysłówek
+iam|już|przysłówek
+saepe|często|przysłówek
+tum, tunc|wtedy|przysłówek
+ibi|tam|przysłówek
+hic (przysł.)|tutaj|przysłówek
+ubi|gdzie|przysłówek
+unde|skąd|przysłówek
+inde|stamtąd|przysłówek
+iterum|znowu, powtórnie|przysłówek
+simul|razem, jednocześnie|przysłówek
+bene|dobrze|przysłówek
+male|źle|przysłówek
+valde|bardzo|przysłówek
+multum|wiele|przysłówek
+parum|mało|przysłówek
+satis|dosyć|przysłówek
+magis|bardziej|przysłówek
+maxime|najbardziej|przysłówek
+tantum|tylko, tak bardzo|przysłówek
+solum|tylko|przysłówek
+vix|ledwie|przysłówek
+statim|natychmiast|przysłówek
+mox|wkrótce|przysłówek
+diu|długo|przysłówek
+cur|dlaczego|przysłówek
+quomodo|jak, w jaki sposób|przysłówek
+quando|kiedy|przysłówek
+ita|tak|przysłówek
+sic|tak (sic transit gloria mundi)|przysłówek
+certe|z pewnością|przysłówek
+vere|prawdziwie|przysłówek
+libenter|chętnie|przysłówek
+olim|niegdyś|przysłówek
+prope|blisko|przysłówek
+procul|daleko|przysłówek
+intus|wewnątrz|przysłówek
+foris|na zewnątrz|przysłówek
+sursum|w górę (Sursum corda)|przysłówek
+amen|zaprawdę, niech się stanie|kościół
+alleluia|chwalcie Pana (hebr.)|kościół
+`;
+
+const LA_NUM = [
+["unus, una, unum","jeden","I","primus","pierwszy"],["duo, duae, duo","dwa","II","secundus","drugi"],["tres, tria","trzy","III","tertius","trzeci"],
+["quattuor","cztery","IV","quartus","czwarty"],["quinque","pięć","V","quintus","piąty"],["sex","sześć","VI","sextus","szósty"],
+["septem","siedem","VII","septimus","siódmy"],["octo","osiem","VIII","octavus","ósmy"],["novem","dziewięć","IX","nonus","dziewiąty"],
+["decem","dziesięć","X","decimus","dziesiąty"],["undecim","jedenaście","XI","undecimus","jedenasty"],["duodecim","dwanaście","XII","duodecimus","dwunasty"],
+["tredecim","trzynaście","XIII","tertius decimus","trzynasty"],["quattuordecim","czternaście","XIV","quartus decimus","czternasty"],["quindecim","piętnaście","XV","quintus decimus","piętnasty"],
+["sedecim","szesnaście","XVI","sextus decimus","szesnasty"],["septendecim","siedemnaście","XVII","septimus decimus","siedemnasty"],["duodeviginti","osiemnaście (2 do 20)","XVIII","duodevicesimus","osiemnasty"],
+["undeviginti","dziewiętnaście (1 do 20)","XIX","undevicesimus","dziewiętnasty"],["viginti","dwadzieścia","XX","vicesimus","dwudziesty"],["triginta","trzydzieści","XXX","tricesimus","trzydziesty"],
+["quadraginta","czterdzieści","XL","quadragesimus","czterdziesty"],["quinquaginta","pięćdziesiąt","L","quinquagesimus","pięćdziesiąty"],["sexaginta","sześćdziesiąt","LX","sexagesimus","sześćdziesiąty"],
+["septuaginta","siedemdziesiąt","LXX","septuagesimus","siedemdziesiąty"],["octoginta","osiemdziesiąt","LXXX","octogesimus","osiemdziesiąty"],["nonaginta","dziewięćdziesiąt","XC","nonagesimus","dziewięćdziesiąty"],
+["centum","sto","C","centesimus","setny"],["ducenti, -ae, -a","dwieście","CC","ducentesimus","dwusetny"],["trecenti","trzysta","CCC","trecentesimus","trzechsetny"],
+["quadringenti","czterysta","CD","quadringentesimus","czterechsetny"],["quingenti","pięćset","D","quingentesimus","pięćsetny"],["sescenti","sześćset","DC","sescentesimus","sześćsetny"],
+["septingenti","siedemset","DCC","septingentesimus","siedemsetny"],["octingenti","osiemset","DCCC","octingentesimus","osiemsetny"],["nongenti","dziewięćset","CM","nongentesimus","dziewięćsetny"],
+["mille","tysiąc","M","millesimus","tysięczny"]
+];
+
+/* Sentencje, zwroty, skróty: "łacina|polski|grupa" */
+const LA_PHRASES = `
+Benedicamus Domino.|Szczęść Boże (dosł. Błogosławmy Pana).|lektorat
+Deo gratias.|Bóg zapłać / Bogu dzięki.|lektorat
+Valete, discipuli (studentes)!|Bądźcie zdrowi, uczniowie – do widzenia.|lektorat
+Salve! Salvete!|Witaj! Witajcie! (bądź zdrów)|lektorat
+Salve, Magistra!|Witaj, Pani Profesor!|lektorat
+Adsum.|Jestem (obecny).|lektorat
+Gaudeamus igitur, iuvenes dum sumus.|Radujmy się więc, póki jesteśmy młodzi (pieśń studencka – zadanie: posłuchać).|lektorat
+De mortuis nil nisi bene.|O zmarłych tylko dobrze (Diogenes Laertios).|nagrobki
+Requiescant a laboribus suis.|Niech odpoczną od trudów swoich (Ap 14,13).|nagrobki
+H.S.E. – Hic sepultus (sepulta) est.|Tu jest pogrzebany (pogrzebana).|nagrobki
+D.O.M. – Deo Optimo Maximo.|Bogu Najlepszemu, Największemu.|nagrobki
+D.O.M. – Domus Omnium Mortuorum.|Dom wszystkich zmarłych.|nagrobki
+R.I.P. – Requiesce in pace.|Spoczywaj w pokoju.|nagrobki
+R.I.P. – Requiescat in pace.|Niech spoczywa w pokoju.|nagrobki
+R.I.P. – Requiescant in pace.|Niech spoczywają w pokoju.|nagrobki
+Tituli sepulcrales|napisy nagrobne|nagrobki
+Festino scriptum.|Spieszę, aby pisać (supinum po czasowniku ruchu).|gramatyka
+Dura lex, sed lex.|Twarde prawo, ale prawo.|filozofia
+Si fallor, sum.|Jeśli się mylę, to jestem (św. Augustyn).|filozofia
+Cogito, ergo sum.|Myślę, więc jestem (Kartezjusz).|filozofia
+Sanguis martyrum semen christianorum.|Krew męczenników jest posiewem chrześcijan (Tertulian).|kościół
+Non licet esse vos.|Nie wolno wam istnieć (Institutum Neronianum).|kościół
+Odium humani generis|nienawiść do rodzaju ludzkiego (Tacyt o chrześcijanach)|kościół
+Pax deorum|pokój z bogami|kościół
+Exitiabilis superstitio|zgubny zabobon (Tacyt)|kościół
+Dominus et Deus|Pan i Bóg (tytuł Domicjana)|kościół
+Ex opere operato|na mocy samego dokonanego czynu (skuteczność sakramentów)|kościół
+Instrumentum vocale|narzędzie mówiące (niewolnik w prawie rzymskim)|kościół
+Successio apostolica|sukcesja apostolska|kościół
+Secunda paenitentia|druga pokuta|kościół
+Verus Israel|prawdziwy Izrael|kościół
+Domus ecclesiae|kościół domowy|kościół
+Ite, missa est.|Idźcie, ofiara spełniona (rozesłanie).|kościół
+Sursum corda.|W górę serca.|kościół
+Agnus Dei, qui tollis peccata mundi.|Baranku Boży, który gładzisz grzechy świata.|kościół
+Verbum caro factum est.|Słowo stało się ciałem (J 1,14).|kościół
+Lex orandi, lex credendi.|Prawo modlitwy jest prawem wiary.|kościół
+Extra Ecclesiam nulla salus.|Poza Kościołem nie ma zbawienia (św. Cyprian).|kościół
+Ecclesia semper reformanda.|Kościół zawsze wymaga odnowy.|kościół
+Ad maiorem Dei gloriam (AMDG).|Na większą chwałę Bożą.|kościół
+Soli Deo gloria.|Samemu Bogu chwała.|kościół
+Ora et labora.|Módl się i pracuj (reguła benedyktyńska).|kościół
+Fides quaerens intellectum.|Wiara szukająca zrozumienia (św. Anzelm).|filozofia
+Credo, ut intellegam.|Wierzę, abym zrozumiał (św. Anzelm / Augustyn).|filozofia
+Philosophia ancilla theologiae.|Filozofia służebnicą teologii.|filozofia
+Magister Interior|Nauczyciel Wewnętrzny (Augustyn)|filozofia
+Rationes aeternae|prawdy (racje) wieczne|filozofia
+Scientia et sapientia|wiedza i mądrość|filozofia
+Imago Dei|obraz Boga|filozofia
+Privatio boni|brak dobra (zło jako brak)|filozofia
+Principium rationis sufficientis|zasada racji dostatecznej (Leibniz)|filozofia
+Principium identitatis indiscernibilium|zasada tożsamości rzeczy nierozróżnialnych (Leibniz)|filozofia
+Coincidentia oppositorum|zbieżność przeciwieństw|logika
+A priori|z góry, niezależnie od doświadczenia|logika
+A posteriori|na podstawie doświadczenia|logika
+Genus proximum et differentia specifica|rodzaj najbliższy i różnica gatunkowa (definicja)|logika
+Suppositio materialis|supozycja materialna (nazwa jako napis)|logika
+Suppositio personalis|supozycja osobowa (konkretny desygnat)|logika
+Suppositio simplex|supozycja zwykła (pojęcie ogólne)|logika
+Affirmo – nego|stwierdzam – przeczę (stąd a, i oraz e, o w zdaniach kategorycznych)|logika
+Tertium non datur.|Trzeciej możliwości nie ma (zasada wyłączonego środka).|logika
+Ex falso quodlibet.|Z fałszu wynika cokolwiek.|logika
+Reductio ad absurdum|sprowadzenie do niedorzeczności|logika
+Petitio principii|błąd założenia tego, co się dowodzi|logika
+Ignotum per ignotum|nieznane przez nieznane (błąd definicji)|logika
+Idem per idem|to samo przez to samo (błędne koło w definicji)|logika
+Non sequitur|nie wynika|logika
+Conditio sine qua non|warunek konieczny|logika
+Modus ponens|sposób potwierdzający (jeśli p, to q; p; więc q)|logika
+Modus tollens|sposób obalający (jeśli p, to q; nie q; więc nie p)|logika
+Nasciturus|ten, który ma się narodzić (podmiot praw w prawie rzymskim)|filozofia
+Ars vitae – ars moriendi|sztuka życia – sztuka umierania|filozofia
+Memento mori.|Pamiętaj o śmierci.|sentencje
+Carpe diem.|Chwytaj dzień (Horacy).|sentencje
+Exegi monumentum aere perennius.|Wzniosłem pomnik trwalszy od spiżu (Horacy).|sentencje
+Non omnis moriar.|Nie wszystek umrę (Horacy).|sentencje
+Errare humanum est.|Błądzić jest rzeczą ludzką.|sentencje
+Historia magistra vitae.|Historia nauczycielką życia (Cyceron).|sentencje
+Verba volant, scripta manent.|Słowa ulatują, pisma pozostają.|sentencje
+Repetitio est mater studiorum.|Powtarzanie jest matką nauki.|sentencje
+Mens sana in corpore sano.|Zdrowy umysł w zdrowym ciele.|sentencje
+Per aspera ad astra.|Przez trudy do gwiazd.|sentencje
+Nosce te ipsum.|Poznaj samego siebie.|sentencje
+Sic transit gloria mundi.|Tak przemija chwała świata.|sentencje
+Omnia mea mecum porto.|Wszystko, co moje, noszę ze sobą.|sentencje
+Panta rhei – omnia fluunt.|Wszystko płynie (Heraklit).|filozofia
+Scio me nihil scire.|Wiem, że nic nie wiem (Sokrates).|filozofia
+Homo homini lupus.|Człowiek człowiekowi wilkiem.|sentencje
+Ubi caritas et amor, Deus ibi est.|Gdzie miłość wzajemna i dobroć, tam znajdziesz Boga.|kościół
+In nomine Patris|W imię Ojca|kościół
+Substantia, quantitas, qualitas, relatio, ubi, quando, situs, habitus, actio, passio|10 kategorii Arystotelesa: substancja, ilość, jakość, relacja, gdzie, kiedy, położenie, posiadanie, działanie, doznawanie|filozofia
+`;
+
+/* ===== MODLITWY ===== */
+const LA_PRAYERS = [
+{id:"signum", part:1, title:"Signum Sanctae Crucis", pl:"Znak Krzyża",
+ la:"In nomine Patris, et Filii, et Spiritus Sancti. Amen.",
+ tr:"W imię Ojca i Syna, i Ducha Świętego. Amen."},
+{id:"gloria", part:1, title:"Doxologia in honorem Sanctissimae Trinitatis", pl:"Chwała Ojcu",
+ la:"Gloria Patri, et Filio, et Spiritui Sancto, sicut erat in principio et nunc et semper et in saecula saeculorum. Amen.",
+ tr:"Chwała Ojcu i Synowi, i Duchowi Świętemu, jak była na początku, teraz i zawsze, i na wieki wieków. Amen."},
+{id:"pater", part:1, title:"Oratio Dominica", pl:"Ojcze nasz",
+ la:"Pater noster, qui es in caelis, sanctificetur nomen tuum, adveniat regnum tuum, fiat voluntas tua sicut in caelo et in terra. Panem nostrum quotidianum da nobis hodie; et dimitte nobis debita nostra, sicut et nos dimittimus debitoribus nostris, et ne nos inducas in tentationem, sed libera nos a malo. Amen.",
+ tr:"Ojcze nasz, któryś jest w niebie, święć się imię Twoje, przyjdź królestwo Twoje, bądź wola Twoja jako w niebie, tak i na ziemi. Chleba naszego powszedniego daj nam dzisiaj; i odpuść nam nasze winy, jako i my odpuszczamy naszym winowajcom; i nie wódź nas na pokuszenie, ale nas zbaw ode złego. Amen."},
+{id:"ave", part:1, title:"Salutatio Angelica", pl:"Zdrowaś Maryjo",
+ la:"Ave, Maria, gratia plena, Dominus tecum; benedicta tu in mulieribus, et benedictus fructus ventris tui, Iesus. Sancta Maria, mater Dei, ora pro nobis peccatoribus, nunc et in hora mortis nostrae. Amen.",
+ tr:"Zdrowaś Maryjo, łaski pełna, Pan z Tobą; błogosławionaś Ty między niewiastami i błogosławiony owoc żywota Twojego, Jezus. Święta Maryjo, Matko Boża, módl się za nami grzesznymi teraz i w godzinę śmierci naszej. Amen."},
+{id:"angele", part:2, title:"Oratio ad Angelum Custodem", pl:"Aniele Boży",
+ la:"Angele Dei, qui custos es mei, me, tibi commissum pietate superna, illumina, custodi, rege et guberna. Amen.",
+ tr:"Aniele Boży, Stróżu mój, ty zawsze przy mnie stój; rano, wieczór, we dnie, w nocy bądź mi zawsze ku pomocy. Amen. (Polska wersja jest wolna – dosłownie: Aniele Boży, który jesteś moim stróżem, mnie, tobie powierzonego dobrocią niebiańską, oświecaj, strzeż, rządź i kieruj.)"},
+{id:"requiem", part:2, title:"Oratio pro fidelibus defunctis", pl:"Wieczny odpoczynek",
+ la:"Requiem aeternam dona eis, Domine, et lux perpetua luceat eis. Requiescant in pace. Amen.",
+ tr:"Wieczny odpoczynek racz im dać, Panie, a światłość wiekuista niechaj im świeci. Niech odpoczywają w pokoju wiecznym. Amen. (Za jedną osobę: dona ei … luceat ei. Requiescat in pace.)"},
+{id:"credo", part:2, title:"Credo (Symbolum Apostolorum)", pl:"Wierzę w Boga (Skład Apostolski) – do wyboru",
+ la:"Credo in Deum Patrem omnipotentem, Creatorem caeli et terrae. Et in Iesum Christum, Filium eius unicum, Dominum nostrum, qui conceptus est de Spiritu Sancto, natus ex Maria Virgine, passus sub Pontio Pilato, crucifixus, mortuus, et sepultus, descendit ad infernos, tertia die resurrexit a mortuis, ascendit ad caelos, sedet ad dexteram Dei Patris omnipotentis, inde venturus est iudicare vivos et mortuos. Credo in Spiritum Sanctum, sanctam Ecclesiam catholicam, sanctorum communionem, remissionem peccatorum, carnis resurrectionem, vitam aeternam. Amen.",
+ tr:"Wierzę w Boga, Ojca wszechmogącego, Stworzyciela nieba i ziemi. I w Jezusa Chrystusa, Syna Jego jedynego, Pana naszego, który się począł z Ducha Świętego, narodził się z Maryi Panny, umęczon pod Ponckim Piłatem, ukrzyżowan, umarł i pogrzebion; zstąpił do piekieł, trzeciego dnia zmartwychwstał, wstąpił na niebiosa, siedzi po prawicy Boga Ojca wszechmogącego, stamtąd przyjdzie sądzić żywych i umarłych. Wierzę w Ducha Świętego, święty Kościół powszechny, świętych obcowanie, grzechów odpuszczenie, ciała zmartwychwstanie, żywot wieczny. Amen."},
+{id:"nicaenum", part:2, title:"Credo (nicejsko-konstantynopolitańskie)", pl:"Wierzę w jednego Boga – do wyboru",
+ la:"Credo in unum Deum * Patrem omnipotentem * factorem caeli et terrae * visibilium omnium, et invisibilium. * Et in unum Dominum Jesum Christum, * Filium Dei unigenitum, * Et ex Patre natum ante omnia saecula. * Deum de Deo, * lumen de lumine, * Deum verum de Deo vero. * Genitum, non factum, * consubstantialem Patri: * per quem omnia facta sunt. * Qui propter nos homines, * et propter nostram salutem * descendit de caelis. * Et incarnatus est de Spiritu Sancto ex Maria Virgine: * Et homo factus est. * Crucifixus etiam pro nobis: * sub Pontio Pilato passus est et sepultus est. * Et resurrexit tertia die, secundum Scripturas. * Et ascendit in caelum: * sedet ad dexteram Patris. * Et iterum venturus est cum gloria, * judicare vivos et mortuos: * cujus regni non erit finis. * Et in Spiritum Sanctum, Dominum, et vivificantem: * qui ex Patre [Filioque] procedit. * Quicum Patre et Filio adoratur, et conglorificatur: * qui locutus est per Prophetas. * Et unam sanctam catholicam et apostolicam Ecclesiam. * Confiteor unum baptisma in remissionem peccatorum. * Et exspecto resurrectionem mortuorum. * Et vitam venturi saeculi. Amen",
+ tr:"Wierzę w jednego Boga, Ojca wszechmogącego, Stworzyciela nieba i ziemi, wszystkich rzeczy widzialnych i niewidzialnych. I w jednego Pana Jezusa Chrystusa, Syna Bożego jednorodzonego, który z Ojca jest zrodzony przed wszystkimi wiekami. Bóg z Boga, Światłość ze Światłości, Bóg prawdziwy z Boga prawdziwego. Zrodzony, a nie stworzony, współistotny Ojcu, a przez Niego wszystko się stało. On to dla nas, ludzi, i dla naszego zbawienia zstąpił z nieba. I za sprawą Ducha Świętego przyjął ciało z Maryi Dziewicy i stał się człowiekiem. Ukrzyżowany również za nas, pod Poncjuszem Piłatem został umęczony i pogrzebany. I zmartwychwstał dnia trzeciego, jak oznajmia Pismo. I wstąpił do nieba, siedzi po prawicy Ojca. I powtórnie przyjdzie w chwale sądzić żywych i umarłych, a królestwu Jego nie będzie końca. Wierzę w Ducha Świętego, Pana i Ożywiciela, który od Ojca i Syna pochodzi. Który z Ojcem i Synem wspólnie odbiera uwielbienie i chwałę; który mówił przez Proroków. Wierzę w jeden, święty, powszechny i apostolski Kościół. Wyznaję jeden chrzest na odpuszczenie grzechów. I oczekuję wskrzeszenia umarłych. I życia wiecznego w przyszłym świecie. Amen."}
+];
+
+/* Słowniczek modlitw: forma → objaśnienie */
+const LA_GLOSS = `
+in|w, na (+abl. – miejsce); do, ku (+acc. – kierunek)
+nomine|imieniu – nomen, nominis (abl. lp.)
+patris|Ojca – pater (dop. lp.)
+et|i
+filii|Syna – filius (dop. lp.)
+spiritus|Ducha – spiritus, -us (dop. lp., IV dekl.)
+sancti|Świętego – sanctus (dop. lp.)
+amen|niech się stanie, zaprawdę
+gloria|chwała (mian.); cum gloria – w chwale (abl.)
+patri|Ojcu – pater (cel. lp.)
+filio|Synowi – filius (cel./abl. lp.)
+spiritui|Duchowi – spiritus (cel. lp.)
+sancto|Świętemu – sanctus (cel./abl. lp.)
+sicut|jak, tak jak
+erat|była – sum, esse (imperf., 3 os. lp.)
+principio|początku – principium (abl. lp.)
+nunc|teraz
+semper|zawsze
+saecula|wieki – saeculum (bier. lm.)
+saeculorum|wieków – saeculum (dop. lm.)
+pater|Ojcze – wołacz = mianownik; ojciec
+noster|nasz (mian. lp. m)
+qui|który
+es|jesteś – sum (2 os. lp.)
+caelis|niebiosach / niebie – caelum (abl. lm.)
+sanctificetur|niech będzie uświęcone, święć się – sanctifico (tryb łączący, strona bierna, 3 os.)
+nomen|imię (mian./bier.)
+tuum|Twoje (n)
+adveniat|niech przyjdzie – advenio (tryb łączący, 3 os.)
+regnum|królestwo
+fiat|niech się stanie, bądź – fio (tryb łączący)
+voluntas|wola
+tua|Twoja (f)
+caelo|niebie – caelum (abl. lp.)
+terra|ziemi – terra (abl. lp.)
+panem|chleb – panis (bier. lp.)
+nostrum|nasz/naszego (bier. lp.)
+quotidianum|codzienny, powszedni (bier.) – wymowa [kwotidianum]
+da|daj – do, dare (rozkaźnik)
+nobis|nam (cel.) / nami (abl.)
+hodie|dzisiaj
+dimitte|odpuść – dimitto (rozkaźnik)
+debita|długi, winy – debitum (bier. lm.)
+nostra|nasze (lm. n)
+nos|my / nas
+dimittimus|odpuszczamy – dimitto (1 os. lm.)
+debitoribus|dłużnikom, winowajcom – debitor (cel. lm.)
+nostris|naszym (cel. lm.)
+ne|nie (zakaz: ne inducas – nie wódź)
+inducas|wprowadzaj, wódź – induco (tryb łączący, 2 os.)
+tentationem|pokuszenie – tentatio (bier. lp.)
+sed|ale
+libera|wybaw, uwolnij – libero (rozkaźnik)
+a|od (+abl.)
+malo|złego – malum (abl.)
+ave|bądź pozdrowiona, zdrowaś
+maria|Maryja / Maryjo
+gratia|łaską / łaski (gratia plena – pełna łaski; abl.)
+plena|pełna – plenus
+dominus|Pan (mian.)
+tecum|z Tobą (cum + te)
+benedicta|błogosławiona (f)
+tu|Ty
+mulieribus|niewiastach, kobietach – mulier (abl. lm.)
+benedictus|błogosławiony (m)
+fructus|owoc – fructus, -us
+ventris|łona, żywota – venter (dop. lp.)
+tui|Twojego (dop.)
+iesus|Jezus (mian.)
+sancta|Święta (f); sanctam – święty (bier. f)
+mater|Matko (wołacz) – mater
+dei|Boga, Boży – Deus (dop. lp.)
+ora|módl się – oro (rozkaźnik)
+pro|za (+abl.)
+peccatoribus|grzesznymi – peccator (abl. lm.)
+hora|godzinę – hora (abl. lp.)
+mortis|śmierci – mors (dop.)
+nostrae|naszej (dop. lp. f)
+angele|Aniele – angelus (wołacz)
+custos|stróż – custos, custodis
+mei|mój, mnie (dop. od ego)
+me|mnie (bier.)
+tibi|Tobie (cel.)
+commissum|powierzonego – committo (imiesłów bierny)
+pietate|dobrocią, pobożnością – pietas (abl.)
+superna|niebiańską, z wysokości – supernus (abl. f)
+illumina|oświecaj – illumino (rozkaźnik)
+custodi|strzeż – custodio (rozkaźnik)
+rege|rządź – rego (rozkaźnik)
+guberna|kieruj – guberno (rozkaźnik)
+requiem|odpoczynek – requies (bier. lp.)
+aeternam|wieczny / wieczne (bier. f)
+dona|daj, obdarz – dono (rozkaźnik)
+eis|im (cel. lm.) – za kilka osób
+ei|jemu / jej (cel. lp.) – za jedną osobę
+domine|Panie – Dominus (wołacz)
+lux|światło, światłość
+perpetua|wieczysta, nieustanna
+luceat|niech świeci – luceo (tryb łączący)
+requiescant|niech odpoczywają – requiesco (tryb łączący, 3 os. lm.)
+requiescat|niech odpoczywa (3 os. lp.)
+pace|pokoju – pax (abl.)
+credo|wierzę – credo, credere
+deum|Boga – Deus (bier.)
+patrem|Ojca – pater (bier.)
+omnipotentem|wszechmogącego – omnipotens (bier.)
+creatorem|Stworzyciela – creator (bier.)
+caeli|nieba – caelum (dop.)
+terrae|ziemi – terra (dop.)
+iesum|Jezusa (bier.)
+christum|Chrystusa (bier.)
+filium|Syna – filius (bier.)
+eius|Jego (dop. od is)
+unicum|jedynego – unicus (bier.)
+dominum|Pana (bier.)
+conceptus|poczęty – concipio (imiesłów)
+est|jest; z imiesłowem: czas przeszły (conceptus est – począł się)
+de|z, od, o (+abl.)
+spiritu|Ducha – spiritus (abl.)
+natus|narodzony – nascor
+ex|z (+abl.)
+virgine|Dziewicy, Panny – virgo (abl.)
+passus|umęczony – patior
+sub|pod (+abl.)
+pontio|Poncjuszu (abl.)
+pilato|Piłacie (abl.)
+crucifixus|ukrzyżowany – crucifigo
+mortuus|umarły – morior
+sepultus|pogrzebany – sepelio
+descendit|zstąpił – descendo (perf.)
+ad|do, ku (+acc.)
+infernos|piekieł, otchłani – infernus (bier. lm.)
+tertia|trzeciego (abl. f)
+die|dnia – dies (abl.)
+resurrexit|zmartwychwstał – resurgo (perf.)
+mortuis|umarłych – mortuus (abl. lm.)
+ascendit|wstąpił – ascendo (perf.)
+caelos|niebiosa – caelum (bier. lm.)
+sedet|siedzi – sedeo
+dexteram|prawicę – dextera (bier.)
+omnipotentis|wszechmogącego (dop.)
+inde|stamtąd
+venturus|mający przyjść – venio (imiesłów przyszły)
+iudicare|sądzić – iudico (bezokol.)
+vivos|żywych – vivus (bier. lm.)
+mortuos|umarłych (bier. lm.)
+spiritum|Ducha (bier.)
+sanctum|Świętego (bier.)
+ecclesiam|Kościół – ecclesia (bier.)
+catholicam|powszechny, katolicki (bier. f)
+sanctorum|świętych (dop. lm.)
+communionem|obcowanie, wspólnotę – communio (bier.)
+remissionem|odpuszczenie – remissio (bier.)
+peccatorum|grzechów – peccatum (dop. lm.)
+carnis|ciała – caro (dop.)
+resurrectionem|zmartwychwstanie – resurrectio (bier.)
+vitam|życie – vita (bier.)
+unum|jednego – unus (bier.)
+factorem|Stworzyciela, Sprawcę – factor (bier.)
+visibilium|widzialnych (dop. lm.)
+omnium|wszystkich (dop. lm.)
+invisibilium|niewidzialnych (dop. lm.)
+unigenitum|jednorodzonego (bier.)
+patre|Ojca – pater (abl.)
+natum|zrodzonego – nascor (bier.)
+ante|przed (+acc.)
+omnia|wszystkie, wszystko (lm. n)
+lumen|światłość
+lumine|światłości (abl.)
+verum|prawdziwego (bier.)
+vero|prawdziwego (abl.)
+genitum|zrodzonego – gigno
+non|nie
+factum|uczynionego, stworzonego – facio
+consubstantialem|współistotnego (bier.)
+per|przez (+acc.)
+quem|którego (bier.)
+facta|uczynione, stworzone (lm. n)
+sunt|są; facta sunt – stały się
+propter|dla, z powodu (+acc.)
+homines|ludzi – homo (bier. lm.)
+nostram|nasze (bier. f)
+salutem|zbawienie – salus (bier.)
+incarnatus|wcielony – incarno
+homo|człowiek
+factus|stał się (factus est)
+etiam|także, również
+resurrexit|zmartwychwstał
+secundum|według (+acc.)
+scripturas|Pism – Scriptura (bier. lm.)
+caelum|niebo (bier.)
+iterum|powtórnie
+cum|z (+abl.)
+cuius|którego (dop.)
+regni|królestwa (dop.)
+erit|będzie – sum (fut.)
+finis|koniec
+vivificantem|ożywiającego, Ożywiciela – vivifico (imiesłów, bier.)
+filioque|i Syna (Filio + -que)
+procedit|pochodzi – procedo
+adoratur|jest uwielbiany – adoro (str. bierna)
+conglorificatur|jest współwysławiany (str. bierna)
+locutus|mówił – loquor (locutus est)
+prophetas|Proroków – propheta (bier. lm.)
+unam|jeden (bier. f)
+apostolicam|apostolski (bier. f)
+confiteor|wyznaję
+baptisma|chrzest (bier.)
+exspecto|oczekuję
+mortuorum|umarłych (dop. lm.)
+venturi|przyszłego (dop.)
+saeculi|wieku, świata (dop.)
+deo|Bogu / Boga (abl.)
+quicum|który z (qui + cum): który z Ojcem i Synem
+`;
+
+/* ===== WŁOSKI – DANE ===== */
+/* Rzeczowniki: "słowo|znaczenie|rodzaj(m/f)|liczba mnoga (opcjonalnie)"; inne kategorie: "słowo|znaczenie" */
+const IT_CATS = [
+{id:"saluti", name:"Powitania i zwroty grzecznościowe", icon:"👋", type:"phrase", data:`
+ciao|cześć (na powitanie i pożegnanie)
+buongiorno|dzień dobry
+buon pomeriggio|dobrego popołudnia
+buonasera|dobry wieczór
+buonanotte|dobranoc
+arrivederci|do widzenia
+arrivederLa|do widzenia (do Pana/Pani)
+a presto|do zobaczenia wkrótce
+a domani|do jutra
+a dopo|na razie, do później
+buona giornata!|miłego dnia!
+buona serata!|miłego wieczoru!
+alla prossima!|do następnego razu!
+bene, grazie|dobrze, dziękuję
+male|źle
+qual è il tuo numero di telefono?|jaki jest twój numer telefonu?
+di dove?|skąd?
+salve|witam (neutralne)
+per favore|proszę (prosząc)
+per piacere|proszę (prosząc)
+grazie|dziękuję
+grazie mille|bardzo dziękuję
+prego|proszę (odpowiedź na dziękuję); proszę bardzo
+di niente|nie ma za co
+scusa|przepraszam (do ty)
+scusi|przepraszam (do Pana/Pani)
+mi dispiace|przykro mi
+permesso?|czy można? (wchodząc)
+sì|tak
+no|nie
+va bene|dobrze, w porządku
+d'accordo|zgoda
+certo|oczywiście
+come stai?|jak się masz?
+come sta?|jak się Pan/Pani ma?
+come va?|jak leci?
+sto bene|mam się dobrze
+molto bene, grazie|bardzo dobrze, dziękuję
+così così|tak sobie
+non c'è male|nieźle
+e tu?|a ty?
+e Lei?|a Pan/Pani?
+piacere|miło mi
+piacere mio|mnie również miło
+benvenuto|witaj (mile widziany)
+auguri!|najlepsze życzenia!
+buon appetito|smacznego
+salute!|na zdrowie!
+pronto?|słucham? (przez telefon)
+allora|więc, zatem, no to
+non capisco|nie rozumiem
+può ripetere, per favore?|może Pan/Pani powtórzyć?
+come si dice … in italiano?|jak się mówi … po włosku?
+che cosa significa?|co to znaczy?
+parla polacco?|czy mówi Pan/Pani po polsku?
+parlo un po' d'italiano|mówię trochę po włosku
+non lo so|nie wiem
+`},
+{id:"presentarsi", name:"Przedstawianie się", icon:"🙋", type:"phrase", data:`
+mi chiamo Kacper|nazywam się Kacper
+sono Kacper|jestem Kacper
+come ti chiami?|jak się nazywasz?
+come si chiama?|jak się Pan/Pani nazywa?
+sono di Cieszyn|jestem z Cieszyna
+di dove sei?|skąd jesteś?
+sono polacco|jestem Polakiem
+sono polacca|jestem Polką
+abito a Kraków|mieszkam w Krakowie
+dove abiti?|gdzie mieszkasz?
+studio teologia|studiuję teologię
+studio filosofia|studiuję filozofię
+studio psicologia|studiuję psychologię
+sono seminarista|jestem klerykiem
+sono studente|jestem studentem
+quanti anni hai?|ile masz lat?
+ho vent'anni|mam dwadzieścia lat
+che lavoro fai?|czym się zajmujesz (zawodowo)?
+parlo polacco e un po' d'italiano|mówię po polsku i trochę po włosku
+il mio numero di telefono è…|mój numer telefonu to…
+Mario Rossi|„Jan Kowalski” po włosku
+mi chiamo / ti chiami / si chiama|nazywam się / nazywasz się / nazywa się
+questo è Marco|to jest Marco (o mężczyźnie)
+questa è Giulia|to jest Giulia (o kobiecie)
+lui si chiama…|on nazywa się…
+lei si chiama…|ona nazywa się…
+lui è italiano / lei è italiana|on jest Włochem / ona jest Włoszką
+lui ha … anni / lei ha … anni|on ma … lat / ona ma … lat
+sono polacco / polacca|jestem Polakiem / Polką
+sono ucraino / ucraina|jestem Ukraińcem / Ukrainką
+sono bielorusso / bielorussa|jestem Białorusinem / Białorusinką
+che cosa studi?|co studiujesz?
+come si scrive?|jak to się pisze?
+`},
+{id:"unita", name:"Unità introduttiva – słówka ze skryptu", type:"noun", data:`
+libro|książka|m
+quaderno|zeszyt|m
+penna|długopis|f
+borsa|torba|f
+bottiglia|butelka|f
+cellulare|telefon komórkowy|m
+caricatore|ładowarka|m
+porta|drzwi|f
+finestra|okno|f
+chiave|klucz|f
+frase|zdanie|f
+lezione|lekcja|f
+studente|student|m
+studentessa|studentka|f
+insegnante|nauczyciel / nauczycielka|m
+ragazzo|chłopiec|m
+ragazza|dziewczyna|f
+gatto|kot|m
+pesce|ryba|m
+treno|pociąg|m
+macchina|samochód|f
+autobus|autobus|m|autobus
+aereo|samolot|m
+zaino|plecak|m
+stivale|kozak, but z cholewą|m
+albero|drzewo|m
+isola|wyspa|f
+casa|dom|f
+ristorante|restauracja|m
+museo|muzeum|m
+piazza|plac|f
+lingua|język|f
+calcio|piłka nożna|m|calci
+musica|muzyka|f|musiche
+arte|sztuka|f
+moda|moda|f
+gelato|lody|m
+cappuccino|cappuccino|m
+espresso|kawa espresso|m
+spaghetti|spaghetti|m|spaghetti
+prosciutto|szynka|m
+parmigiano|parmezan|m
+zucchero|cukier|m
+chitarra|gitara|f
+problema|problem|m|problemi
+città|miasto|f|città
+caffè|kawa|m|caffè
+bar|bar|m|bar
+sport|sport|m|sport
+`},
+{id:"nazionalita", name:"Narodowości z zajęć", type:"phrase", data:`
+polacco / polacca|Polak / Polka
+italiano / italiana|Włoch / Włoszka
+ucraino / ucraina|Ukrainiec / Ukrainka
+bielorusso / bielorussa|Białorusin / Białorusinka
+americano / americana|Amerykanin / Amerykanka
+australiano / australiana|Australijczyk / Australijka
+spagnolo / spagnola|Hiszpan / Hiszpanka
+brasiliano / brasiliana|Brazylijczyk / Brazylijka
+marocchino / marocchina|Marokańczyk / Marokanka
+argentino / argentina|Argentyńczyk / Argentynka
+tedesco / tedesca|Niemiec / Niemka
+svizzero / svizzera|Szwajcar / Szwajcarka
+inglese|Anglik / Angielka (nieodmienne co do rodzaju)
+`},
+{id:"alfabeto", name:"Alfabet i literowanie", type:"phrase", data:`
+a|a
+b – bi|b
+c – ci|c [czi]
+d – di|d
+e|e
+f – effe|f
+g – gi|g [dżi]
+h – acca|h [akka]
+i|i
+l – elle|l
+m – emme|m
+n – enne|n
+o|o
+p – pi|p
+q – cu|q [ku]
+r – erre|r
+s – esse|s
+t – ti|t
+u|u
+v – vu (vi)|v
+z – zeta|z [dzeta]
+j – i lunga|j (litera obca)
+k – cappa|k (litera obca)
+w – doppia vu|w (litera obca)
+x – ics|x (litera obca)
+y – ipsilon / i greca|y (litera obca)
+come si scrive?|jak to się pisze? (prośba o przeliterowanie)
+`},
+{id:"conti", name:"Liczenie i tablice rejestracyjne", type:"phrase", data:`
+più|plus (+)
+meno|minus (−)
+per|razy (×)
+diviso|podzielone przez (:)
+uguale / fa|równa się (=)
+due più tre fa cinque|dwa plus trzy równa się pięć
+dieci meno quattro uguale sei|dziesięć minus cztery równa się sześć
+la targa|tablica rejestracyjna
+di dov'è questa targa?|skąd jest ta tablica rejestracyjna?
+questa targa è italiana|ta tablica jest włoska
+questa targa è polacca|ta tablica jest polska
+questa targa è spagnola|ta tablica jest hiszpańska
+questa targa è tedesca|ta tablica jest niemiecka
+questa targa è francese|ta tablica jest francuska
+che cosa vedi?|co widzisz?
+`},
+{id:"stati", name:"Samopoczucie i stany (essere / avere)", icon:"🙂", type:"phrase", data:`
+essere stanco / stanchi|być zmęczonym / zmęczonymi
+essere triste / tristi|być smutnym / smutnymi
+essere felice / felici|być szczęśliwym / szczęśliwymi
+essere arrabbiato / arrabbiati|być złym, wściekłym
+essere contento / contenti|być zadowolonym
+essere malato|być chorym
+essere nervoso|być zdenerwowanym
+essere preoccupato|być zmartwionym
+essere tranquillo|być spokojnym
+essere in ritardo|być spóźnionym
+essere in anticipo|być przed czasem
+avere fame|być głodnym (dosł. mieć głód)
+avere sete|być spragnionym (mieć pragnienie)
+avere freddo|marznąć, być zimno (mieć zimno)
+avere caldo|być gorąco (mieć ciepło)
+avere sonno|być śpiącym
+avere paura|bać się (mieć strach)
+avere fretta|spieszyć się
+avere ragione|mieć rację
+avere torto|nie mieć racji
+avere bisogno di|potrzebować (mieć potrzebę)
+avere voglia di|mieć ochotę na
+avere mal di testa|mieć ból głowy
+avere … anni|mieć … lat
+`},
+{id:"tempo", name:"Czas: dni, miesiące, pory roku", icon:"📅", type:"noun", data:`
+lunedì|poniedziałek|m|lunedì
+martedì|wtorek|m|martedì
+mercoledì|środa|m|mercoledì
+giovedì|czwartek|m|giovedì
+venerdì|piątek|m|venerdì
+sabato|sobota|m
+domenica|niedziela|f
+gennaio|styczeń|m
+febbraio|luty|m
+marzo|marzec|m
+aprile|kwiecień|m
+maggio|maj|m
+giugno|czerwiec|m
+luglio|lipiec|m
+agosto|sierpień|m
+settembre|wrzesień|m
+ottobre|październik|m
+novembre|listopad|m
+dicembre|grudzień|m
+primavera|wiosna|f
+estate|lato|f
+autunno|jesień|m
+inverno|zima|m
+giorno|dzień|m
+settimana|tydzień|f
+mese|miesiąc|m
+anno|rok|m
+ora|godzina|f
+minuto|minuta|m
+secondo|sekunda|m
+mattina|ranek, przedpołudnie|f
+pomeriggio|popołudnie|m
+sera|wieczór|f
+notte|noc|f
+mezzogiorno|południe|m
+mezzanotte|północ|f
+oggi|dzisiaj|adv
+domani|jutro|adv
+ieri|wczoraj|adv
+dopodomani|pojutrze|adv
+adesso|teraz|adv
+ora (avv.)|teraz|adv
+presto|wcześnie, wkrótce|adv
+tardi|późno|adv
+sempre|zawsze|adv
+mai|nigdy|adv
+spesso|często|adv
+qualche volta|czasami|adv
+il fine settimana|weekend|m
+`},
+{id:"colori", name:"Kolory", icon:"🎨", type:"adj", data:`
+bianco|biały
+nero|czarny
+rosso|czerwony
+verde|zielony
+giallo|żółty
+blu|niebieski, granatowy (nieodmienny)
+azzurro|błękitny
+grigio|szary
+marrone|brązowy
+arancione|pomarańczowy
+rosa|różowy (nieodmienny)
+viola|fioletowy (nieodmienny)
+celeste|jasnoniebieski
+oro|złoty
+argento|srebrny
+`},
+{id:"famiglia", name:"Rodzina i ludzie", icon:"👪", type:"noun", data:`
+famiglia|rodzina|f
+padre|ojciec|m
+madre|matka|f
+papà|tata|m|papà
+mamma|mama|f
+genitori|rodzice|m|genitori
+figlio|syn|m
+figlia|córka|f
+fratello|brat|m
+sorella|siostra|f
+nonno|dziadek|m
+nonna|babcia|f
+zio|wujek|m|zii
+zia|ciocia|f
+cugino|kuzyn|m
+cugina|kuzynka|f
+marito|mąż|m
+moglie|żona|f|mogli
+nipote|wnuk / bratanek|m
+bambino|dziecko, chłopczyk|m
+bambina|dziewczynka|f
+ragazzo|chłopak|m
+ragazza|dziewczyna|f
+uomo|mężczyzna, człowiek|m|uomini
+donna|kobieta|f
+persona|osoba|f
+gente|ludzie|f|gente
+amico|przyjaciel|m|amici
+amica|przyjaciółka|f|amiche
+collega|kolega z pracy / koleżanka|f|colleghe
+amico di lavoro|kolega z pracy|m|amici di lavoro
+vicino|sąsiad|m
+signore|pan|m
+signora|pani|f
+signorina|panienka|f
+`},
+{id:"corpo", name:"Ciało i zdrowie", icon:"🫀", type:"noun", data:`
+corpo|ciało|m
+testa|głowa|f
+capelli|włosy|m|capelli
+faccia|twarz|f|facce
+occhio|oko|m|occhi
+orecchio|ucho|m|orecchie
+naso|nos|m
+bocca|usta|f|bocche
+dente|ząb|m
+lingua|język|f
+collo|szyja|m
+spalla|ramię (bark)|f
+braccio|ręka (ramię)|m|braccia
+mano|dłoń, ręka|f|mani
+dito|palec|m|dita
+gamba|noga|f
+piede|stopa|m
+ginocchio|kolano|m|ginocchia
+cuore|serce|m
+stomaco|żołądek|m|stomaci
+schiena|plecy|f
+pelle|skóra|f
+sangue|krew|m
+salute|zdrowie|f
+malattia|choroba|f
+medico|lekarz|m|medici
+ospedale|szpital|m
+farmacia|apteka|f
+medicina|lekarstwo|f
+febbre|gorączka|f
+dolore|ból|m
+raffreddore|katar, przeziębienie|m
+`},
+{id:"casa", name:"Dom i mieszkanie", icon:"🏠", type:"noun", data:`
+casa|dom|f
+casa mia|mój dom (rodzinny)|f
+appartamento|mieszkanie|m
+stanza|pokój|f
+camera|sypialnia, pokój|f
+cucina|kuchnia|f
+bagno|łazienka|m
+soggiorno|salon|m
+salotto|salon|m
+ingresso|przedpokój, wejście|m
+porta|drzwi|f
+finestra|okno|f
+muro|mur, ściana|m
+parete|ściana (wewn.)|f
+pavimento|podłoga|m
+soffitto|sufit|m
+tetto|dach|m
+scala|schody|f
+letto|łóżko|m
+tavolo|stół|m
+sedia|krzesło|f
+divano|kanapa|m
+armadio|szafa|m
+scrivania|biurko|f
+lampada|lampa|f
+specchio|lustro|m|specchi
+frigorifero|lodówka|m
+forno|piekarnik|m
+chiave|klucz|f
+giardino|ogród|m
+balcone|balkon|m
+libro|książka|m
+quaderno|zeszyt|m
+penna|długopis|f
+matita|ołówek|f
+computer|komputer|m|computer
+telefono|telefon|m
+cellulare|komórka|m
+televisione|telewizja, telewizor|f
+`},
+{id:"cibo", name:"Jedzenie i picie", icon:"🍝", type:"noun", data:`
+cibo|jedzenie|m
+colazione|śniadanie|f
+pranzo|obiad|m
+cena|kolacja|f
+pane|chleb|m
+pasta|makaron, ciastko|f
+pizza|pizza|f
+riso|ryż|m
+carne|mięso|f
+pesce|ryba|m
+pollo|kurczak|m
+prosciutto|szynka|m
+formaggio|ser|m|formaggi
+uovo|jajko|m|uova
+latte|mleko|m
+burro|masło|m
+olio|olej, oliwa|m
+sale|sól|m
+zucchero|cukier|m
+frutta|owoce|f
+mela|jabłko|f
+pera|gruszka|f
+arancia|pomarańcza|f|arance
+banana|banan|f
+uva|winogrona|f
+limone|cytryna|m
+verdura|warzywa|f
+patata|ziemniak|f
+pomodoro|pomidor|m
+insalata|sałata, sałatka|f
+cipolla|cebula|f
+aglio|czosnek|m
+zuppa|zupa|f
+dolce|deser, słodycz|m
+gelato|lody|m
+torta|tort, ciasto|f
+biscotto|ciastko|m
+cornetto|rogalik, croissant (po włosku!)|m
+acqua|woda|f
+acqua frizzante|woda gazowana|f
+acqua naturale|woda niegazowana|f
+vino|wino|m
+vino rosso|czerwone wino|m
+birra|piwo|f
+caffè|kawa|m|caffè
+cappuccino|cappuccino|m
+tè|herbata|m|tè
+succo|sok|m|succhi
+bicchiere|szklanka, kieliszek|m
+tazza|filiżanka|f
+piatto|talerz, danie|m
+forchetta|widelec|f
+coltello|nóż|m
+cucchiaio|łyżka|m|cucchiai
+bottiglia|butelka|f
+ristorante|restauracja|m
+bar|bar, kawiarnia|m|bar
+conto|rachunek|m
+menù|menu|m|menù
+`},
+{id:"citta", name:"Miasto, miejsca, podróże", icon:"🏙️", type:"noun", data:`
+città|miasto|f|città
+paese|kraj; miasteczko|m
+via|ulica|f
+strada|ulica, droga|f
+piazza|plac|f
+ponte|most|m
+negozio|sklep|m|negozi
+supermercato|supermarket|m
+mercato|targ|m|mercati
+banca|bank|f|banche
+posta|poczta|f
+ufficio|biuro|m|uffici
+scuola|szkoła|f
+università|uniwersytet|f|università
+biblioteca|biblioteka|f|biblioteche
+museo|muzeum|m
+teatro|teatr|m
+cinema|kino|m|cinema
+albergo|hotel|m|alberghi
+stazione|dworzec|f
+aeroporto|lotnisko|m
+fermata|przystanek|f
+treno|pociąg|m
+autobus|autobus|m|autobus
+macchina|samochód|f
+bicicletta|rower|f
+aereo|samolot|m
+nave|statek|f
+biglietto|bilet|m
+viaggio|podróż|m|viaggi
+valigia|walizka|f|valigie
+mappa|mapa|f
+centro|centrum|m
+parco|park|m|parchi
+mare|morze|m
+montagna|góra (góry)|f
+lago|jezioro|m|laghi
+fiume|rzeka|m
+campagna|wieś (okolica)|f
+destra|prawo (strona)|f
+sinistra|lewo (strona)|f
+dritto|prosto|adv
+vicino (avv.)|blisko|adv
+lontano|daleko|adv
+qui / qua|tutaj|adv
+lì / là|tam|adv
+dove?|gdzie?|adv
+`},
+{id:"lavoro", name:"Praca i studia", icon:"🎓", type:"noun", data:`
+lavoro|praca|m
+primo giorno di lavoro|pierwszy dzień w pracy|m
+studio|nauka; gabinet|m|studi
+studente|student|m
+studentessa|studentka|f
+professore|profesor, nauczyciel|m
+professoressa|profesorka, nauczycielka|f
+maestro|nauczyciel (szk. podst.); mistrz|m
+insegnante|nauczyciel(ka)|m
+lezione|lekcja, wykład|f
+corso|kurs|m
+classe|klasa|f
+aula|sala wykładowa|f
+esame|egzamin|m
+compito|zadanie (domowe)|m
+voto|ocena|m
+domanda|pytanie|f
+risposta|odpowiedź|f
+parola|słowo|f
+frase|zdanie|f
+lingua (straniera)|język (obcy)|f
+dizionario|słownik|m|dizionari
+grammatica|gramatyka|f|grammatiche
+esercizio|ćwiczenie|m|esercizi
+pagina|strona|f
+lettera|list; litera|f
+foglio|kartka|m|fogli
+giornale|gazeta|m
+rivista|czasopismo|f
+direttore|dyrektor|m
+capo|szef|m
+impiegato|urzędnik|m
+segretaria|sekretarka|f
+operaio|robotnik|m|operai
+medico (prof.)|lekarz|m|medici
+avvocato|adwokat|m
+ingegnere|inżynier|m
+cameriere|kelner|m
+cuoco|kucharz|m|cuochi
+commesso|sprzedawca|m
+riunione|zebranie|f
+orario|rozkład, plan zajęć|m|orari
+stipendio|pensja|m|stipendi
+`},
+{id:"chiesa", name:"Kościół i wiara", icon:"⛪", type:"noun", data:`
+chiesa|kościół|f|chiese
+Dio|Bóg|m|dei
+Gesù Cristo|Jezus Chrystus|m|Gesù Cristo
+Spirito Santo|Duch Święty|m|Spirito Santo
+Madonna|Matka Boża|f
+Vergine Maria|Dziewica Maryja|f
+Trinità|Trójca|f|Trinità
+fede|wiara|f
+speranza|nadzieja|f
+carità|miłość (caritas)|f|carità
+amore|miłość|m
+grazia|łaska|f
+peccato|grzech|m
+perdono|przebaczenie|m
+salvezza|zbawienie|f
+preghiera|modlitwa|f
+messa|msza|f
+santa messa|Msza Święta|f
+sacramento|sakrament|m
+battesimo|chrzest|m
+cresima|bierzmowanie|f
+eucaristia|Eucharystia|f
+confessione|spowiedź|f
+matrimonio|małżeństwo|m|matrimoni
+ordinazione|święcenia|f
+sacerdote|kapłan|m
+prete|ksiądz|m
+parroco|proboszcz|m|parroci
+vescovo|biskup|m
+papa|papież|m|papi
+cardinale|kardynał|m
+diacono|diakon|m
+seminarista|kleryk|m|seminaristi
+seminario|seminarium|m|seminari
+suora|zakonnica|f
+frate|zakonnik, brat|m
+monaco|mnich|m|monaci
+santo|święty|m
+santa|święta|f
+angelo|anioł|m
+apostolo|apostoł|m
+martire|męczennik|m
+profeta|prorok|m|profeti
+fedele|wierny|m
+parrocchia|parafia|f
+altare|ołtarz|m
+croce|krzyż|f
+calice|kielich|m
+ostia|hostia|f
+candela|świeca|f
+Bibbia|Biblia|f
+Vangelo|Ewangelia|m
+Sacra Scrittura|Pismo Święte|f
+salmo|psalm|m
+omelia|homilia|f
+benedizione|błogosławieństwo|f
+paradiso|raj|m
+inferno|piekło|m
+purgatorio|czyściec|m|purgatori
+anima|dusza|f
+cielo|niebo|m
+Natale|Boże Narodzenie|m
+Pasqua|Wielkanoc|f
+Quaresima|Wielki Post|f
+Avvento|Adwent|m
+Pentecoste|Zesłanie Ducha Świętego|f
+Vaticano|Watykan|m
+`},
+{id:"filosofia", name:"Filozofia, nauka, pojęcia", icon:"🧠", type:"noun", data:`
+filosofia|filozofia|f
+teologia|teologia|f
+psicologia|psychologia|f
+storia|historia|f
+logica|logika|f|logiche
+verità|prawda|f|verità
+bene|dobro|m
+male|zło|m
+bellezza|piękno|f
+essere (sost.)|byt|m
+essenza|istota|f
+esistenza|istnienie|f
+sostanza|substancja|f
+natura|natura|f
+ragione|rozum, racja|f
+intelletto|intelekt|m
+volontà|wola|f|volontà
+libertà|wolność|f|libertà
+coscienza|sumienie, świadomość|f
+persona umana|osoba ludzka|f
+dignità|godność|f|dignità
+virtù|cnota|f|virtù
+saggezza|mądrość|f
+sapienza|mądrość|f
+conoscenza|poznanie, wiedza|f
+scienza|nauka|f
+idea|idea|f
+concetto|pojęcie|m
+segno|znak|m
+simbolo|symbol|m
+mistero|tajemnica|m
+problema|problem|m|problemi
+domanda (filos.)|pytanie|f
+tempo|czas; pogoda|m
+spazio|przestrzeń|m|spazi
+mondo|świat|m
+uomo (filos.)|człowiek|m|uomini
+vita|życie|f
+morte|śmierć|f
+felicità|szczęście|f|felicità
+dubbio|wątpliwość|m|dubbi
+`},
+{id:"natura", name:"Przyroda i pogoda", icon:"🌤️", type:"noun", data:`
+sole|słońce|m
+luna|księżyc|f
+stella|gwiazda|f
+cielo (natura)|niebo|m
+nuvola|chmura|f
+pioggia|deszcz|f|piogge
+neve|śnieg|f
+vento|wiatr|m
+nebbia|mgła|f
+temporale|burza|m
+tempo (meteo)|pogoda|m
+fa caldo|jest gorąco|x
+fa freddo|jest zimno|x
+fa bel tempo|jest ładna pogoda|x
+fa brutto tempo|jest brzydka pogoda|x
+piove|pada deszcz|x
+nevica|pada śnieg|x
+c'è il sole|świeci słońce|x
+albero|drzewo|m
+fiore|kwiat|m
+erba|trawa|f
+bosco|las|m|boschi
+foresta|puszcza|f
+terra|ziemia|f
+fuoco|ogień|m|fuochi
+aria|powietrze|f
+animale|zwierzę|m
+cane|pies|m
+gatto|kot|m
+uccello|ptak|m
+cavallo|koń|m
+mucca|krowa|f|mucche
+pecora|owca|f
+pesce (anim.)|ryba|m
+agnello|baranek|m
+`},
+{id:"vestiti", name:"Ubrania", icon:"👕", type:"noun", data:`
+vestito|ubranie, sukienka, garnitur|m
+camicia|koszula|f|camicie
+maglietta|koszulka|f
+maglione|sweter|m
+pantaloni|spodnie|m|pantaloni
+gonna|spódnica|f
+giacca|marynarka, kurtka|f|giacche
+cappotto|płaszcz|m
+scarpe|buty|f|scarpe
+calzini|skarpetki|m|calzini
+cappello|kapelusz|m
+sciarpa|szalik|f
+guanti|rękawiczki|m|guanti
+borsa|torba, torebka|f
+zaino|plecak|m
+occhiali|okulary|m|occhiali
+orologio|zegarek|m|orologi
+tonaca|sutanna|f
+`},
+{id:"paesi", name:"Kraje i narodowości", icon:"🌍", type:"phrase", data:`
+Italia – italiano / italiana|Włochy – Włoch / Włoszka
+Polonia – polacco / polacca|Polska – Polak / Polka
+Germania – tedesco / tedesca|Niemcy – Niemiec / Niemka
+Francia – francese|Francja – Francuz(ka)
+Spagna – spagnolo / spagnola|Hiszpania – Hiszpan(ka)
+Inghilterra – inglese|Anglia – Anglik / Angielka
+Stati Uniti – americano|Stany Zjednoczone – Amerykanin
+Russia – russo|Rosja – Rosjanin
+Ucraina – ucraino|Ukraina – Ukrainiec
+Repubblica Ceca – ceco|Czechy – Czech
+Slovacchia – slovacco|Słowacja – Słowak
+Austria – austriaco|Austria – Austriak
+Grecia – greco|Grecja – Grek
+Israele – israeliano|Izrael – Izraelczyk
+Roma – romano|Rzym – rzymianin
+Europa – europeo|Europa – Europejczyk
+`},
+{id:"verbi_are", name:"Czasowniki na -are", icon:"🔵", type:"verb", data:`
+lavorare|pracować|are
+parlare|mówić, rozmawiać|are
+comprare|kupować|are
+abitare|mieszkać|are
+amare|kochać|are
+aspettare|czekać|are
+ascoltare|słuchać|are
+ballare|tańczyć|are
+camminare|chodzić, spacerować|are
+cantare|śpiewać|are
+cercare|szukać|are
+chiamare|wołać, dzwonić|are
+cominciare|zaczynać|are
+cucinare|gotować|are
+domandare|pytać|are
+entrare|wchodzić|are
+guardare|patrzeć, oglądać|are
+guidare|prowadzić (auto)|are
+imparare|uczyć się (czegoś)|are
+incontrare|spotykać|are
+insegnare|uczyć (kogoś)|are
+invitare|zapraszać|are
+lavare|myć|are
+mangiare|jeść|are
+pagare|płacić|are
+pensare|myśleć|are
+portare|nosić, przynosić|are
+pregare|modlić się, prosić|are
+preparare|przygotowywać|are
+provare|próbować|are
+raccontare|opowiadać|are
+restare|zostawać|are
+ricordare|pamiętać|are
+riposare|odpoczywać|are
+salutare|pozdrawiać|are
+sbagliare|mylić się|are
+spiegare|wyjaśniać|are
+sperare|mieć nadzieję|are
+studiare|uczyć się, studiować|are
+suonare|grać (na instrumencie), dzwonić|are
+telefonare|telefonować|are
+tornare|wracać|are
+trovare|znajdować|are
+usare|używać|are
+viaggiare|podróżować|are
+visitare|zwiedzać, odwiedzać|are
+arrivare|przybywać|are
+ringraziare|dziękować|are
+celebrare|celebrować, odprawiać|are
+confessare|spowiadać, wyznawać|are
+perdonare|przebaczać|are
+adorare|adorować|are
+lodare|chwalić|are
+battezzare|chrzcić|are
+`},
+{id:"verbi_ere", name:"Czasowniki na -ere", icon:"🟢", type:"verb", data:`
+prendere|brać|ere
+scrivere|pisać|ere
+leggere|czytać|ere
+vedere|widzieć|ere
+vivere|żyć|ere
+credere|wierzyć|ere
+ricevere|otrzymywać|ere
+rispondere|odpowiadać|ere
+chiedere|pytać, prosić|ere
+chiudere|zamykać|ere
+correre|biec|ere
+decidere|decydować|ere
+mettere|kłaść|ere
+perdere|tracić, gubić|ere
+permettere|pozwalać|ere
+piangere|płakać|ere
+promettere|obiecywać|ere
+ridere|śmiać się|ere
+ripetere|powtarzać|ere
+rompere|łamać, psuć|ere
+scendere|schodzić|ere
+spendere|wydawać (pieniądze)|ere
+vendere|sprzedawać|ere
+vincere|wygrywać|ere
+conoscere|znać|ere
+crescere|rosnąć|ere
+cadere|upadać|ere
+temere|bać się|ere
+discutere|dyskutować|ere
+accendere|zapalać|ere
+`},
+{id:"verbi_ire", name:"Czasowniki na -ire", icon:"🟣", type:"verb", data:`
+dormire|spać|ire
+aprire|otwierać|ire
+partire|wyjeżdżać|ire
+sentire|czuć, słyszeć|ire
+servire|służyć|ire
+seguire|iść za, śledzić|ire
+offrire|ofiarować, częstować|ire
+soffrire|cierpieć|ire
+coprire|przykrywać|ire
+vestire|ubierać|ire
+finire|kończyć|isc
+capire|rozumieć|isc
+preferire|woleć|isc
+pulire|sprzątać|isc
+spedire|wysyłać|isc
+costruire|budować|isc
+restituire|zwracać|isc
+obbedire|być posłusznym|isc
+suggerire|podpowiadać|isc
+`},
+{id:"verbi_irr", name:"Czasowniki nieregularne", icon:"🔴", type:"verb", data:`
+essere|być|irr
+avere|mieć|irr
+andare|iść, jechać|irr
+fare|robić|irr
+dire|mówić, powiedzieć|irr
+venire|przychodzić|irr
+stare|być, czuć się, stać|irr
+dare|dawać|irr
+potere|móc|irr
+volere|chcieć|irr
+dovere|musieć|irr
+sapere|wiedzieć, umieć|irr
+uscire|wychodzić|irr
+bere|pić|irr
+rimanere|zostawać|irr
+tenere|trzymać|irr
+salire|wchodzić (w górę)|irr
+piacere|podobać się|irr
+benedire|błogosławić|irr
+chiamarsi|nazywać się|irr
+`},
+{id:"aggettivi", name:"Przymiotniki", icon:"✨", type:"adj", data:`
+bello|piękny, ładny
+brutto|brzydki
+buono|dobry
+cattivo|zły
+grande|duży, wielki
+piccolo|mały
+alto|wysoki
+basso|niski
+lungo|długi
+corto|krótki
+nuovo|nowy
+vecchio|stary
+giovane|młody
+anziano|starszy (wiekiem)
+caldo|ciepły, gorący
+freddo|zimny
+facile|łatwy
+difficile|trudny
+veloce|szybki
+lento|wolny (powolny)
+libero|wolny
+occupato|zajęty
+pieno|pełny
+vuoto|pusty
+caro|drogi; kochany
+economico|tani
+ricco|bogaty
+povero|biedny
+forte|silny
+debole|słaby
+felice|szczęśliwy
+triste|smutny
+contento|zadowolony
+stanco|zmęczony
+malato|chory
+sano|zdrowy
+simpatico|sympatyczny
+antipatico|niesympatyczny
+gentile|uprzejmy
+intelligente|inteligentny
+stupido|głupi
+bravo|zdolny, dzielny
+pigro|leniwy
+allegro|wesoły
+serio|poważny
+tranquillo|spokojny
+nervoso|nerwowy
+famoso|sławny
+importante|ważny
+interessante|ciekawy
+noioso|nudny
+pulito|czysty
+sporco|brudny
+aperto|otwarty
+chiuso|zamknięty
+vicino (agg.)|bliski
+lontano (agg.)|daleki
+primo|pierwszy
+ultimo|ostatni
+santo|święty
+sacro|święty (sakralny)
+vero|prawdziwy
+falso|fałszywy
+giusto|sprawiedliwy, właściwy
+sbagliato|błędny
+possibile|możliwy
+impossibile|niemożliwy
+necessario|konieczny
+umano|ludzki
+divino|boski
+eterno|wieczny
+cattolico|katolicki
+cristiano|chrześcijański
+italiano|włoski
+polacco|polski
+straniero|obcy, zagraniczny
+molto (agg.)|liczny, dużo
+poco|mało
+tutto|cały
+ogni|każdy (nieodmienne)
+`},
+{id:"piccole", name:"Słówka funkcyjne: pytajniki, przyimki, spójniki", icon:"🔗", type:"phrase", data:`
+chi?|kto?
+che cosa? / cosa?|co?
+come?|jak?
+dove?|gdzie?
+quando?|kiedy?
+perché?|dlaczego? / ponieważ
+quanto? / quanta? / quanti? / quante?|ile?
+quale? / quali?|który?
+di|z (skąd), od, o (dopełniacz)
+a|do, w (miasto), o (godzina)
+da|od, z; u (kogoś)
+in|w, do (kraj, pomieszczenie)
+con|z (kimś)
+su|na
+per|dla, przez, żeby
+tra / fra|między; za (czas)
+senza|bez
+e|i
+o|lub, albo
+ma|ale
+anche|też, także
+però|jednak
+quindi|więc, dlatego
+allora (cong.)|więc, zatem
+se|jeśli
+che|że; który
+quando (cong.)|kiedy (gdy)
+mentre|podczas gdy
+molto|bardzo
+poco (avv.)|mało
+troppo|za dużo, zbyt
+abbastanza|dosyć, wystarczająco
+bene|dobrze
+male|źle
+già|już
+ancora|jeszcze
+subito|natychmiast
+insieme|razem
+forse|może
+sicuro|na pewno
+proprio|właśnie, naprawdę
+c'è|jest (znajduje się)
+ci sono|są (znajdują się)
+`}
+];
+
+/* Odmiany nieregularne (presente) */
+const IT_IRR = {
+ essere:["sono","sei","è","siamo","siete","sono"],
+ avere:["ho","hai","ha","abbiamo","avete","hanno"],
+ andare:["vado","vai","va","andiamo","andate","vanno"],
+ fare:["faccio","fai","fa","facciamo","fate","fanno"],
+ dire:["dico","dici","dice","diciamo","dite","dicono"],
+ venire:["vengo","vieni","viene","veniamo","venite","vengono"],
+ stare:["sto","stai","sta","stiamo","state","stanno"],
+ dare:["do","dai","dà","diamo","date","danno"],
+ potere:["posso","puoi","può","possiamo","potete","possono"],
+ volere:["voglio","vuoi","vuole","vogliamo","volete","vogliono"],
+ dovere:["devo","devi","deve","dobbiamo","dovete","devono"],
+ sapere:["so","sai","sa","sappiamo","sapete","sanno"],
+ uscire:["esco","esci","esce","usciamo","uscite","escono"],
+ bere:["bevo","bevi","beve","beviamo","bevete","bevono"],
+ rimanere:["rimango","rimani","rimane","rimaniamo","rimanete","rimangono"],
+ tenere:["tengo","tieni","tiene","teniamo","tenete","tengono"],
+ salire:["salgo","sali","sale","saliamo","salite","salgono"],
+ piacere:["piaccio","piaci","piace","piacciamo","piacete","piacciono"],
+ chiamarsi:["mi chiamo","ti chiami","si chiama","ci chiamiamo","vi chiamate","si chiamano"],
+ benedire:["benedico","benedici","benedice","benediciamo","benedite","benedicono"]
+};
+const IT_PERS = ["io","tu","lui / lei / Lei","noi","voi","loro"];
+const IT_PERS_PL = ["ja","ty","on / ona / Pan(i)","my","wy","oni / one"];
+
+/* ===== WŁOSKI – GRAMATYKA „TAK, ŻEBY NAWET OSIOŁ ZROZUMIAŁ” ===== */
+const IT_LESSONS = [
+{id:"wymowa", title:"1. Jak to przeczytać? (wymowa)", html:`
+<p class="lead">Włoski czyta się prawie tak, jak się pisze. Musisz zapamiętać tylko kilka „pułapek” z literami <b>c</b>, <b>g</b> i <b>h</b>.</p>
+<div class="rule"><b>Zasada osła:</b> litera <b>h</b> nic nie mówi. Jest jak „przełącznik”: stawiasz ją po c/g, żeby dźwięk był twardy.</div>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Piszę</th><th>Czytam</th><th>Przykład</th></tr></thead><tbody>
+<tr><td>ca, co, cu</td><td>ka, ko, ku</td><td><b>ca</b>sa [kaza] – dom</td></tr>
+<tr><td>ce, ci</td><td>cze, czi</td><td><b>ci</b>ao [czao], <b>ce</b>na [czena]</td></tr>
+<tr><td>che, chi</td><td>ke, ki</td><td><b>chi</b>esa [kieza] – kościół</td></tr>
+<tr><td>ga, go, gu</td><td>ga, go, gu</td><td><b>ga</b>tto – kot</td></tr>
+<tr><td>ge, gi</td><td>dże, dżi</td><td><b>gi</b>orno [dżiorno] – dzień</td></tr>
+<tr><td>ghe, ghi</td><td>ge, gi</td><td>spa<b>ghe</b>tti [spagetti]</td></tr>
+<tr><td>gn</td><td>ń</td><td>ba<b>gn</b>o [bańo] – łazienka</td></tr>
+<tr><td>gli</td><td>li (miękkie, jak „lj”)</td><td>fi<b>gli</b>o [filjo] – syn</td></tr>
+<tr><td>sc + e/i</td><td>sz</td><td><b>sci</b>are [sziare] – jeździć na nartach</td></tr>
+<tr><td>sch</td><td>sk</td><td><b>sch</b>iena [skiena] – plecy</td></tr>
+<tr><td>z</td><td>c albo dz</td><td>pi<b>zz</b>a [pitca], <b>z</b>ero [dzero]</td></tr>
+<tr><td>qu</td><td>kw</td><td><b>qu</b>ando [kwando] – kiedy</td></tr>
+</tbody></table></div>
+<div class="tip"><b>Podwójne litery</b> (tt, ll, ss, zz) czytasz dłużej: <i>pa<b>ss</b>ta</i> to nie to samo co <i>pasta</i>! Akcent pada zwykle na przedostatnią sylabę; jeśli na ostatnią – jest kreska: <i>città, caffè, perché</i>.</div>
+<div class="rule"><b>Reguły z zajęć – zapamiętaj po jedzeniu i sztuce:</b>
+<div class="table-wrap"><table class="nt"><tbody>
+<tr><td><b>ci</b></td><td>cappu<b>cci</b>no</td><td><b>ce</b></td><td>Versa<b>ce</b></td></tr>
+<tr><td><b>gi</b></td><td>Caravag<b>gi</b>o</td><td><b>ge</b></td><td><b>ge</b>lato</td></tr>
+<tr><td><b>ch</b></td><td>espresso macc<b>h</b>iato</td><td><b>gh</b></td><td>spa<b>gh</b>etti</td></tr>
+<tr><td><b>gn</b></td><td>lasa<b>gn</b>e</td><td><b>gli</b></td><td>ta<b>gli</b>atelle</td></tr>
+<tr><td><b>sc + i</b></td><td>pro<b>sci</b>utto</td><td><b>sc + e</b></td><td><b>sce</b>na</td></tr>
+<tr><td><b>s</b> między samogłoskami</td><td>Pi<b>s</b>a [piza] – dźwięczne</td><td></td><td></td></tr>
+</tbody></table></div></div>
+<div class="tip"><b>Ciekawostka z łaciny:</b> na lektoracie z łaciny „quotidianum” czytamy [kwotidianum] – tak samo jak włoskie <i>quotidiano</i> (codzienny).</div>
+`},
+{id:"alfabet", title:"1a. Alfabet i literowanie", html:`
+<p class="lead">Włoski alfabet ma tylko <b>21 liter</b>. Pięć dodatkowych (j, k, w, x, y) występuje tylko w słowach obcych.</p>
+<div class="table-wrap"><table class="nt"><tbody>
+<tr><td>A – a</td><td>B – bi</td><td>C – ci</td><td>D – di</td><td>E – e</td><td>F – effe</td><td>G – gi</td></tr>
+<tr><td>H – acca</td><td>I – i</td><td>L – elle</td><td>M – emme</td><td>N – enne</td><td>O – o</td><td>P – pi</td></tr>
+<tr><td>Q – cu</td><td>R – erre</td><td>S – esse</td><td>T – ti</td><td>U – u</td><td>V – vu</td><td>Z – zeta</td></tr>
+<tr><td>J – i lunga</td><td>K – cappa</td><td>W – doppia vu</td><td>X – ics</td><td>Y – ipsilon</td><td></td><td></td></tr>
+</tbody></table></div>
+<div class="rule"><b>Literowanie:</b> „Come si scrive?” – Jak to się pisze? → „K-A-C-P-E-R: cappa, a, ci, pi, e, erre”.<br>Pomaga: litera H to <b>acca</b> (bo sama nic nie wymawia), a Z to <b>zeta</b>.</div>
+`},
+{id:"rodzajnik", title:"2. Rodzajnik określony – czapka na rzeczowniku", html:`
+<p class="lead">Po polsku mówimy „książka”. Włoch zawsze nakłada rzeczownikowi <b>czapkę</b>: <i>il libro</i>, <i>la casa</i>. Ta czapka to <b>rodzajnik</b>. Mówi: rodzaj męski czy żeński, jedna rzecz czy wiele.</p>
+<div class="rule"><b>Krok 1 – rodzaj:</b> końcówka <b>-o</b> → prawie zawsze męski. Końcówka <b>-a</b> → prawie zawsze żeński. Końcówka <b>-e</b> → trzeba zapamiętać (il padre, la madre).</div>
+<div class="rule"><b>Krok 2 – pierwsza litera:</b> sprawdź, od czego zaczyna się słowo.</div>
+<div class="table-wrap"><table class="nt"><thead><tr><th></th><th>Liczba pojedyncza</th><th>Liczba mnoga</th><th>Kiedy?</th></tr></thead><tbody>
+<tr><td rowspan="3"><b>męski</b></td><td><b>il</b> libro</td><td><b>i</b> libri</td><td>zwykła spółgłoska</td></tr>
+<tr><td><b>lo</b> studente, lo zaino</td><td><b>gli</b> studenti, gli zaini</td><td>s + spółgłoska, z, gn, ps, x, y</td></tr>
+<tr><td><b>l'</b>amico</td><td><b>gli</b> amici</td><td>samogłoska</td></tr>
+<tr><td rowspan="2"><b>żeński</b></td><td><b>la</b> casa</td><td><b>le</b> case</td><td>spółgłoska</td></tr>
+<tr><td><b>l'</b>amica</td><td><b>le</b> amiche</td><td>samogłoska</td></tr>
+</tbody></table></div>
+<div class="tip"><b>Wierszyk dla osła:</b> „<i>Lo</i> lubi <b>S</b>-kę ze spółgłoską i <b>Z</b>-etkę. Przed samogłoską czapka gubi literkę i robi się <i>l'</i>.”</div>
+<div class="warn"><b>Typowy błąd:</b> <s>il studente</s> → poprawnie <b>lo studente</b> (bo s + spółgłoska).</div>
+`},
+{id:"nieokreslony", title:"3. Rodzajnik nieokreślony – „jakiś, jeden”", html:`
+<p class="lead">Gdy mówisz o czymś po raz pierwszy albo „jakimś jednym”, zakładasz lżejszą czapkę: <b>un, uno, una, un'</b>. W liczbie mnogiej jej nie ma.</p>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Rodzaj</th><th>Forma</th><th>Przykład</th></tr></thead><tbody>
+<tr><td>męski – zwykle</td><td><b>un</b></td><td>un libro, un amico (bez apostrofu!)</td></tr>
+<tr><td>męski – s+spółgł., z, gn, ps</td><td><b>uno</b></td><td>uno studente, uno zaino</td></tr>
+<tr><td>żeński – spółgłoska</td><td><b>una</b></td><td>una casa</td></tr>
+<tr><td>żeński – samogłoska</td><td><b>un'</b></td><td>un'amica, un'ora</td></tr>
+</tbody></table></div>
+<div class="tip">Apostrof jest tylko u <b>pań</b>: <i>un'amica</i> (ona), ale <i>un amico</i> (on).</div>
+`},
+{id:"mnoga", title:"4. Liczba mnoga – zmień ostatnią literę", html:`
+<p class="lead">Nie dodajesz żadnych „-y”, „-owie”. <b>Wymieniasz tylko ostatnią literę.</b></p>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Było</th><th>Jest</th><th>Przykład</th></tr></thead><tbody>
+<tr><td>-o</td><td>-i</td><td>libro → libri</td></tr>
+<tr><td>-a (żeński)</td><td>-e</td><td>casa → case</td></tr>
+<tr><td>-e</td><td>-i</td><td>studente → studenti, chiave → chiavi</td></tr>
+<tr><td>-a (męski)</td><td>-i</td><td>il problema → i problemi, il papa → i papi</td></tr>
+<tr><td>akcent na końcu / słowo obce / skrócone</td><td>bez zmian</td><td>la città → le città, il bar → i bar, la foto → le foto</td></tr>
+</tbody></table></div>
+<div class="tip"><b>-co/-go, -ca/-ga</b>: żeby zachować twardy dźwięk, dodajemy <b>h</b>: amica → ami<b>ch</b>e, lago → la<b>gh</b>i, banca → ban<b>ch</b>e. (Wyjątki do zapamiętania: amico → amici, medico → medici.)</div>
+<div class="warn"><b>Rebelianci:</b> l'uomo → gli uomini, la mano → le mani, l'uovo → le uova, il braccio → le braccia, il dito → le dita.</div>
+`},
+{id:"essere_avere", title:"5. Essere i avere – dwa najważniejsze czasowniki", html:`
+<p class="lead"><b>Essere</b> = być. <b>Avere</b> = mieć. Na nich stoi cały język – naucz się ich jak pacierza.</p>
+<div class="two">
+<div class="table-wrap"><table class="nt"><thead><tr><th colspan="2">ESSERE – być</th></tr></thead><tbody>
+<tr><td>io</td><td><b>sono</b> – jestem</td></tr><tr><td>tu</td><td><b>sei</b> – jesteś</td></tr><tr><td>lui/lei/Lei</td><td><b>è</b> – jest</td></tr>
+<tr><td>noi</td><td><b>siamo</b> – jesteśmy</td></tr><tr><td>voi</td><td><b>siete</b> – jesteście</td></tr><tr><td>loro</td><td><b>sono</b> – są</td></tr></tbody></table></div>
+<div class="table-wrap"><table class="nt"><thead><tr><th colspan="2">AVERE – mieć</th></tr></thead><tbody>
+<tr><td>io</td><td><b>ho</b> – mam</td></tr><tr><td>tu</td><td><b>hai</b> – masz</td></tr><tr><td>lui/lei/Lei</td><td><b>ha</b> – ma</td></tr>
+<tr><td>noi</td><td><b>abbiamo</b> – mamy</td></tr><tr><td>voi</td><td><b>avete</b> – macie</td></tr><tr><td>loro</td><td><b>hanno</b> – mają</td></tr></tbody></table></div>
+</div>
+<div class="warn"><b>h w avere jest nieme</b>: ho = [o], hanno = [anno]. Literka h jest tylko po to, żeby odróżnić <i>ho</i> (mam) od <i>o</i> (lub), <i>ha</i> (ma) od <i>a</i> (do).</div>
+<div class="rule"><b>Z zajęć: kiedy essere, a kiedy avere?</b><br>
+<b>Essere + przymiotnik</b> (jaki jestem?): sono stanco (zmęczony), triste (smutny), felice (szczęśliwy), arrabbiato (zły), contento (zadowolony).<br>
+<b>Avere + rzeczownik</b> (co „mam”?): ho fame (głód), sete (pragnienie), freddo (zimno), caldo (gorąco), sonno, paura, fretta.</div>
+<div class="warn"><b>Typowy błąd Polaka:</b> „jestem głodny” to <b>ho fame</b> (mam głód), a nie <s>sono fame</s>. „Jest mi zimno” to <b>ho freddo</b>. Wiek też „się ma”: <b>ho vent'anni</b>.</div>
+<div class="rule"><b>CHIAMARSI – nazywać się</b> (czasownik zwrotny: <i>mi, ti, si, ci, vi, si</i> + odmiana jak -are):<br>
+io <b>mi chiamo</b> · tu <b>ti chiami</b> · lui/lei/Lei <b>si chiama</b> · noi <b>ci chiamiamo</b> · voi <b>vi chiamate</b> · loro <b>si chiamano</b></div>
+<div class="tip"><b>Lei</b> (z wielkiej litery) = forma grzecznościowa „Pan/Pani” – odmieniasz jak „on/ona”: <i>Lei è italiano?</i> – Czy Pan jest Włochem?</div>
+`},
+{id:"regularne", title:"6. Czasowniki regularne – odetnij ogon, przyklej końcówkę", html:`
+<p class="lead">Każdy czasownik w bezokoliczniku ma „ogon”: <b>-are</b>, <b>-ere</b> albo <b>-ire</b>. Odcinasz ogon i doklejasz końcówkę osoby. Tyle.</p>
+<div class="rule">lavor<s>are</s> → lavor + <b>o</b> = <b>lavoro</b> (pracuję)</div>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Osoba</th><th>-ARE<br><small>lavorare – pracować</small></th><th>-ERE<br><small>prendere – brać</small></th><th>-IRE<br><small>dormire – spać</small></th><th>-IRE (-isc-)<br><small>capire – rozumieć</small></th></tr></thead><tbody>
+<tr><td>io</td><td>lavor<b>o</b></td><td>prend<b>o</b></td><td>dorm<b>o</b></td><td>cap<b>isco</b></td></tr>
+<tr><td>tu</td><td>lavor<b>i</b></td><td>prend<b>i</b></td><td>dorm<b>i</b></td><td>cap<b>isci</b></td></tr>
+<tr><td>lui/lei</td><td>lavor<b>a</b></td><td>prend<b>e</b></td><td>dorm<b>e</b></td><td>cap<b>isce</b></td></tr>
+<tr><td>noi</td><td>lavor<b>iamo</b></td><td>prend<b>iamo</b></td><td>dorm<b>iamo</b></td><td>cap<b>iamo</b></td></tr>
+<tr><td>voi</td><td>lavor<b>ate</b></td><td>prend<b>ete</b></td><td>dorm<b>ite</b></td><td>cap<b>ite</b></td></tr>
+<tr><td>loro</td><td>lavor<b>ano</b></td><td>prend<b>ono</b></td><td>dorm<b>ono</b></td><td>cap<b>iscono</b></td></tr>
+</tbody></table></div>
+<div class="tip"><b>Patrz, ile się powtarza!</b> <i>io → -o</i>, <i>tu → -i</i>, <i>noi → -iamo</i> – zawsze tak samo we wszystkich trzech grupach. Różnią się tylko „on”, „wy” i „oni” – a i tam samogłoska pochodzi z ogona (lavor<b>a</b>te, prend<b>e</b>te, dorm<b>i</b>te).</div>
+<div class="rule"><b>-isc-</b>: niektóre czasowniki na -ire (capire, finire, preferire, pulire, spedire) wsuwają „-isc-” we wszystkie osoby <b>oprócz noi i voi</b>. Kształt „buta”: io, tu, lui + loro mają isc.</div>
+<div class="warn"><b>Pisownia:</b> cer<b>care</b> → tu cer<b>chi</b>, noi cer<b>chiamo</b> (h ratuje twarde k). man<b>giare</b> → tu man<b>gi</b>, noi man<b>giamo</b> (nie piszemy podwójnego i). stud<b>iare</b> → tu stud<b>i</b>.</div>
+<div class="tip"><b>Zaimek zwykle się pomija:</b> „Lavoro a Roma” – (ja) pracuję w Rzymie. Końcówka sama mówi, kto.</div>
+`},
+{id:"nieregularne", title:"7. Czasowniki nieregularne – „buntownicy”", html:`
+<p class="lead">Kilku czasowników nie da się „odciąć i przykleić”. To te najczęstsze – trzeba je wykuć. Pełne tabele masz w ćwiczeniu „Odmiana”.</p>
+<div class="table-wrap"><table class="nt"><thead><tr><th></th><th>andare<br><small>iść</small></th><th>fare<br><small>robić</small></th><th>stare<br><small>być, czuć się</small></th><th>venire<br><small>przyjść</small></th><th>volere<br><small>chcieć</small></th><th>potere<br><small>móc</small></th><th>dovere<br><small>musieć</small></th></tr></thead><tbody>
+<tr><td>io</td><td>vado</td><td>faccio</td><td>sto</td><td>vengo</td><td>voglio</td><td>posso</td><td>devo</td></tr>
+<tr><td>tu</td><td>vai</td><td>fai</td><td>stai</td><td>vieni</td><td>vuoi</td><td>puoi</td><td>devi</td></tr>
+<tr><td>lui/lei</td><td>va</td><td>fa</td><td>sta</td><td>viene</td><td>vuole</td><td>può</td><td>deve</td></tr>
+<tr><td>noi</td><td>andiamo</td><td>facciamo</td><td>stiamo</td><td>veniamo</td><td>vogliamo</td><td>possiamo</td><td>dobbiamo</td></tr>
+<tr><td>voi</td><td>andate</td><td>fate</td><td>state</td><td>venite</td><td>volete</td><td>potete</td><td>dovete</td></tr>
+<tr><td>loro</td><td>vanno</td><td>fanno</td><td>stanno</td><td>vengono</td><td>vogliono</td><td>possono</td><td>devono</td></tr>
+</tbody></table></div>
+<div class="tip"><b>Stare vs essere:</b> „Come stai?” – jak się czujesz? → „Sto bene” – czuję się dobrze. Stare = samopoczucie i „przebywanie”. Essere = cecha, tożsamość.</div>
+<div class="tip"><b>Volere / potere / dovere + bezokolicznik:</b> Voglio studiare. Posso entrare? Devo pregare. – Jak po polsku: chcę + uczyć się.</div>
+`},
+{id:"przeczenie", title:"8. Przeczenie i pytania – najprostsza lekcja świata", html:`
+<p class="lead"><b>Przeczenie:</b> wstaw <b>non</b> przed czasownik. Koniec.</p>
+<div class="rule">Parlo italiano. → <b>Non</b> parlo italiano. (Nie mówię po włosku.)</div>
+<p class="lead"><b>Pytanie:</b> nie zmieniasz szyku – zmieniasz tylko <b>melodię</b> (głos idzie w górę). W piśmie dodajesz „?”.</p>
+<div class="rule">Parli italiano. (Mówisz po włosku.) → Parli italiano<b>?</b> (Mówisz po włosku?)</div>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Pytajnik</th><th>Znaczenie</th><th>Przykład</th></tr></thead><tbody>
+<tr><td>chi?</td><td>kto?</td><td>Chi è? – Kto to?</td></tr>
+<tr><td>che cosa? / cosa?</td><td>co?</td><td>Cosa fai? – Co robisz?</td></tr>
+<tr><td>dove?</td><td>gdzie?</td><td>Dove abiti? – Gdzie mieszkasz?</td></tr>
+<tr><td>quando?</td><td>kiedy?</td><td>Quando parti? – Kiedy wyjeżdżasz?</td></tr>
+<tr><td>come?</td><td>jak?</td><td>Come ti chiami? – Jak się nazywasz?</td></tr>
+<tr><td>perché?</td><td>dlaczego? (i: ponieważ)</td><td>Perché studi? – Perché mi piace.</td></tr>
+<tr><td>quanto?</td><td>ile?</td><td>Quanto costa? – Ile kosztuje?</td></tr>
+</tbody></table></div>
+<div class="rule"><b>Z zajęć – wszystkie trzy rodzaje zdań na jednym przykładzie:</b><br>
+twierdzące: <b>Tu sei stanca.</b> – Jesteś zmęczona.<br>
+przeczące: <b>Tu non sei stanca.</b> – Nie jesteś zmęczona.<br>
+pytające: <b>(Tu) Sei stanca?</b> – Jesteś zmęczona?<br>
+odpowiedź: <b>Sì, sono stanca. / No, non sono stanca.</b></div>
+<div class="warn">Podwójne przeczenie jest poprawne (jak po polsku): <b>Non</b> vedo <b>niente</b> – nic nie widzę. <b>Non</b> vado <b>mai</b> – nigdy nie chodzę.</div>
+`},
+{id:"przymiotniki", title:"9. Przymiotniki – przebierają się za rzeczownik", html:`
+<p class="lead">Przymiotnik jest jak kameleon: przyjmuje <b>rodzaj i liczbę</b> rzeczownika. Zwykle stoi <b>po</b> rzeczowniku.</p>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Typ</th><th>on</th><th>ona</th><th>oni</th><th>one</th></tr></thead><tbody>
+<tr><td>na -o (4 formy)</td><td>un ragazzo alt<b>o</b></td><td>una ragazza alt<b>a</b></td><td>ragazzi alt<b>i</b></td><td>ragazze alt<b>e</b></td></tr>
+<tr><td>na -e (2 formy)</td><td>un libro grand<b>e</b></td><td>una casa grand<b>e</b></td><td>libri grand<b>i</b></td><td>case grand<b>i</b></td></tr>
+</tbody></table></div>
+<div class="tip">Kolory <b>blu, rosa, viola</b> się nie odmieniają: le scarpe blu. <b>Bello</b> i <b>buono</b> przed rzeczownikiem zachowują się jak rodzajniki (un bel libro, un buon vino) – na razie wystarczy je rozpoznać.</div>
+`},
+{id:"przyimki", title:"10. Przyimki ściągnięte – przyimek zjada rodzajnik", html:`
+<p class="lead">Gdy przyimek (di, a, da, in, su) spotyka rodzajnik określony, <b>sklejają się w jedno słowo</b>. Jak „w + ten” → „we”… tylko konsekwentnie.</p>
+<div class="table-wrap"><table class="nt"><thead><tr><th>+</th><th>il</th><th>lo</th><th>l'</th><th>la</th><th>i</th><th>gli</th><th>le</th></tr></thead><tbody>
+<tr><td><b>di</b> (z/o/od)</td><td>del</td><td>dello</td><td>dell'</td><td>della</td><td>dei</td><td>degli</td><td>delle</td></tr>
+<tr><td><b>a</b> (do/w)</td><td>al</td><td>allo</td><td>all'</td><td>alla</td><td>ai</td><td>agli</td><td>alle</td></tr>
+<tr><td><b>da</b> (od/u)</td><td>dal</td><td>dallo</td><td>dall'</td><td>dalla</td><td>dai</td><td>dagli</td><td>dalle</td></tr>
+<tr><td><b>in</b> (w)</td><td>nel</td><td>nello</td><td>nell'</td><td>nella</td><td>nei</td><td>negli</td><td>nelle</td></tr>
+<tr><td><b>su</b> (na)</td><td>sul</td><td>sullo</td><td>sull'</td><td>sulla</td><td>sui</td><td>sugli</td><td>sulle</td></tr>
+</tbody></table></div>
+<div class="rule"><b>Trik osła:</b> weź przyimek (de-, a-, da-, ne-, su-) i doklej <b>„l” + rodzajnik</b>. Przed „il” zostaje jedno l (del), przed resztą podwójne (della, dello, dell').</div>
+<div class="tip">„Con” i „per” zwykle się nie sklejają: con il professore, per la chiesa. Miasta bez rodzajnika: vado <b>a</b> Roma, abito <b>a</b> Kraków; kraje: vado <b>in</b> Italia.</div>
+`},
+{id:"liczebniki", title:"11. Liczebniki – klocki LEGO", html:`
+<p class="lead">Liczby po włosku buduje się z klocków, sklejając je <b>w jedno słowo</b>: 23 = venti + tre = <b>ventitré</b>.</p>
+<div class="table-wrap"><table class="nt"><tbody>
+<tr><td>0 zero</td><td>1 uno</td><td>2 due</td><td>3 tre</td><td>4 quattro</td><td>5 cinque</td></tr>
+<tr><td>6 sei</td><td>7 sette</td><td>8 otto</td><td>9 nove</td><td>10 dieci</td><td>11 undici</td></tr>
+<tr><td>12 dodici</td><td>13 tredici</td><td>14 quattordici</td><td>15 quindici</td><td>16 sedici</td><td>17 diciassette</td></tr>
+<tr><td>18 diciotto</td><td>19 diciannove</td><td>20 venti</td><td>30 trenta</td><td>40 quaranta</td><td>50 cinquanta</td></tr>
+<tr><td>60 sessanta</td><td>70 settanta</td><td>80 ottanta</td><td>90 novanta</td><td>100 cento</td><td>1000 mille</td></tr>
+</tbody></table></div>
+<div class="rule"><b>Trzy reguły:</b><br>
+1) Przed <b>uno</b> i <b>otto</b> dziesiątka gubi samogłoskę: vent<s>i</s>uno → <b>ventuno</b>, vent<s>i</s>otto → <b>ventotto</b>, trent<s>a</s>uno → <b>trentuno</b>.<br>
+2) Na końcu <b>tre</b> dostaje akcent: ventitré, trentatré.<br>
+3) Tysiąc to <b>mille</b>, ale „tysiące” to <b>-mila</b>: duemila, tremila.</div>
+<div class="tip">Z zajęć: liczby 20–30 – venti, ventuno, ventidue, ventitré, ventiquattro, venticinque, ventisei, ventisette, ventotto, ventinove, trenta. Ćwicz w zakładce „Liczebniki”.</div>
+`},
+{id:"piacere", title:"12. C'è / ci sono i „mi piace”", html:`
+<div class="rule"><b>C'è</b> = jest (coś gdzieś). <b>Ci sono</b> = są.<br>C'è una chiesa in piazza. – Na placu jest kościół. Ci sono molti studenti. – Jest wielu studentów.</div>
+<p class="lead"><b>Piacere</b> działa „od tyłu”: po włosku nie „ja lubię pizzę”, tylko „pizza <i>mi</i> się podoba”.</p>
+<div class="table-wrap"><table class="nt"><thead><tr><th>Komu?</th><th>jedna rzecz / czynność</th><th>wiele rzeczy</th></tr></thead><tbody>
+<tr><td>mi (mnie)</td><td>mi piace la pizza</td><td>mi piacciono le lingue</td></tr>
+<tr><td>ti (tobie)</td><td>ti piace studiare?</td><td>ti piacciono i libri?</td></tr>
+<tr><td>gli / le (jemu / jej)</td><td>gli piace il caffè</td><td>le piacciono i fiori</td></tr>
+<tr><td>ci / vi / gli (nam / wam / im)</td><td>ci piace cantare</td><td>vi piacciono i film?</td></tr>
+</tbody></table></div>
+<div class="warn">Patrz na to, CO się podoba: jedna rzecz → <b>piace</b>, wiele → <b>piacciono</b>. „Ja” nie ma tu znaczenia.</div>
+`},
+{id:"godziny", title:"13. Która godzina? Daty", html:`
+<div class="rule"><b>Che ore sono?</b> / <b>Che ora è?</b> – Która godzina?<br>
+<b>È l'una.</b> – Jest pierwsza. (jedyna w liczbie pojedynczej!)<br>
+<b>Sono le tre.</b> – Jest trzecia. <b>Sono le otto e mezza.</b> – 8:30. <b>Sono le nove e un quarto.</b> – 9:15. <b>Sono le dieci meno un quarto.</b> – 9:45.<br>
+<b>È mezzogiorno / È mezzanotte.</b> – południe / północ.</div>
+<div class="rule"><b>A che ora?</b> – O której? → <b>alle</b> sette (o siódmej), <b>all'</b>una (o pierwszej).</div>
+<div class="tip"><b>Data:</b> oggi è il trenta ottobre (30 października) – liczebnik główny z rodzajnikiem „il”. Wyjątek: pierwszy dzień miesiąca – <b>il primo</b> novembre. Dni tygodnia i miesiące piszemy małą literą.</div>
+`},
+{id:"passato", title:"14. Na później: passato prossimo (czas przeszły)", html:`
+<p class="lead">Gdy będziesz gotowy: czas przeszły składa się z dwóch klocków – <b>avere/essere</b> w teraźniejszym + <b>imiesłów</b>.</p>
+<div class="rule">-are → <b>-ato</b> (lavorato), -ere → <b>-uto</b> (ricevuto), -ire → <b>-ito</b> (dormito).<br>
+Ho lavorato. – Pracowałem. Abbiamo mangiato. – Zjedliśmy.<br>
+Czasowniki ruchu i zmiany stanu biorą <b>essere</b>, a imiesłów się odmienia: Sono andato / andata. Siamo arrivati.</div>
+`}
+];
+
+/* ===== AugustApka – rdzeń ===== */
+const SUBJECTS = [
+ {id:"teoria",  name:"Teoria poznania", code:"TP", c:"#2B4F45"},
+ {id:"histfil", name:"Historia filozofii", code:"HF", c:"#8A5A2B"},
+ {id:"lacina",  name:"Łacina", code:"LA", c:"#C2573D"},
+ {id:"fczl",    name:"Filozofia człowieka", code:"FC", c:"#5B4A7A"},
+ {id:"fprz",    name:"Filozofia przyrody", code:"FP", c:"#2F6E8E"},
+ {id:"hk",      name:"Historia Kościoła powszechnego", code:"HK", c:"#8E2F3C"},
+ {id:"wloski",  name:"Włoski", code:"IT", c:"#3C7D4A"},
+ {id:"muzyka",  name:"Muzyka", code:"MU", c:"#B0782A"},
+ {id:"logika",  name:"Logika", code:"LO", c:"#33566E"},
+ {id:"wstep",   name:"Wstęp do filozofii", code:"WF", c:"#6E5B2F"},
+ {id:"psych",   name:"Psychologia ogólna", code:"PS", c:"#7A3F62"},
+ {id:"slownik", name:"Słowniczek terminów naukowych", code:"SŁ", c:"#45524D"}
+];
+const SUBJ = Object.fromEntries(SUBJECTS.map(s=>[s.id,s]));
+const MODULES = {};   // rozszerzenia przedmiotów (łacina, włoski, muzyka, logika)
+
+/* ---------- pamięć (localStorage z zabezpieczeniem) ---------- */
+const Store = (()=>{
+  const KEY="augustapka.v2"; let mem={};
+  try{ const raw=localStorage.getItem(KEY); if(raw) mem=JSON.parse(raw)||{}; }catch(e){}
+  const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} };
+  return {
+    get:(k,d)=> (k in mem? mem[k] : d),
+    set:(k,v)=>{ mem[k]=v; save(); },
+    all:()=>mem,
+    replace:(o)=>{ mem=o||{}; save(); }
+  };
+})();
+
+/* ---------- pomocnicze ---------- */
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+function h(tag,attrs={},...kids){
+  const el=document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs||{})){
+    if(v==null||v===false) continue;
+    if(k==="class") el.className=v;
+    else if(k==="html") el.innerHTML=v;
+    else if(k.startsWith("on")) el.addEventListener(k.slice(2),v);
+    else if(k==="style") el.setAttribute("style",v);
+    else el.setAttribute(k,v===true?"":v);
+  }
+  for(const kid of kids.flat()){ if(kid==null||kid===false) continue; el.append(kid.nodeType?kid:document.createTextNode(String(kid))); }
+  return el;
+}
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle = a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = a=>a[Math.floor(Math.random()*a.length)];
+const norm = s=>String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/ł/g,"l").replace(/[’'`]/g,"'").replace(/[.,;:!?„”"()\[\]*]/g," ").replace(/\s+/g," ").trim();
+const stripHtml = s=>String(s).replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/\s+/g," ");
+function toast(msg){ const t=h("div",{class:"toast",role:"status"},msg); document.body.append(t); setTimeout(()=>t.remove(),1800); }
+function todayISO(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+const MONTHS=["sty","lut","mar","kwi","maj","cze","lip","sie","wrz","paź","lis","gru"];
+const MONTHS_FULL=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+const DAYS=["niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"];
+function daysBetween(a,b){ return Math.round((new Date(b+"T12:00")-new Date(a+"T12:00"))/864e5); }
+function fmtDate(iso){ const d=new Date(iso+"T12:00"); return d.getDate()+" "+MONTHS_FULL[d.getMonth()]+" "+d.getFullYear(); }
+
+/* ---------- dane notatek i słowniczka ---------- */
+function notesOf(id){ return (window.AUG_NOTES&&AUG_NOTES[id])||[]; }
+function glossOf(id){
+  const secs=(window.AUG_GLOSS||[]).filter(s=>id==="slownik"||s.k===id);
+  return secs;
+}
+function glossCards(id){
+  const out=[];
+  for(const s of glossOf(id)) for(const [t,d] of s.items) out.push({id:s.k+"|"+t, front:t, back:d, extra:s.title});
+  return out;
+}
+
+/* ---------- system 5 koszyków (Leitner) ---------- */
+const Leitner = {
+  state(deck){ return Store.get("lt:"+deck,{}); },
+  box(deck,cid){ return this.state(deck)[cid]||1; },
+  move(deck,cid,ok){
+    const st=this.state(deck); const b=st[cid]||1;
+    st[cid]= ok? Math.min(5,b+1) : Math.max(1,b-1);
+    Store.set("lt:"+deck,st); this.log(ok); return st[cid];
+  },
+  counts(deck,cards){ const st=this.state(deck); const c=[0,0,0,0,0]; for(const x of cards) c[(st[x.id]||1)-1]++; return c; },
+  mastery(deck,cards){ if(!cards.length) return 0; const st=this.state(deck); let s=0; for(const x of cards) s+=(st[x.id]||1)-1; return s/(cards.length*4); },
+  next(deck,cards,onlyBox,lastId){
+    const st=this.state(deck);
+    let pool=cards.filter(c=>c.id!==lastId);
+    if(onlyBox) pool=pool.filter(c=>(st[c.id]||1)===onlyBox);
+    if(!pool.length) pool=onlyBox? cards.filter(c=>(st[c.id]||1)===onlyBox):cards;
+    if(!pool.length) return null;
+    const W=[16,8,4,2,1]; let tot=0; const ws=pool.map(c=>{const w=W[(st[c.id]||1)-1]; tot+=w; return w;});
+    let r=Math.random()*tot; for(let i=0;i<pool.length;i++){ r-=ws[i]; if(r<=0) return pool[i]; } return pool[pool.length-1];
+  },
+  reset(deck){ Store.set("lt:"+deck,{}); },
+  log(ok){ const d=todayISO(); const l=Store.get("log",{}); l[d]=l[d]||[0,0]; l[d][ok?0:1]++; Store.set("log",l); }
+};
+
+/* Widok fiszek: decks = [{id,name,cards}], opts: {typing:boolean, dirs:[["front","back","LA → PL"],...]} */
+function flashcardsView(el,decks,opts={}){
+  el.innerHTML="";
+  let deck=decks[0], onlyBox=0, card=null, shown=false, dir=0, typing=!!opts.typing, lastId=null, streak=0;
+  const dirs=opts.dirs||[["front","back","Pojęcie → definicja"],["back","front","Definicja → pojęcie"]];
+  const head=h("div",{class:"stack"});
+  const deckSel = decks.length>1 ? h("select",{class:"input",id:"deck-"+decks[0].id,onchange:e=>{deck=decks.find(d=>d.id===e.target.value);onlyBox=0;draw();}},
+      decks.map(d=>h("option",{value:d.id},d.name+" ("+d.cards.length+")"))) : null;
+  const dirBtn=h("button",{class:"btn sm",onclick:()=>{dir=(dir+1)%dirs.length;dirBtn.textContent="Kierunek: "+dirs[dir][2];draw();}},"Kierunek: "+dirs[0][2]);
+  const typeBtn= opts.allowTyping? h("button",{class:"btn sm",onclick:()=>{typing=!typing;typeBtn.textContent=typing?"Tryb: wpisuję":"Tryb: odsłaniam";draw();}},typing?"Tryb: wpisuję":"Tryb: odsłaniam"):null;
+  const resetBtn=h("button",{class:"btn sm ghost",onclick:()=>{ if(resetBtn.dataset.c){ Leitner.reset(deck.id); delete resetBtn.dataset.c; resetBtn.textContent="Wyzeruj koszyki"; draw(); toast("Wszystkie fiszki wróciły do koszyka 1"); } else { resetBtn.dataset.c=1; resetBtn.textContent="Na pewno? Kliknij jeszcze raz"; setTimeout(()=>{delete resetBtn.dataset.c;resetBtn.textContent="Wyzeruj koszyki";},3000);} }},"Wyzeruj koszyki");
+  const boxesEl=h("div",{class:"boxes"});
+  const cardEl=h("div");
+  const info=h("p",{class:"small muted"},"Zasada 5 koszyków: dobra odpowiedź przenosi fiszkę do następnego koszyka, zła – cofa o jeden koszyk niżej. Fiszki z niższych koszyków pojawiają się częściej. Kliknij koszyk, żeby ćwiczyć tylko z niego.");
+  head.append(h("div",{class:"row"},deckSel,dirBtn,typeBtn,resetBtn),boxesEl,info);
+  el.append(head,h("div",{style:"height:14px"}),cardEl);
+  function renderBoxes(){
+    const c=Leitner.counts(deck.id,deck.cards); const max=Math.max(1,...c);
+    boxesEl.innerHTML="";
+    c.forEach((n,i)=>boxesEl.append(h("button",{class:"box"+(onlyBox===i+1?" on":""),onclick:()=>{onlyBox=onlyBox===i+1?0:i+1;draw();},"aria-label":"Koszyk "+(i+1)},
+      h("div",{class:"k"},"Koszyk "+(i+1)),h("div",{class:"v mono"},n),h("div",{class:"hb"},h("i",{style:"width:"+(n/max*100)+"%"})))));
+  }
+  function draw(){
+    renderBoxes(); shown=false;
+    card=Leitner.next(deck.id,deck.cards,onlyBox,lastId);
+    cardEl.innerHTML="";
+    if(!card){ cardEl.append(h("div",{class:"empty"},onlyBox?"Ten koszyk jest pusty – wybierz inny.":"Brak fiszek w tej talii.")); return; }
+    lastId=card.id;
+    const f=card[dirs[dir][0]], b=card[dirs[dir][1]];
+    const box=Leitner.box(deck.id,card.id);
+    const fl=h("div",{class:"flash"},h("span",{class:"pill green fbox"},"Koszyk "+box),
+      h("div",{class:"front"+(String(f).length>80?" long":"")},f), card.extra&&dir===0? h("div",{class:"small muted"},card.extra):null);
+    const acts=h("div",{class:"flash-acts"});
+    cardEl.append(fl,acts);
+    const grade=ok=>{ const nb=Leitner.move(deck.id,card.id,ok); streak= ok? streak+1:0; toast(ok?("Do koszyka "+nb+(streak>2?" · seria "+streak:"")):("Cofnięta do koszyka "+nb)); draw(); };
+    if(typing){
+      const inp=h("input",{class:"input",id:"fc-typing",placeholder:"Wpisz odpowiedź i naciśnij Enter",autocomplete:"off",autocapitalize:"off",spellcheck:"false"});
+      const chk=h("button",{class:"btn pri"},"Sprawdź");
+      const doCheck=()=>{
+        const ok=answerMatches(inp.value,b);
+        fl.append(h("div",{class:"back"},h("div",{class:"feedback "+(ok?"ok":"bad")},ok?"Dobrze!":"Poprawnie: "),!ok?h("div",{},b):null));
+        acts.innerHTML=""; const nx=h("button",{class:"btn pri",onclick:()=>grade(ok)},"Dalej →"); acts.append(nx); nx.focus();
+      };
+      inp.addEventListener("keydown",e=>{if(e.key==="Enter")doCheck();});
+      chk.onclick=doCheck;
+      acts.append(h("div",{class:"row",style:"width:100%;max-width:520px"},inp,chk));
+      setTimeout(()=>inp.focus(),30);
+    } else {
+      const show=h("button",{class:"btn pri"},"Pokaż odpowiedź");
+      show.onclick=()=>{ fl.append(h("div",{class:"back",html:esc(b)})); acts.innerHTML="";
+        acts.append(h("button",{class:"btn bad",onclick:()=>grade(false)},"✗ Nie wiedziałem"),h("button",{class:"btn ok",onclick:()=>grade(true)},"✓ Wiedziałem")); };
+      acts.append(show);
+    }
+  }
+  draw();
+}
+function answerMatches(given,correct){
+  const g=norm(given); if(!g) return false;
+  const variants=String(correct).split(/[;,/]| – | - |\(|\)/).map(norm).filter(x=>x.length>0);
+  const c=norm(correct);
+  if(g===c) return true;
+  if(variants.some(v=>v===g)) return true;
+  const strip=s=>s.replace(/^(il|lo|la|l'|i|gli|le|un|uno|una|un') /,"");
+  if(strip(g)===strip(c)) return true;
+  return variants.some(v=>strip(v)===strip(g));
+}
+
+/* ---------- quiz ABCD ---------- */
+function quizView(el,cards,quizKey,opt={}){
+  el.innerHTML="";
+  if(cards.length<4){ el.append(h("div",{class:"empty"},"Za mało pojęć do quizu.")); return; }
+  let n=0, good=0, mode=0; const total=opt.len||10;
+  const best=Store.get("qbest:"+quizKey,0);
+  const sc=h("div",{class:"score"}), box=h("div",{class:"stack"});
+  const modeBtn=h("button",{class:"btn sm",onclick:()=>{mode=1-mode;modeBtn.textContent=mode?"Pytanie: pojęcie → wybierz definicję":"Pytanie: definicja → wybierz pojęcie";restart();}},"Pytanie: definicja → wybierz pojęcie");
+  el.append(h("div",{class:"row"},modeBtn,h("button",{class:"btn sm ghost",onclick:()=>restart()},"Od nowa")),sc,box);
+  function upd(){ sc.innerHTML=`<span>Pytanie <b class="mono">${Math.min(n+1,total)}/${total}</b></span><span>Wynik <b class="mono">${good}</b></span><span>Rekord <b class="mono">${Store.get("qbest:"+quizKey,0)}/${total}</b></span>`; }
+  function restart(){ n=0; good=0; ask(); }
+  function ask(){
+    upd(); box.innerHTML="";
+    if(n>=total){
+      if(good>Store.get("qbest:"+quizKey,0)) Store.set("qbest:"+quizKey,good);
+      box.append(h("div",{class:"card"},h("h2",{},`Wynik: ${good}/${total}`),h("p",{class:"muted"},good>=total*.8?"Świetnie – materiał opanowany.":good>=total*.5?"Nieźle. Powtórz fiszki z koszyków 1–2.":"Wróć do notatek i fiszek, potem spróbuj jeszcze raz."),h("button",{class:"btn pri",onclick:restart},"Jeszcze raz")));
+      upd(); return;
+    }
+    const q=pick(cards); const others=shuffle(cards.filter(c=>c.front!==q.front)).slice(0,3);
+    const opts=shuffle([q,...others]);
+    const prompt= mode? q.front : q.back;
+    box.append(h("div",{class:"card"},h("div",{class:"small muted"},q.extra||""),h("div",{class:"q-prompt"},prompt)));
+    const ol=h("div",{class:"q-opts"}); box.append(ol);
+    opts.forEach(o=>{ const b=h("button",{class:"q-opt"},mode? o.back : o.front);
+      b.onclick=()=>{ if(ol.dataset.done) return; ol.dataset.done=1; const ok=o===q; if(ok) good++;
+        b.classList.add(ok?"ok":"bad"); if(!ok) [...ol.children][opts.indexOf(q)].classList.add("ok");
+        box.append(h("button",{class:"btn pri",onclick:()=>{n++;ask();}},n+1>=total?"Zobacz wynik":"Następne →")); upd(); };
+      ol.append(b); });
+  }
+  ask();
+}
+
+/* ---------- notatki ---------- */
+function notesView(el,sid){
+  const list=notesOf(sid);
+  el.innerHTML="";
+  if(!list.length){ el.append(h("div",{class:"empty"},"Brak notatek.")); return; }
+  const read=Store.get("read",{});
+  const wrap=h("div",{class:"lec-list"});
+  list.forEach((n,i)=>{
+    const key=sid+":"+i;
+    wrap.append(h("button",{class:"lec"+(read[key]?" read":""),onclick:()=>openNote(i)},
+      h("span",{class:"n mono"},read[key]?"✓":i+1),h("span",{},h("b",{},n.t),h("small",{},read[key]?"Przerobione":"Kliknij, aby czytać"))));
+  });
+  el.append(wrap);
+  function openNote(i){
+    const n=list[i]; const key=sid+":"+i;
+    el.innerHTML="";
+    const r=Store.get("read",{});
+    const mark=h("button",{class:"btn sm "+(r[key]?"ok":""),onclick:()=>{const rr=Store.get("read",{}); rr[key]=!rr[key]; Store.set("read",rr); mark.className="btn sm "+(rr[key]?"ok":""); mark.textContent=rr[key]?"✓ Przerobione":"Oznacz jako przerobione";}},r[key]?"✓ Przerobione":"Oznacz jako przerobione");
+    el.append(h("div",{class:"reader"},
+      h("div",{class:"reader-h"},h("button",{class:"btn sm ghost",onclick:()=>notesView(el,sid)},"← Lista wykładów"),h("div",{class:"row"},mark)),
+      h("h2",{style:"font-size:22px;font-weight:800;margin-bottom:10px"},n.t),
+      h("div",{class:"note",html:n.html}),
+      h("div",{class:"row",style:"justify-content:space-between;margin-top:22px"},
+        i>0?h("button",{class:"btn sm",onclick:()=>openNote(i-1)},"← "+list[i-1].t.slice(0,38)+"…"):h("span"),
+        i<list.length-1?h("button",{class:"btn sm",onclick:()=>openNote(i+1)},list[i+1].t.slice(0,38)+"… →"):h("span"))));
+    window.scrollTo({top:0});
+  }
+  el._open=openNote;
+}
+
+/* ---------- słowniczek ---------- */
+function glossaryView(el,sid){
+  el.innerHTML="";
+  let q="", filt=sid==="slownik"?"":sid;
+  const input=h("input",{class:"input",id:"gl-q-"+sid,placeholder:"Szukaj pojęcia lub w definicji…",oninput:e=>{q=e.target.value;draw();}});
+  const chips= sid==="slownik"? h("div",{class:"chips"},[h("button",{class:"chip on","data-k":""},"Wszystkie"),...SUBJECTS.filter(s=>(AUG_GLOSS||[]).some(g=>g.k===s.id)).map(s=>h("button",{class:"chip","data-k":s.id},s.name))]):null;
+  if(chips) chips.addEventListener("click",e=>{const b=e.target.closest(".chip"); if(!b) return; filt=b.dataset.k; $$(".chip",chips).forEach(c=>c.classList.toggle("on",c===b)); draw();});
+  const out=h("div",{class:"gl"}), cnt=h("div",{class:"small muted"});
+  el.append(h("div",{class:"stack"},input,chips,cnt),out);
+  function draw(){
+    out.innerHTML=""; const nq=norm(q); let total=0;
+    for(const s of (AUG_GLOSS||[])){
+      if(filt&&s.k!==filt) continue;
+      const items=s.items.filter(([t,d])=>!nq||norm(t+" "+d).includes(nq));
+      if(!items.length) continue;
+      out.append(h("div",{class:"gl-sec"},s.title));
+      for(const [t,d] of items){ total++; out.append(h("div",{class:"gl-item"},h("b",{html:hl(t,q)}),h("p",{html:hl(d,q)}))); }
+    }
+    cnt.textContent=total+" pojęć";
+    if(!total) out.append(h("div",{class:"empty"},"Nic nie znaleziono."));
+  }
+  draw();
+}
+function hl(text,q){ const t=esc(text); if(!q||q.length<2) return t; try{ const re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"); return t.replace(re,"<mark>$1</mark>"); }catch(e){ return t; } }
+
+/* ---------- terminarz ---------- */
+const SEED_EVENTS=[
+ {id:"s6",subj:"wloski",type:"Kolokwium",title:"Test z włoskiego: cała Unità introduttiva (s. 5–14) + zadania domowe + materiał z zajęć",date:"2026-11-04"},
+ {id:"s7",subj:"wloski",type:"Zadanie domowe",title:"Esercizi 10–14, s. 8–10",date:"2026-11-04"},
+ {id:"s1",subj:"lacina",type:"Kolokwium",title:"Modlitwy cz. 2 – ustnie, na pamięć: Angele Dei, Requiem aeternam, Credo (do wyboru)",date:"2026-11-16"},
+ {id:"s2",subj:"fprz",type:"Praca pisemna",title:"Wypracowanie nr 1 (500 słów) na temat z wykładów – 25%",date:"2026-11-30"},
+ {id:"s3",subj:"fprz",type:"Praca pisemna",title:"Wypracowanie nr 2 (500 słów) na temat z wykładów – 25%",date:"2026-12-31"},
+ {id:"s4",subj:"histfil",type:"Praca pisemna",title:"Praca semestralna: Koncepcja miłości w „Uczcie” Platona – 5–7 stron, czcionka 12, przypisy",date:"2027-01-11"},
+ {id:"s5",subj:"fprz",type:"Praca pisemna",title:"Wypracowanie (1500 słów) – 30%",date:"2027-01-28"}
+];
+const EV_TYPES=["Kolokwium","Egzamin","Sprawdzian","Zadanie domowe","Praca pisemna","Zaliczenie ustne","Inne"];
+function allEvents(){
+  const hidden=Store.get("evHidden",[]); const user=Store.get("events",[]); const today=todayISO();
+  const ev=[...SEED_EVENTS.filter(e=>!hidden.includes(e.id)),...user].filter(e=>e.date>=today);
+  // usuń z pamięci minione wpisy użytkownika
+  const keep=user.filter(e=>e.date>=today); if(keep.length!==user.length) Store.set("events",keep);
+  return ev.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function agendaView(el,limitSubj){
+  el.innerHTML="";
+  const today=todayISO(); const done=Store.get("evDone",{});
+  const ev=allEvents().filter(e=>!limitSubj||e.subj===limitSubj);
+  const list=h("div",{class:"agenda"});
+  if(!ev.length) list.append(h("div",{class:"empty"},limitSubj?"Brak nadchodzących terminów z tego przedmiotu.":"Brak nadchodzących terminów. Dodaj kolokwium, egzamin albo zadanie poniżej."));
+  for(const e of ev){
+    const d=new Date(e.date+"T12:00"); const left=daysBetween(today,e.date); const s=SUBJ[e.subj]||{name:"Inne",c:"#888"};
+    const isDone=!!done[e.id];
+    const leftTxt= left===0?"dziś!": left===1?"jutro": left<5?"za "+left+" dni":"za "+left+" dni";
+    list.append(h("div",{class:"ev"+(left<=7?" soon":"")+(isDone?" done":""),style:"--c:"+s.c},
+      h("div",{class:"d"},h("b",{class:"mono"},d.getDate()),h("small",{},MONTHS[d.getMonth()]+" "+String(d.getFullYear()).slice(2))),
+      h("div",{class:"x"},h("b",{},e.title),h("span",{},e.type+" · "+s.name+(e.plan?" · robię: "+fmtDate(e.plan):"")+(e.note?" · "+e.note:""))),
+      h("div",{class:"stack",style:"gap:6px;align-items:flex-end"},h("span",{class:"left"},leftTxt),
+        h("div",{class:"acts"},
+          h("button",{class:"btn sm ghost",title:isDone?"Oznacz jako niezrobione":"Oznacz jako zrobione","aria-label":"Zrobione",onclick:()=>{const dd=Store.get("evDone",{}); dd[e.id]=!dd[e.id]; Store.set("evDone",dd); agendaView(el,limitSubj);}},isDone?"↺":"✓"),
+          h("button",{class:"btn sm ghost",title:"Usuń","aria-label":"Usuń",onclick:()=>{ if(String(e.id).startsWith("s")){const hd=Store.get("evHidden",[]); hd.push(e.id); Store.set("evHidden",hd);} else Store.set("events",Store.get("events",[]).filter(x=>x.id!==e.id)); agendaView(el,limitSubj); toast("Usunięto termin"); }},"✕")))));
+  }
+  el.append(list);
+  if(!limitSubj){
+    const f=h("form",{class:"card addform",style:"margin-top:12px"});
+    const tSel=h("select",{class:"input",id:"ev-type"},EV_TYPES.map(t=>h("option",{},t)));
+    const sSel=h("select",{class:"input",id:"ev-subj"},SUBJECTS.filter(s=>s.id!=="slownik").map(s=>h("option",{value:s.id},s.name)));
+    const ti=h("input",{class:"input",id:"ev-title",placeholder:"np. Kolokwium nr 1 – podziały nazw",required:true});
+    const da=h("input",{class:"input",id:"ev-date",type:"date",required:true,min:today});
+    const pl=h("input",{class:"input",id:"ev-plan",type:"date"});
+    const no=h("input",{class:"input",id:"ev-note",placeholder:"np. rozdz. 1–3, sala 12"});
+    f.append(h("label",{class:"f"},"Rodzaj",tSel),h("label",{class:"f"},"Przedmiot",sSel),h("label",{class:"f",style:"grid-column:1/-1"},"Co dokładnie",ti),
+      h("label",{class:"f"},"Termin",da),h("label",{class:"f"},"Kiedy to robię (opcjonalnie)",pl),h("label",{class:"f"},"Uwagi",no),
+      h("button",{class:"btn pri",type:"submit"},"+ Dodaj do terminarza"));
+    f.addEventListener("submit",e=>{e.preventDefault(); if(!ti.value.trim()||!da.value) return;
+      const u=Store.get("events",[]); u.push({id:"u"+Date.now(),subj:sSel.value,type:tSel.value,title:ti.value.trim(),date:da.value,plan:pl.value||"",note:no.value.trim()}); Store.set("events",u);
+      toast("Dodano: "+ti.value.trim()); agendaView(el,limitSubj); });
+    el.append(h("details",{style:"margin-top:10px"},h("summary",{class:"btn sm",style:"display:inline-block"},"+ Dodaj kolokwium, egzamin lub zadanie"),f));
+    el.append(h("p",{class:"small muted",style:"margin-top:8px"},"Minione terminy znikają automatycznie dzień po dacie."));
+  }
+}
+
+/* ---------- ekran główny ---------- */
+const MARK_SVG=`<svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="58" r="34" fill="none" stroke="currentColor" stroke-width="3" opacity=".45"/><path d="M50 82 C26 66 22 50 30 42 C37 35 46 38 50 46 C54 38 63 35 70 42 C78 50 74 66 50 82Z" fill="#C2573D"/><path d="M50 40 C44 30 52 24 48 12 C58 20 62 30 54 40 Z" fill="#E9A23B"/><path d="M50 52v18M42 60h16" stroke="#F7F3F4" stroke-width="4" stroke-linecap="round"/></svg>`;
+function homeView(el){
+  el.innerHTML="";
+  const d=new Date();
+  const hero=h("div",{class:"hero"},
+    h("div",{},h("div",{class:"eyebrow-s",style:"color:#F2B8A8"},DAYS[d.getDay()]+", "+d.getDate()+" "+MONTHS_FULL[d.getMonth()]+" "+d.getFullYear()),
+      h("h1",{},"Czego dziś się uczysz?"),
+      h("p",{},"Notatki z wykładów, słowniczek, fiszki w 5 koszykach, łacina, włoski, muzyka i terminarz kolokwiów – wszystko w jednym miejscu."),
+      h("div",{class:"quote"},"„Pobożność może przeminąć, a wiedza nie, dlatego warto studiować.” – z pierwszego wykładu")),
+    h("div",{html:MARK_SVG}));
+  el.append(hero);
+  const agWrap=h("div");
+  el.append(h("div",{class:"sec-h"},h("h2",{},"Terminarz: kolokwia, egzaminy, zadania"),h("span",{class:"small muted"},"Najbliższe na górze")),agWrap);
+  agendaView(agWrap);
+  el.append(h("div",{class:"sec-h"},h("h2",{},"Przedmioty"),h("span",{class:"small muted"},"Pasek = opanowanie fiszek (koszyki)")));
+  const g=h("div",{class:"subjects"});
+  for(const s of SUBJECTS){
+    const nn=notesOf(s.id).length; const cards=glossCards(s.id); const m=subjectMastery(s.id);
+    const meta= s.id==="slownik"? cards.length+" pojęć" : s.id==="muzyka"? "koło kwintowe · nuty · interwały" : s.id==="lacina"? "koniugacje · modlitwy · słownik" : s.id==="wloski"? "gramatyka · słownictwo · ćwiczenia" : nn+" notatek · "+cards.length+" pojęć";
+    g.append(h("button",{class:"subj",style:"--c:"+s.c,onclick:()=>go(s.id)},
+      h("div",{class:"t"},h("span",{class:"badge",style:"--c:"+s.c},s.code),h("b",{},s.name)),
+      h("div",{class:"meta"},meta),
+      h("div",{class:"bar"},h("i",{style:"width:"+Math.round(m*100)+"%"}))));
+  }
+  el.append(g);
+  const log=Store.get("log",{}); const t=log[todayISO()]||[0,0];
+  el.append(h("div",{class:"sec-h"},h("h2",{},"Kopia zapasowa postępów")),
+    h("div",{class:"card stack"},
+      h("p",{class:"small muted",style:"margin:0"},"Postępy (koszyki, przeczytane notatki, terminarz) zapisują się w tej przeglądarce. Dziś odpowiedzi: ",h("b",{},t[0]+" dobrych, "+t[1]+" złych"),". Żeby przenieść je na inne urządzenie, skopiuj kod i wklej go tam."),
+      h("div",{class:"row"},
+        h("button",{class:"btn sm",onclick:async()=>{const s=JSON.stringify(Store.all()); try{await navigator.clipboard.writeText(s); toast("Skopiowano kod postępów");}catch(e){ ta.value=s; ta.classList.remove("hide"); ta.select(); toast("Zaznaczono – skopiuj ręcznie"); }}},"Kopiuj kod postępów"),
+        h("button",{class:"btn sm",onclick:()=>{ta.classList.remove("hide"); ta.value=""; ta.placeholder="Wklej tu kod i kliknij „Wczytaj”"; ld.classList.remove("hide"); ta.focus();}},"Wklej kod z innego urządzenia")),
+      (()=>{ window.ta=h("textarea",{class:"input hide",id:"backup-ta",rows:"3"}); return ta; })(),
+      (()=>{ window.ld=h("button",{class:"btn sm pri hide",onclick:()=>{ try{ const o=JSON.parse(ta.value); Store.replace(o); toast("Wczytano postępy"); render(); }catch(e){ toast("To nie jest poprawny kod postępów"); } }},"Wczytaj"); return ld; })()));
+  el.append(h("div",{class:"foot"},"AugustApka · Rocznik św. Augustyna · notatki na podstawie Twoich nagrań, zdjęć i zapisków"));
+}
+function subjectMastery(id){
+  if(MODULES[id]&&MODULES[id].mastery) return MODULES[id].mastery();
+  const cards=glossCards(id); return Leitner.mastery("g:"+id,cards);
+}
+
+/* ---------- strona przedmiotu ---------- */
+function subjectView(el,sid){
+  const s=SUBJ[sid]; el.innerHTML="";
+  const nn=notesOf(sid).length, gc=glossCards(sid);
+  const subt={teoria:"Epistemologia: od Platona przez Augustyna po Hegla.",histfil:"Od jończyków i Heraklita po Parmenidesa, atomistów i Platona.",lacina:"Koniugacje, 23 czasowniki z tablicy, modlitwy na kolokwium, słownik i fiszki.",fczl:"Personalizm chrześcijański, filozofia dramatu i dialogu.",fprz:"Czas, przestrzeń i ruch – od Platona do teorii względności.",hk:"Kościół apostolski, Rzym i prześladowania, kanon, Ojcowie, herezje.",wloski:"Gramatyka krok po kroku, słownictwo w działach, fiszki i ćwiczenia.",muzyka:"Koło kwintowe, czytanie nut w kluczu wiolinowym i basowym, interwały.",logika:"Semiotyka, nazwy, zdania, poziomy języka, metalogika.",wstep:"Czym jest filozofia, jej źródła i specyfika.",psych:"Wundt, Brentano, psychoanaliza, behawioryzm, psychologia głębi.",slownik:"Wszystkie pojęcia ze wszystkich wykładów w jednym miejscu."}[sid]||"";
+  el.append(h("div",{class:"page-h"},h("div",{},h("div",{class:"eyebrow-s",style:"color:"+s.c},s.code+" · przedmiot"),h("h1",{},s.name),h("div",{class:"sub"},subt))));
+  const tabs=[];
+  const mod=MODULES[sid]||{};
+  if(sid==="slownik"){
+    tabs.push({id:"lista",label:"Wszystkie pojęcia ("+gc.length+")",render:x=>glossaryView(x,"slownik")});
+    tabs.push({id:"fiszki",label:"Fiszki – 5 koszyków",render:x=>flashcardsView(x,[{id:"g:all",name:"Wszystkie pojęcia",cards:gc},...SUBJECTS.filter(t=>glossCards(t.id).length&&t.id!=="slownik").map(t=>({id:"g:"+t.id,name:t.name,cards:glossCards(t.id)}))],{allowTyping:true})});
+    tabs.push({id:"quiz",label:"Quiz",render:x=>quizView(x,gc,"all",{len:15})});
+  } else {
+    if(mod.tabsBefore) tabs.push(...mod.tabsBefore);
+    if(nn) tabs.push({id:"notatki",label:"Notatki ("+nn+")",render:x=>notesView(x,sid)});
+    if(mod.tabs) tabs.push(...mod.tabs);
+    if(gc.length){
+      tabs.push({id:"pojecia",label:"Pojęcia ("+gc.length+")",render:x=>glossaryView(x,sid)});
+      tabs.push({id:"fiszki-p",label:"Fiszki pojęć",render:x=>flashcardsView(x,[{id:"g:"+sid,name:s.name,cards:gc}],{allowTyping:true})});
+      tabs.push({id:"quiz",label:"Quiz",render:x=>quizView(x,gc,sid)});
+    }
+    tabs.push({id:"terminy",label:"Terminy",render:x=>agendaView(x,sid)});
+  }
+  const tabBar=h("div",{class:"tabs",role:"tablist"}); const body=h("div");
+  el.append(tabBar,body);
+  let cur=Store.get("tab:"+sid,tabs[0].id); if(!tabs.find(t=>t.id===cur)) cur=tabs[0].id;
+  function show(id){ cur=id; Store.set("tab:"+sid,id); $$("button",tabBar).forEach(b=>b.classList.toggle("on",b.dataset.id===id)); body.innerHTML=""; const t=tabs.find(t=>t.id===id); t.render(body); }
+  tabs.forEach(t=>tabBar.append(h("button",{"data-id":t.id,role:"tab",onclick:()=>show(t.id)},t.label)));
+  show(cur);
+  el._show=show;
+}
+
+/* ---------- wyszukiwarka globalna ---------- */
+let SEARCH_IDX=null;
+function buildIndex(){
+  const idx=[];
+  for(const s of SUBJECTS) notesOf(s.id).forEach((n,i)=>idx.push({k:"Notatki",t:n.t,sub:s.name,txt:norm(n.t+" "+stripHtml(n.html)),go:()=>{go(s.id,"notatki");setTimeout(()=>{const b=$("main"); const tabBody=b&&b.querySelector(".tabs+div"); if(tabBody&&tabBody._open) tabBody._open(i);},80);}}));
+  for(const g of (window.AUG_GLOSS||[])) for(const [t,d] of g.items) idx.push({k:"Pojęcia",t,sub:d.slice(0,90)+"…",txt:norm(t),txt2:norm(d),go:()=>{go("slownik","lista");setTimeout(()=>{const i=$("#gl-q-slownik"); if(i){i.value=t.split(" (")[0]; i.dispatchEvent(new Event("input"));}},80);}});
+  if(window.searchExtra) idx.push(...window.searchExtra());
+  return idx;
+}
+function setupSearch(){
+  const inp=$("#q"), res=$("#qres");
+  inp.addEventListener("input",()=>{
+    const q=norm(inp.value); res.innerHTML="";
+    if(q.length<2){ res.classList.add("hide"); return; }
+    SEARCH_IDX=SEARCH_IDX||buildIndex();
+    const hits=SEARCH_IDX.filter(x=>x.txt.includes(q)||(x.txt2&&x.txt2.includes(q))).sort((a,b)=>(b.txt.startsWith(q)-a.txt.startsWith(q))).slice(0,40);
+    const groups={}; hits.forEach(x=>(groups[x.k]=groups[x.k]||[]).push(x));
+    if(!hits.length) res.append(h("div",{class:"sr-h"},"Brak wyników"));
+    for(const [k,arr] of Object.entries(groups)){ res.append(h("div",{class:"sr-h"},k)); arr.slice(0,12).forEach(x=>res.append(h("button",{class:"sr",onclick:()=>{res.classList.add("hide"); inp.value=""; x.go();}},x.t,h("small",{},x.sub)))); }
+    res.classList.remove("hide");
+  });
+  document.addEventListener("click",e=>{ if(!e.target.closest(".search")) res.classList.add("hide"); });
+  inp.addEventListener("keydown",e=>{ if(e.key==="Escape"){ res.classList.add("hide"); inp.blur(); } });
+}
+
+/* ---------- nawigacja ---------- */
+function go(id,tab){ if(tab) Store.set("tab:"+id,tab); if(location.hash.slice(1)===id) render(); else location.hash=id; }
+function render(){
+  const id=location.hash.slice(1);
+  const main=$("main"); main.innerHTML="";
+  const page=h("div");
+  main.append(page);
+  const ex=window.EXTRA_VIEWS&&EXTRA_VIEWS[id];
+  if(SUBJ[id]) subjectView(page,id); else if(ex) ex(page); else homeView(page);
+  $$(".side button[data-id]").forEach(b=>b.classList.toggle("on",b.dataset.id===((SUBJ[id]||ex)?id:"home")));
+  $$(".bottom button").forEach(b=>b.classList.toggle("on",b.dataset.id===(SUBJ[id]?(["lacina","wloski","muzyka"].includes(id)?id:"subj"):"home")));
+  window.scrollTo({top:0});
+}
+function setupShell(){
+  const side=$(".side");
+  side.append(h("button",{"data-id":"home",onclick:()=>go("home")},h("span",{class:"badge",style:"--c:var(--terra)"},"⌂"),"Start i terminarz"));
+  side.append(h("div",{class:"lbl"},"Przedmioty"));
+  SUBJECTS.forEach(s=>side.append(h("button",{"data-id":s.id,onclick:()=>go(s.id)},h("span",{class:"badge",style:"--c:"+s.c},s.code),s.name)));
+  const bt=$(".bottom");
+  const ic={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',subj:'<path d="M4 5h7v14H4zM13 5h7v14h-7z"/>',lacina:'<path d="M6 4h12M8 4v16M16 4v16M5 20h14"/>',wloski:'<path d="M4 6h16M4 12h10M4 18h13"/>',muzyka:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>'};
+  const items=[["home","Start"],["subj","Przedmioty"],["lacina","Łacina"],["wloski","Włoski"],["muzyka","Muzyka"]];
+  items.forEach(([id,l])=>bt.append(h("button",{"data-id":id,onclick:()=>{ if(id==="subj"){ go("home"); setTimeout(()=>{const g=$(".subjects"); g&&g.scrollIntoView({behavior:"smooth"});},60);} else go(id); },html:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic[id]}</svg>${l}`})));
+  $("#brand").onclick=()=>go("home");
+  $("#theme").onclick=()=>{ const r=document.documentElement; const cur=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); const nx=cur==="dark"?"light":"dark"; r.setAttribute("data-theme",nx); Store.set("theme",nx); };
+  const th=Store.get("theme",null); if(th) document.documentElement.setAttribute("data-theme",th);
+  setupSearch();
+  window.addEventListener("hashchange",render);
+  render();
+}
+
+/* ===== JAK SIĘ UCZYĆ: motto, sesja nauki (Pomodoro + przeplatanie + przeszkadzajki),
+   czytam i przypominam (Feynman / active recall / pytania), Cornell, mapy myśli, rytm powtórek ===== */
+(function(){
+const MOTTOS=[
+ "Nauka to proces. Wiedza ma nas formować.",
+ "Czas przed książką to czas modlitwy.",
+ "Nauka pomaga spotkać człowieka – wiedza zostanie potem postawiona do ludzi i jest dla nich.",
+ "Mam zobaczyć człowieka!",
+ "Filozofia ma nas nauczyć myślenia i rozumienia współczesnego świata.",
+ "Za każdą ideologią stoi jakaś filozofia – np. socjalizm, nacjonalizm, faszyzm.",
+ "Logika kształtuje precyzję myślenia.",
+ "Pobożność może przeminąć, a wiedza nie, dlatego warto studiować."
+];
+const EGGS=["ALE BYM ZJADŁ GOLONKĘ 🍖","croisant po włosku cornetto 🥐","kogutos 🐓"];
+const GIANT="OBUDŹ W SOBIE OLBRZYMA NIE BĄDŹ KARŁEEEM!!!!";
+function egg(t){ const e=h("div",{class:"egg",role:"status"},t); document.body.append(e); setTimeout(()=>e.remove(),2600); }
+const DISTR=["telefon","zmęczenie","stres","senność","natłok obowiązków","presja czasu","hałas","zła pora dnia","rozbicie","odkładanie na później","towarzystwo"];
+const INTERVALS=[0,1,3,7,30]; // dziś (krótka powtórka), po 1 dniu, 3 dniach, tygodniu, miesiącu
+const addDays=(iso,n)=>{ const d=new Date(iso+"T12:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+
+/* ---------- rytm powtórek ---------- */
+const Rev={
+  all(){ return Store.get("rev",{}); },
+  get(k){ return this.all()[k]||null; },
+  start(k){ const r=this.all(); if(!r[k]) { r[k]={stage:0,due:todayISO(),last:null}; Store.set("rev",r); } },
+  stop(k){ const r=this.all(); delete r[k]; Store.set("rev",r); },
+  rate(k,grade){ // grade: 2 umiałem, 1 częściowo, 0 nie umiałem
+    const r=this.all(); const x=r[k]||{stage:0}; const t=todayISO();
+    if(grade===2){ x.stage=Math.min(INTERVALS.length-1,(x.stage||0)+1); x.due=addDays(t,INTERVALS[x.stage]); }
+    else if(grade===1){ x.due=addDays(t,1); }
+    else { x.stage=1; x.due=addDays(t,1); }
+    x.last=t; r[k]=x; Store.set("rev",r);
+    const rd=Store.get("read",{}); rd[k]=true; Store.set("read",rd);
+    return x;
+  },
+  // przed sprawdzianem: jeśli z przedmiotu jest termin w ciągu 2 dni, a ostatnia powtórka była wcześniej niż wczoraj
+  dueList(){
+    const t=todayISO(); const out=[]; const r=this.all(); const ev=allEvents();
+    for(const [k,x] of Object.entries(r)){
+      const [sid,i]=k.split(":"); const n=notesOf(sid)[+i]; if(!n) continue;
+      let why=null;
+      if(x.due<=t) why= x.stage===0?"krótka powtórka dziś": x.due<t?"zaległa powtórka":"powtórka zaplanowana na dziś";
+      const exam=ev.find(e=>e.subj===sid&&daysBetween(t,e.date)<=2&&daysBetween(t,e.date)>=0);
+      if(!why&&exam&&(!x.last||daysBetween(x.last,t)>=2)) why="przed sprawdzianem ("+fmtDate(exam.date)+")";
+      if(why) out.push({k,sid,i:+i,n,why,x});
+    }
+    return out.sort((a,b)=>a.x.due.localeCompare(b.x.due));
+  }
+};
+window.Rev=Rev;
+
+/* ---------- mapa myśli z notatki ---------- */
+function mindMap(n){
+  const doc=document.createElement("div"); doc.innerHTML=n.html;
+  const root={t:n.t,ch:[]}; let br=null, sub=null;
+  const GENERIC=/^(cytat|znaczenie|punkt \d+|przykład|przykłady|zasada z tablicy|uwaga|definicja|wniosek|sens|kim jest|główna myśl)$/i;
+  const branch=t=>{ br={t,ch:[]}; root.ch.push(br); sub=null; };
+  for(const el of doc.children){
+    if(el.matches(".topic")&&!root.topic){ root.topic=el.textContent.replace(/^Temat/,"").trim(); continue; }
+    if(el.matches("h4")){ const num=(el.querySelector(".num")||{}).textContent||""; const t=el.textContent.trim();
+      if(/^[A-H][.)]/.test(num.trim())&&br){ sub={t,ch:[]}; br.ch.push(sub); } else branch(t); continue; }
+    if(el.matches("h5")){ if(!br) branch(n.t); const node={t:el.textContent.trim(),ch:[]}; if(sub&&sub!==br){ sub.ch.push({t:node.t,leaf:true,strong:true}); } else { br.ch.push(node); sub=node; } continue; }
+    if(el.matches("ul")){ if(!br) branch("Najważniejsze"); const tgt=sub||br;
+      for(const li of el.querySelectorAll(":scope > li")){ const b=li.querySelector("b"); let txt=(b?b.textContent:li.textContent).replace(/:$/,"").trim(); if(!txt||txt.length>70||GENERIC.test(txt)) continue; tgt.ch.push({t:txt,leaf:true}); } }
+  }
+  const flat=root.ch;
+  const wrap=h("div",{class:"mm"});
+  wrap.append(h("div",{class:"mm-root"},h("b",{},root.t),root.topic?h("small",{},root.topic):null));
+  const branches=h("div",{class:"mm-br"});
+  const colors=["#2B4F45","#C2573D","#2F6E8E","#8A5A2B","#5B4A7A","#3C7D4A","#8E2F3C","#B0782A"];
+  flat.forEach((b,i)=>{
+    const card=h("div",{class:"mm-b",style:"--c:"+colors[i%colors.length]},h("div",{class:"mm-bt"},b.t));
+    const leaves=h("div",{class:"mm-l"});
+    for(const c of b.ch.slice(0,12)){
+      if(c.leaf) leaves.append(h("span",{class:"mm-leaf"},c.t));
+      else { const g=h("div",{class:"mm-sub"},h("div",{class:"mm-st"},c.t)); const ll=h("div",{class:"mm-l"}); c.ch.slice(0,10).forEach(x=>ll.append(h("span",{class:"mm-leaf"+(x.strong?" strong":"")},x.t))); if(c.ch.length) g.append(ll); leaves.append(g); }
+    }
+    if(b.ch.length) card.append(leaves);
+    branches.append(card);
+  });
+  if(!flat.length) branches.append(h("div",{class:"empty"},"Ta notatka nie ma nagłówków – mapa myśli powstaje z nagłówków i pogrubionych haseł."));
+  wrap.append(branches);
+  return wrap;
+}
+
+/* ---------- czytnik notatki: Cornell + Zamknij i wyjaśnij + Mapa myśli ---------- */
+function prompts(n){
+  const doc=document.createElement("div"); doc.innerHTML=n.html;
+  let p=[...doc.querySelectorAll("h4")].map(x=>x.textContent.trim());
+  if(p.length<3) p=p.concat([...doc.querySelectorAll("h5")].map(x=>x.textContent.trim())).slice(0,10);
+  return p;
+}
+notesView=function(el,sid){
+  const list=notesOf(sid);
+  el.innerHTML="";
+  if(!list.length){ el.append(h("div",{class:"empty"},"Brak notatek.")); return; }
+  const read=Store.get("read",{}); const t=todayISO();
+  const wrap=h("div",{class:"lec-list"});
+  list.forEach((n,i)=>{
+    const key=sid+":"+i; const rv=Rev.get(key);
+    const status= rv? (rv.due<=t?"Do powtórki dziś":"Następna powtórka: "+fmtDate(rv.due)) : read[key]?"Przerobione":"Kliknij, aby czytać";
+    wrap.append(h("button",{class:"lec"+(read[key]?" read":"")+(rv&&rv.due<=t?" due":""),onclick:()=>openNote(i)},
+      h("span",{class:"n mono"},read[key]?"✓":i+1),h("span",{},h("b",{},n.t),h("small",{},status))));
+  });
+  el.append(h("p",{class:"small muted"},"Każdą notatkę możesz czytać, zamknąć i wyjaśnić własnymi słowami albo zobaczyć jako mapę myśli. Po oznaczeniu jako przerobiona aplikacja zaplanuje powtórki: dziś, po 1 dniu, 3 dniach, tygodniu i miesiącu, a także przed sprawdzianem."),wrap);
+  function openNote(i,mode){
+    const n=list[i]; const key=sid+":"+i;
+    el.innerHTML="";
+    let cur=mode||"read";
+    const rv=Rev.get(key);
+    const mark=h("button",{class:"btn sm "+(Store.get("read",{})[key]?"ok":"")},Store.get("read",{})[key]?"✓ Przerobione":"Oznacz jako przerobione");
+    mark.onclick=()=>{ const rr=Store.get("read",{}); rr[key]=!rr[key]; Store.set("read",rr); if(rr[key]){ Rev.start(key); toast("Zaplanowano powtórki: dziś, za 1, 3, 7 i 30 dni"); } else Rev.stop(key); mark.className="btn sm "+(rr[key]?"ok":""); mark.textContent=rr[key]?"✓ Przerobione":"Oznacz jako przerobione"; };
+    const modes=h("div",{class:"chips"},[["read","📖 Czytam (Cornell)"],["recall","🧠 Zamknij i wyjaśnij"],["map","🗺️ Mapa myśli"]].map(([k,l])=>h("button",{class:"chip"+(k===cur?" on":""),"data-k":k},l)));
+    const body=h("div");
+    modes.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; cur=b.dataset.k; $$(".chip",modes).forEach(c=>c.classList.toggle("on",c===b)); draw();};
+    el.append(h("div",{class:"reader"},
+      h("div",{class:"reader-h"},h("button",{class:"btn sm ghost",onclick:()=>notesView(el,sid)},"← Lista wykładów"),h("div",{class:"row"},rv?h("span",{class:"pill "+(rv.due<=todayISO()?"terra":"green")},rv.due<=todayISO()?"do powtórki dziś":"powtórka: "+fmtDate(rv.due)):null,mark)),
+      h("h2",{style:"font-size:22px;font-weight:800;margin-bottom:10px"},n.t),modes,h("div",{style:"height:14px"}),body,
+      h("div",{class:"row",style:"justify-content:space-between;margin-top:22px"},
+        i>0?h("button",{class:"btn sm",onclick:()=>openNote(i-1)},"← "+list[i-1].t.slice(0,38)+"…"):h("span"),
+        i<list.length-1?h("button",{class:"btn sm",onclick:()=>openNote(i+1)},list[i+1].t.slice(0,38)+"… →"):h("span"))));
+    function myQ(){ return Store.get("q:"+key,[]); }
+    function draw(){
+      body.innerHTML="";
+      if(cur==="read"){
+        const qs=h("div",{class:"stack",style:"gap:6px"});
+        const drawQ=()=>{ qs.innerHTML=""; prompts(n).forEach(p=>qs.append(h("div",{class:"cq auto"},p)));
+          myQ().forEach((q,j)=>qs.append(h("div",{class:"cq"},q,h("button",{class:"x","aria-label":"Usuń pytanie",onclick:()=>{const a=myQ(); a.splice(j,1); Store.set("q:"+key,a); drawQ();}},"✕")))); };
+        drawQ();
+        const qi=h("input",{class:"input",id:"cq-"+key,placeholder:"Dopisz własne pytanie…"});
+        const addQ=()=>{ const v=qi.value.trim(); if(!v) return; const a=myQ(); a.push(v); Store.set("q:"+key,a); qi.value=""; drawQ(); };
+        qi.addEventListener("keydown",e=>{if(e.key==="Enter")addQ();});
+        const sum=h("textarea",{class:"input",id:"cs-"+key,rows:"4",placeholder:"Streść wykład w 3–5 zdaniach własnymi słowami…"});
+        sum.value=Store.get("sum:"+key,""); sum.addEventListener("input",()=>Store.set("sum:"+key,sum.value));
+        body.append(h("div",{class:"cornell"},
+          h("aside",{class:"c-side"},h("div",{class:"c-lbl"},"Pytania i słowa kluczowe"),qs,h("div",{class:"row",style:"margin-top:8px;flex-wrap:nowrap"},qi,h("button",{class:"btn sm",onclick:addQ},"+"))),
+          h("div",{class:"c-main"},h("div",{class:"note",html:n.html}))),
+          h("div",{class:"c-sum"},h("div",{class:"c-lbl"},"Podsumowanie – własnymi słowami"),sum));
+      }
+      if(cur==="recall"){
+        const ps=[...prompts(n),...myQ()];
+        const ta=h("textarea",{class:"input",id:"rx-"+key,rows:"9",placeholder:"Wyjaśnij temat tak, jakbyś tłumaczył go 10-letniemu dziecku. Pisz wszystko, co pamiętasz – bez zaglądania."});
+        ta.value=Store.get("expl:"+key,""); ta.addEventListener("input",()=>Store.set("expl:"+key,ta.value));
+        const out=h("div");
+        body.append(h("div",{class:"rule",html:"<b>Notatka jest zamknięta.</b> 1) Odpowiedz na pytania poniżej własnymi słowami (metoda Feynmana – jak dla 10-latka). 2) Jeśli utkniesz, wróć do notatki. 3) Odsłoń ją i porównaj, czego zabrakło."}),
+          h("div",{class:"c-lbl"},"Pytania do przypomnienia"),h("ol",{class:"rq"},ps.map(p=>h("li",{},p))),ta,
+          h("div",{class:"row",style:"margin-top:10px"},h("button",{class:"btn pri",onclick:()=>{
+            out.innerHTML="";
+            out.append(h("div",{class:"c-lbl",style:"margin-top:18px"},"Jak poszło? Twoja ocena ustawi kolejną powtórkę"),
+              h("div",{class:"row"},
+                h("button",{class:"btn ok",onclick:()=>done(2)},"✓ Umiałem"),
+                h("button",{class:"btn",onclick:()=>done(1)},"≈ Częściowo"),
+                h("button",{class:"btn bad",onclick:()=>done(0)},"✗ Nie umiałem")),
+              h("div",{class:"note",style:"margin-top:16px;border-top:2px solid var(--line);padding-top:12px",html:n.html}));
+            out.scrollIntoView({behavior:"smooth"});
+          }},"Odsłoń notatkę i porównaj"),h("button",{class:"btn sm ghost",onclick:()=>{cur="read";$$(".chip",modes).forEach(c=>c.classList.toggle("on",c.dataset.k==="read"));draw();}},"Utknąłem – wracam do notatki")),out);
+        function done(g){ const x=Rev.rate(key,g); Leitner.log(g>0); toast(g===2?"Świetnie! Następna powtórka: "+fmtDate(x.due):"Powtórka jutro – "+fmtDate(x.due)); notesView(el,sid); }
+      }
+      if(cur==="map") body.append(h("p",{class:"small muted"},"Mapa myśli powstaje automatycznie z nagłówków i pogrubionych haseł notatki – zobacz powiązania między faktami."),mindMap(n));
+    }
+    draw(); window.scrollTo({top:0});
+  }
+  el._open=openNote;
+};
+
+/* ---------- strona: Jak się uczyć + sesja nauki ---------- */
+const S={ running:false, phase:"focus", end:0, left:0, paused:false, cycle:0, subjects:[], focus:25, brk:5, longBrk:20, timer:null, sessionStart:0 };
+function beep(times=3){ try{ const c=new (window.AudioContext||window.webkitAudioContext)(); for(let i=0;i<times;i++){ const o=c.createOscillator(), g=c.createGain(); o.frequency.value=880; g.gain.setValueAtTime(.0001,c.currentTime+i*.35); g.gain.exponentialRampToValueAtTime(.25,c.currentTime+i*.35+.02); g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+i*.35+.3); o.connect(g).connect(c.destination); o.start(c.currentTime+i*.35); o.stop(c.currentTime+i*.35+.32);} }catch(e){} }
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+const ACTS=["powtórka notatek (Zamknij i wyjaśnij)","fiszki – 5 koszyków","quiz","ćwiczenia / zadania"];
+function subjFor(c){ return S.subjects.length? S.subjects[c%S.subjects.length] : null; }
+const STUDY_HTML=`
+<div class="eyebrow">JAK SIĘ UCZYĆ – moja notatka</div>
+<h4><span class="num">1.</span> Po co się uczę</h4>
+<ul>
+<li><b>Nauka to proces. Wiedza ma nas formować.</b></li>
+<li><b>Czas przed książką to czas modlitwy.</b></li>
+<li>Nauka pomaga spotkać człowieka – wiedza zostanie potem postawiona do ludzi i jest dla nich. <b>Mam zobaczyć człowieka!</b></li>
+<li><b>Filozofia</b> ma nas nauczyć myślenia i rozumienia współczesnego świata. Za każdą ideologią stoi jakaś filozofia, np. socjalizm, nacjonalizm, faszyzm.</li>
+<li><b>Logika</b> kształtuje precyzję myślenia.</li>
+</ul>
+<h4><span class="num">2.</span> Co utrudnia mi naukę</h4>
+<p>telefon <b>!</b> · zmęczenie · stres · senność · natłok obowiązków · presja czasu · hałas · zła pora dnia · rozbicie · odkładanie na później · towarzystwo</p>
+<p class="small">→ W aplikacji: <b>Sesja nauki</b> – przed startem lista kontrolna, po każdym bloku zaznaczasz, co przeszkadzało; statystyki pokazują, co rozprasza najczęściej.</p>
+<h4><span class="num">3.</span> Czytam i przypominam</h4>
+<ul>
+<li>Nie tylko czytam, ale <b>zamykam i wyjaśniam temat własnymi słowami</b>, stawiam pytania i na nie odpowiadam.</li>
+<li><b>Metoda Feynmana</b> – wytłumacz zagadnienie własnymi słowami tak, jakbyś wyjaśniał je 10-letniemu dziecku. Jeśli utkniesz, wróć do materiałów źródłowych.</li>
+<li><b>Aktywne przypominanie (active recall)</b> – zamiast czytać tekst wielokrotnie, zamknij książkę i spróbuj zapisać lub powiedzieć na głos wszystko, co pamiętasz.</li>
+<li><b>Tworzenie pytań</b> – podczas czytania notatek twórz do nich pytania. Przy kolejnej powtórce odpowiadaj na te pytania, zamiast tylko czytać tekst.</li>
+</ul>
+<p class="small">→ W aplikacji: w każdej notatce tryb <b>🧠 Zamknij i wyjaśnij</b> oraz kolumna <b>Pytania i słowa kluczowe</b> z Twoimi pytaniami.</p>
+<h4><span class="num">4.</span> Rytm powtórek – walka z krzywą zapominania</h4>
+<ul>
+<li>Krótka powtórka <b>dziś</b>. Kolejna <b>za kilka dni</b>. Następna <b>przed sprawdzianem</b>.</li>
+<li><b>Powtórki rozłożone w czasie (spaced repetition)</b> – wracaj do materiału w rosnących odstępach: po 1 dniu, 3 dniach, tygodniu, miesiącu.</li>
+</ul>
+<p class="small">→ W aplikacji: po oznaczeniu notatki jako przerobionej powtórki planują się same (dziś, 1, 3, 7, 30 dni + przed terminem z terminarza) i pojawiają się na stronie głównej w sekcji <b>Do powtórki dziś</b>. Fiszki działają według 5 koszyków.</p>
+<h4><span class="num">5.</span> Zarządzanie czasem</h4>
+<ul>
+<li><b>Technika Pomodoro</b> – 25 minut pełnego skupienia, 5 minut całkowitej przerwy. Po 4 cyklach dłuższa przerwa (15–30 minut).</li>
+<li><b>Przeplatanie (interleaving)</b> – miksuj różne tematy lub rodzaje zadań w jednej sesji, zamiast blokować czas na jedną rzecz (np. na zmianę gramatyka i słówka).</li>
+</ul>
+<p class="small">→ W aplikacji: <b>Sesja nauki</b> z zegarem Pomodoro; wybierz kilka przedmiotów, a każdy blok podsunie inny przedmiot i inny rodzaj zadania.</p>
+<h4><span class="num">6.</span> Organizacja wiedzy i notatki</h4>
+<ul>
+<li>Tradycyjne, linearne notatki sprzyjają biernemu czytaniu – zastąp je metodami strukturalnymi.</li>
+<li><b>Metoda Cornella</b> – kartka w trzech sekcjach: kolumna na słowa kluczowe i pytania, główny obszar na notatki, podsumowanie na dole strony.</li>
+<li><b>Mapy myśli (mind mapping)</b> – wizualne hierarchie tematów: hasła, strzałki, kolory – mózg łatwiej dostrzega powiązania między faktami.</li>
+</ul>
+<p class="small">→ W aplikacji: tryb <b>📖 Czytam (Cornell)</b> – pytania z lewej, notatka w środku, Twoje podsumowanie na dole; tryb <b>🗺️ Mapa myśli</b> – mapa budowana z każdej notatki.</p>`;
+function studyView(el){
+  el.innerHTML="";
+  el.append(h("div",{class:"page-h"},h("div",{},h("div",{class:"eyebrow-s"},"Metoda"),h("h1",{},"Jak się uczyć"),h("div",{class:"sub"},"Sesja nauki z Pomodoro, przeplataniem i listą przeszkadzajek – oraz Twoja notatka o metodach."))));
+  const tabs=h("div",{class:"tabs",role:"tablist"}); const body=h("div");
+  const T=[["sesja","Sesja nauki"],["metody","Moja notatka: jak się uczyć"],["statystyki","Co mi przeszkadza – statystyki"]];
+  let cur=Store.get("tab:nauka","sesja");
+  T.forEach(([k,l])=>tabs.append(h("button",{"data-id":k,role:"tab",onclick:()=>show(k)},l)));
+  el.append(tabs,body);
+  function show(k){ cur=k; Store.set("tab:nauka",k); $$("button",tabs).forEach(b=>b.classList.toggle("on",b.dataset.id===k)); body.innerHTML="";
+    if(k==="metody") body.append(h("div",{class:"reader"},h("div",{class:"note",html:STUDY_HTML})));
+    if(k==="statystyki") statsView(body);
+    if(k==="sesja") sessionView(body); }
+  show(cur);
+}
+function statsView(el){
+  const d=Store.get("distr",{}); const ses=Store.get("sessions",[]);
+  const week=ses.filter(s=>daysBetween(s.d,todayISO())<7);
+  const mins=week.reduce((a,s)=>a+s.m,0);
+  const arr=Object.entries(d).sort((a,b)=>b[1]-a[1]); const max=Math.max(1,...arr.map(x=>x[1]));
+  el.append(h("div",{class:"grid2"},
+    h("div",{class:"card stack"},h("h2",{},"Ostatnie 7 dni"),h("div",{class:"score"},h("span",{},"Bloków skupienia ",h("b",{},week.length)),h("span",{},"Minut nauki ",h("b",{},mins)),h("span",{},"Łącznie bloków ",h("b",{},ses.length)))),
+    h("div",{class:"card stack"},h("h2",{},"Co przeszkadza najczęściej"),
+      arr.length? h("div",{class:"stack",style:"gap:6px"},arr.map(([k,v])=>h("div",{},h("div",{class:"row",style:"justify-content:space-between"},h("span",{},k),h("b",{class:"mono"},v)),h("div",{class:"bar",style:"--c:var(--terra)"},h("i",{style:"width:"+(v/max*100)+"%"}))))) : h("div",{class:"empty"},"Po każdym bloku nauki zaznacz, co Ci przeszkadzało – tu pojawią się statystyki."))));
+}
+function sessionView(el){
+  el.innerHTML="";
+  if(S.running){ runView(el); return; }
+  const chosen=new Set(Store.get("ses:subj",[]));
+  const subjChips=h("div",{class:"chips"},SUBJECTS.filter(s=>s.id!=="slownik").map(s=>h("button",{class:"chip"+(chosen.has(s.id)?" on":""),"data-k":s.id},s.name)));
+  subjChips.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; const k=b.dataset.k; chosen.has(k)?chosen.delete(k):chosen.add(k); b.classList.toggle("on"); Store.set("ses:subj",[...chosen]);};
+  const f=h("input",{class:"input",id:"ses-focus",type:"number",min:"5",max:"90",value:Store.get("ses:focus",25)});
+  const br=h("input",{class:"input",id:"ses-brk",type:"number",min:"1",max:"30",value:Store.get("ses:brk",5)});
+  const lb=h("input",{class:"input",id:"ses-long",type:"number",min:"10",max:"40",value:Store.get("ses:long",20)});
+  const checks=["Telefon wyciszony i odłożony poza zasięg ręki","Jest cicho (albo słuchawki)","Mam wodę, nie jestem głodny ani śpiący","Wiem, czego dokładnie się uczę w tym bloku","Nie odkładam na później – zaczynam teraz"];
+  const due=Rev.dueList();
+  el.append(h("div",{class:"grid2"},
+    h("div",{class:"card stack"},
+      h("h2",{},"1. Zanim zaczniesz"),
+      h("div",{class:"stack",style:"gap:8px"},checks.map((c,i)=>h("label",{class:"chk"},h("input",{type:"checkbox",id:"chk"+i}),c))),
+      h("div",{class:"rule",html:"<b>Czas przed książką to czas modlitwy.</b><br><i>Przyjdź, Duchu Święty, napełnij serca swoich wiernych i zapal w nich ogień swojej miłości.</i>"})),
+    h("div",{class:"card stack"},
+      h("h2",{},"2. Co i jak długo"),
+      h("div",{class:"small muted"},"Wybierz jeden przedmiot albo kilka – przy kilku aplikacja będzie je przeplatać (każdy blok inny przedmiot i inny rodzaj zadania)."),
+      subjChips,
+      h("div",{class:"row",style:"flex-wrap:nowrap"},h("label",{class:"f"},"Skupienie (min)",f),h("label",{class:"f"},"Przerwa (min)",br),h("label",{class:"f"},"Długa przerwa",lb)),
+      h("button",{class:"btn terra",style:"padding:14px",onclick:()=>{
+        S.subjects=[...chosen]; S.focus=Math.max(1,+f.value||25); S.brk=Math.max(1,+br.value||5); S.longBrk=Math.max(5,+lb.value||20);
+        Store.set("ses:focus",S.focus); Store.set("ses:brk",S.brk); Store.set("ses:long",S.longBrk);
+        S.running=true; S.cycle=0; startPhase("focus"); runView(el);
+      }},"▶ Zaczynam naukę"),
+      due.length? h("div",{class:"tip small"},h("b",{},"Do powtórki dziś: "+due.length+" "+(due.length===1?"notatka":"notatek")),"  – dobry pomysł na pierwszy blok."):null)));
+}
+function startPhase(ph){
+  S.phase=ph; S.paused=false;
+  const m= ph==="focus"? S.focus : ph==="long"? S.longBrk : S.brk;
+  S.left=m*60; S.end=Date.now()+S.left*1000; S.sessionStart=Date.now();
+  clearInterval(S.timer); S.timer=setInterval(tick,1000);
+}
+function tick(){
+  if(S.paused) return;
+  S.left=Math.max(0,Math.round((S.end-Date.now())/1000));
+  const t=document.getElementById("ses-clock"); if(t) t.textContent=fmt(S.left);
+  const pb=document.getElementById("ses-prog"); if(pb){ const tot=(S.phase==="focus"?S.focus:S.phase==="long"?S.longBrk:S.brk)*60; pb.style.width=(100-S.left/tot*100)+"%"; }
+  if(S.left<=0){ clearInterval(S.timer); beep(S.phase==="focus"?3:2); onPhaseEnd(); }
+}
+let runEl=null;
+function onPhaseEnd(){
+  if(S.phase==="focus"){
+    S.cycle++;
+    const ses=Store.get("sessions",[]); ses.push({d:todayISO(),m:S.focus,s:subjFor(S.cycle-1)}); Store.set("sessions",ses.slice(-500));
+    S.awaitDistr=true;
+  } else { S.awaitDistr=false; startPhase("focus"); }
+  if(runEl&&document.body.contains(runEl)) runView(runEl);
+}
+function runView(el){
+  runEl=el; el.innerHTML="";
+  if(S.awaitDistr){
+    const sel=new Set();
+    const chips=h("div",{class:"chips"},[...DISTR.map(d=>h("button",{class:"chip","data-k":d},d)),h("button",{class:"chip","data-k":"nic"},"nic – pełne skupienie 🙌")]);
+    chips.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; const k=b.dataset.k; sel.has(k)?sel.delete(k):sel.add(k); b.classList.toggle("on");};
+    const longNext=S.cycle%4===0;
+    el.append(h("div",{class:"card stack",style:"max-width:720px"},
+      h("div",{class:"eyebrow-s"},"Blok "+S.cycle+" zakończony"),h("h2",{},"Co Ci przeszkadzało?"),chips,
+      h("div",{class:"row"},h("button",{class:"btn pri",onclick:()=>{ const d=Store.get("distr",{}); sel.forEach(k=>{ if(k!=="nic") d[k]=(d[k]||0)+1; }); Store.set("distr",d); S.awaitDistr=false; startPhase(longNext?"long":"short"); runView(el); }},longNext?"Długa przerwa ("+S.longBrk+" min) →":"Przerwa ("+S.brk+" min) →"),
+        h("button",{class:"btn ghost",onclick:()=>{ S.running=false; S.awaitDistr=false; clearInterval(S.timer); sessionView(el); toast("Sesja zakończona – dobra robota!"); }},"Kończę na dziś"))));
+    return;
+  }
+  const s=subjFor(S.cycle); const sj=s?SUBJ[s]:null; const act=S.subjects.length>1?ACTS[S.cycle%ACTS.length]:null;
+  const focus=S.phase==="focus";
+  el.append(h("div",{class:"timer card "+(focus?"":"brk")},
+    h("div",{class:"eyebrow-s"},focus?"Skupienie · blok "+(S.cycle+1)+" (po 4 blokach długa przerwa)":S.phase==="long"?"Długa przerwa":"Przerwa – całkowita, bez telefonu"),
+    h("div",{class:"clock mono",id:"ses-clock"},fmt(S.left)),
+    h("div",{class:"bar",style:"--c:"+(focus?"var(--terra)":"var(--green)")},h("i",{id:"ses-prog",style:"width:0%"})),
+    focus&&sj? h("div",{class:"now"},"Teraz: ",h("b",{},sj.name),act?h("span",{}," · "+act):null) : focus? h("div",{class:"now"},"Jedna rzecz naraz. Telefon odłożony.") : h("div",{class:"now"},"Wstań, przejdź się, napij się wody."),
+    h("div",{class:"row",style:"justify-content:center"},
+      focus&&sj? h("button",{class:"btn sm",onclick:()=>go(sj.id, act&&act.startsWith("fiszki")?"fiszki-p":act&&act.startsWith("quiz")?"quiz":"notatki")},"Otwórz "+sj.name+" →"):null,
+      h("button",{class:"btn sm",onclick:e=>{ if(S.paused){ S.paused=false; S.end=Date.now()+S.left*1000; e.target.textContent="⏸ Pauza"; } else { S.paused=true; e.target.textContent="▶ Wznów"; } }},S.paused?"▶ Wznów":"⏸ Pauza"),
+      h("button",{class:"btn sm",onclick:()=>{ S.end=Date.now(); tick(); }},"⏭ Pomiń"),
+      h("button",{class:"btn sm ghost",onclick:()=>{ S.running=false; clearInterval(S.timer); sessionView(el); }},"■ Zakończ"))));
+  tick();
+}
+/* ---------- strona główna: motto, „Do powtórki dziś”, przycisk sesji ---------- */
+const _home=homeView;
+homeView=function(el){
+  _home(el);
+  const q=$(".hero .quote",el); if(q){ const ALL=[...MOTTOS,...EGGS]; let i= Math.random()<.12? MOTTOS.length+Math.floor(Math.random()*EGGS.length) : Math.floor(Math.random()*MOTTOS.length); q.textContent="„"+ALL[i]+"”"; q.title="Kliknij, aby zobaczyć następne"; q.style.cursor="pointer"; q.onclick=()=>{ i=(i+1)%ALL.length; q.textContent="„"+ALL[i]+"”"; }; }
+  const hero=$(".hero",el);
+  const g=h("button",{class:"giant",title:"!!!!",onclick:()=>{ g.classList.remove("shake"); void g.offsetWidth; g.classList.add("shake"); }},GIANT);
+  hero.after(g);
+  const due=Rev.dueList();
+  const box=h("div",{class:"study-strip"},
+    h("div",{class:"card stack"},h("div",{class:"row",style:"justify-content:space-between"},h("h2",{},"Do powtórki dziś"),h("span",{class:"pill "+(due.length?"terra":"ok")},due.length?due.length+" "+(due.length===1?"notatka":"notatek"):"wszystko powtórzone")),
+      due.length? h("div",{class:"stack",style:"gap:6px"},due.slice(0,6).map(d=>h("button",{class:"lec",style:"--c:"+SUBJ[d.sid].c,onclick:()=>{ go(d.sid,"notatki"); setTimeout(()=>{ const b=$("main .tabs+div"); if(b&&b._open) b._open(d.i,"recall"); },90); }},
+        h("span",{class:"badge",style:"--c:"+SUBJ[d.sid].c},SUBJ[d.sid].code),h("span",{},h("b",{},d.n.t),h("small",{},d.why+" · otwiera się w trybie „Zamknij i wyjaśnij”"))))) :
+        h("p",{class:"small muted",style:"margin:0"},"Oznacz notatkę jako przerobioną, a powtórki zaplanują się same: dziś, po 1 dniu, 3 dniach, tygodniu, miesiącu i przed sprawdzianem.")),
+    h("button",{class:"card start-btn",onclick:()=>go("nauka")},h("span",{class:"eyebrow-s"},"Pomodoro · przeplatanie · bez telefonu"),h("b",{},"▶ Zaczynam naukę"),h("small",{class:"muted"},(S.running?"Sesja trwa – wróć do zegara":"Lista kontrolna, modlitwa, zegar 25/5"))));
+  g.after(box);
+};
+window.EXTRA_VIEWS={nauka:studyView};
+const _ss=setupShell;
+setupShell=function(){
+  const side=$(".side");
+  // easter eggi: wyszukiwarka i logo
+  setTimeout(()=>{
+    const qi=$("#q"); let last="";
+    if(qi) qi.addEventListener("input",()=>{ const v=norm(qi.value); let t=null;
+      if(/golonk/.test(v)) t=EGGS[0]; else if(/croi?ss?ant|cornett|rogal/.test(v)) t=EGGS[1]; else if(/kogut/.test(v)) t=EGGS[2]; else if(/olbrzym|karzel|karl/.test(v)) t=GIANT;
+      if(t&&t!==last){ egg(t); } last=t||""; });
+    const br=$("#brand"); let n=0, tm=null;
+    if(br) br.addEventListener("click",()=>{ n++; clearTimeout(tm); tm=setTimeout(()=>n=0,1500); if(n>=5){ n=0; egg(EGGS[2]); } });
+  },0);
+  _ss();
+  const homeBtn=$(".side button[data-id='home']");
+  if(homeBtn) homeBtn.after(h("button",{"data-id":"nauka",onclick:()=>go("nauka")},h("span",{class:"badge",style:"--c:var(--gold)"},"⏱"),"Jak się uczyć · sesja"));
+};
+})();
+
+/* ===== ŁACINA – moduł ===== */
+(function(){
+const CONJ = {
+ "1":{n:"I",c:"#2F6E8E",stem:"-a-",inf:"-āre",first:"-o",why:"1. forma kończy się na samo -o (bez -e- ani -i- przed nim), a bezokolicznik na -āre. Temat czasu teraźniejszego kończy się na -a-."},
+ "2":{n:"II",c:"#3C7D4A",stem:"-e-",inf:"-ēre",first:"-eo",why:"W 1. formie przed -o stoi -e- (-eo), a bezokolicznik kończy się na -ēre (długie e). Temat kończy się na -e-."},
+ "3":{n:"III",c:"#C2573D",stem:"spółgłoska",inf:"-ĕre",first:"-o",why:"W 1. formie jest samo -o po spółgłosce (NIE -eo), a bezokolicznik ma -ĕre (krótkie e). Temat kończy się na spółgłoskę."},
+ "3io":{n:"III (na -io)",c:"#8A5A2B",stem:"spółgłoska + i",inf:"-ĕre",first:"-io",why:"1. forma na -io, ale bezokolicznik na -ĕre (krótkie e) – to tzw. koniugacja mieszana (capio, capere)."},
+ "4":{n:"IV",c:"#5B4A7A",stem:"-i-",inf:"-īre",first:"-io",why:"1. forma na -io, a bezokolicznik na -īre (długie i). Temat kończy się na -i-."}
+};
+const deMac = s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"");
+const PERS=["1. os. lp. (ja)","2. os. lp. (ty)","3. os. lp. (on/ona/ono)","1. os. lm. (my)","2. os. lm. (wy)","3. os. lm. (oni/one)"];
+const PERS_S=["ego","tu","is/ea/id","nos","vos","ei/eae/ea"];
+const PL_END={1:["ę","sz","","my","cie","ją"]};
+function parseVerbs(){
+  const tableKeys=new Set(LA_TABLE.map(v=>deMac(v[0].split(",")[0])));
+  const out=LA_TABLE.map(([f,m,c])=>({forms:f,mean:m,conj:c,tag:"z tablicy",table:true,key:deMac(f.split(",")[0])}));
+  for(const line of LA_VERBS.trim().split("\n")){
+    const [f,m,c,t]=line.split("|"); const key=deMac(f.split(",")[0]);
+    if(tableKeys.has(key)) continue;
+    out.push({forms:f,mean:m,conj:c,tag:t||"",table:false,key});
+  }
+  return out;
+}
+const VERBS=parseVerbs();
+/* odmiana praesens: zwraca [[rdzeń,spójka,końcówka],...] */
+function paradigm(v){
+  const parts=deMac(v.forms).split(",").map(s=>s.trim());
+  const first=parts[0], inf=parts[1]; const c=v.conj;
+  if(!/^(1|2|3|3io|4)$/.test(c)) return null;
+  if(c==="1"){ const st=inf.slice(0,-3); return [[st,"","o"],[st,"a","s"],[st,"a","t"],[st,"a","mus"],[st,"a","tis"],[st,"a","nt"]]; }
+  if(c==="2"){ const st=inf.slice(0,-3); return [[st,"e","o"],[st,"e","s"],[st,"e","t"],[st,"e","mus"],[st,"e","tis"],[st,"e","nt"]]; }
+  if(c==="3"){ const st=inf.slice(0,-3); return [[st,"","o"],[st,"i","s"],[st,"i","t"],[st,"i","mus"],[st,"i","tis"],[st,"u","nt"]]; }
+  if(c==="3io"){ const st=inf.slice(0,-3); return [[st,"i","o"],[st,"i","s"],[st,"i","t"],[st,"i","mus"],[st,"i","tis"],[st,"iu","nt"]]; }
+  if(c==="4"){ const st=inf.slice(0,-3); return [[st,"i","o"],[st,"i","s"],[st,"i","t"],[st,"i","mus"],[st,"i","tis"],[st,"iu","nt"]]; }
+}
+const IRR_TAB={sum:["sum","es","est","sumus","estis","sunt"],possum:["possum","potes","potest","possumus","potestis","possunt"],prosum:["prosum","prodes","prodest","prosumus","prodestis","prosunt"],adsum:["adsum","ades","adest","adsumus","adestis","adsunt"],absum:["absum","abes","abest","absumus","abestis","absunt"],eo:["eo","is","it","imus","itis","eunt"],redeo:["redeo","redis","redit","redimus","reditis","redeunt"],transeo:["transeo","transis","transit","transimus","transitis","transeunt"],pereo:["pereo","peris","perit","perimus","peritis","pereunt"],exeo:["exeo","exis","exit","eximus","exitis","exeunt"],fero:["fero","fers","fert","ferimus","fertis","ferunt"],offero:["offero","offers","offert","offerimus","offertis","offerunt"],refero:["refero","refers","refert","referimus","refertis","referunt"],volo:["volo","vis","vult","volumus","vultis","volunt"],nolo:["nolo","non vis","non vult","nolumus","non vultis","nolunt"],malo:["malo","mavis","mavult","malumus","mavultis","malunt"],fio:["fio","fis","fit","(fimus)","(fitis)","fiunt"]};
+function forms(v){ const p=paradigm(v); if(p) return p.map(x=>x.join("")); const k=deMac(v.forms.split(",")[0]); return IRR_TAB[k]||null; }
+function imperative(v){
+  const k=v.key, inf=deMac(v.forms.split(",")[1]||"").trim();
+  const irr={dico:["dic!","dicite!"],duco:["duc!","ducite!"],facio:["fac!","facite!"],fero:["fer!","ferte!"],sum:["es! / esto!","este!"],eo:["i!","ite!"],nolo:["noli!","nolite!"]};
+  if(irr[k]) return irr[k];
+  const c=v.conj;
+  if(c==="1"||c==="2"||c==="4") return [inf.slice(0,-2)+"!",inf.slice(0,-2)+"te!"];
+  if(c==="3"||c==="3io"){ const st=inf.slice(0,-3); return [st+"e!",st+"ite!"]; }
+  return null;
+}
+function paradigmTable(v){
+  const p=paradigm(v), f=forms(v);
+  if(!f) return h("p",{class:"muted small"},"Czasownik "+(v.conj==="dep"?"odmienia się jak strona bierna (deponens) – na razie tylko do rozpoznawania.":"nieosobowy – występuje głównie w 3. os. lp."));
+  const t=h("table",{class:"nt paradigm"},h("thead",{},h("tr",{},h("th",{},"Osoba"),h("th",{},"Zaimek"),h("th",{},"Forma"))));
+  const tb=h("tbody");
+  f.forEach((x,i)=>{ const cell= p? h("td",{html:`<span class="r">${p[i][0]}</span><span class="s">${p[i][1]}</span><span class="e">${p[i][2]}</span>`}) : h("td",{},h("b",{},x));
+    tb.append(h("tr",{},h("td",{class:"small"},PERS[i]),h("td",{class:"small muted"},PERS_S[i]),cell)); });
+  t.append(tb); return h("div",{class:"table-wrap"},t);
+}
+
+/* ---- legenda ---- */
+function legendView(el){
+  el.innerHTML="";
+  el.append(h("div",{class:"card stack"},
+    h("h2",{},"Jak rozpoznać koniugację w sekundę?"),
+    h("p",{class:"muted",style:"margin:0"},"O koniugacji decyduje zestawienie 1. formy (1. os. lp. czasu teraźniejszego) z 2. formą (bezokolicznikiem). Słowniki podają 4 formy: LAUDO, LAUDARE, LAUDAVI, LAUDATUM."),
+    h("div",{class:"table-wrap"},h("table",{class:"nt"},h("thead",{},h("tr",{},["Koniugacja","1. forma","Bezokolicznik","Temat","Jak odróżnić?"].map(x=>h("th",{},x)))),
+      h("tbody",{},["1","2","3","3io","4"].map(k=>h("tr",{},h("td",{},h("span",{class:"c-pill",style:"--c:"+CONJ[k].c},CONJ[k].n)),h("td",{},CONJ[k].first),h("td",{},CONJ[k].inf),h("td",{},CONJ[k].stem),h("td",{class:"small"},CONJ[k].why)))))),
+    h("div",{class:"warn",html:"<b>Najczęstsza pułapka:</b> II i III koniugacja mają w bezokoliczniku „-ere”. Patrz na <b>1. formę</b>: hab<b>eo</b> (jest -e-) → II; leg<b>o</b> (samo -o) → III. Długość: hab<b>ē</b>re (długie) vs leg<b>ĕ</b>re (krótkie)."}),
+    h("div",{class:"rule",html:"<b>Końcówki osobowe strony czynnej</b> są takie same dla wszystkich koniugacji: <b>-o (-m), -s, -t, -mus, -tis, -nt</b>. Thema praesentis + końcówka: ama + s = amas."}),
+    h("div",{class:"tip",html:"<b>III koniugacja – „spójki”:</b> temat kończy się na spółgłoskę (leg-), więc między temat a końcówkę wchodzi samogłoska łącząca: przed -r w bezokoliczniku <b>-e-</b> (leg-e-re), w 2. i 3. os. lp. oraz 1. i 2. lm. <b>-i-</b> (leg-i-s, leg-i-t, leg-i-mus, leg-i-tis), w 3. os. lm. <b>-u-</b> (leg-u-nt). W IV i III-io w 3. os. lm.: <b>-iu-</b> (veni-u-nt, capi-u-nt)."}),
+    h("div",{class:"legend-key",html:'<span><b class="r">rdzeń</b> = temat</span><span><b style="color:var(--terra)">spójka</b> = samogłoska tematyczna / łącząca</span><span><b style="color:var(--green-ink)">końcówka</b> = osoba</span>'}),
+    h("div",{class:"warn",html:"<b>Pułapka na kolokwium – 3. os. lp. vs 3. os. lm.:</b> leg<b>it</b> (on czyta) ↔ leg<b>unt</b> (oni czytają); audi<b>t</b> ↔ audi<b>unt</b>; ama<b>t</b> ↔ ama<b>nt</b>."}),
+    h("div",{class:"tip",html:"<b>4 formy podstawowe</b> (np. laudo, laudare, laudavi, laudatum):<br>1) <b>laudo</b> – chwalę (persona prima singularis indicativi praesentis activi)<br>2) <b>laudare</b> – chwalić (infinitivus praesentis activi)<br>3) <b>laudavi</b> – pochwaliłem/am (persona prima singularis indicativi perfecti activi)<br>4) <b>laudatum</b> – aby pochwalić (supinum). Supinum występuje po czasownikach ruchu i wyraża cel: <i>festino scriptum</i> – spieszę, aby pisać."})));
+  const g=h("div",{class:"conj-grid",style:"margin-top:14px"});
+  [["1","amo, amāre","kochać",{forms:"amo, amare",conj:"1",mean:"kochać"}],["2","video, vidēre","widzieć",{forms:"video, videre",conj:"2",mean:"widzieć"}],["3","ago, agĕre","czynić",{forms:"ago, agere",conj:"3",mean:"czynić"}],["4","audio, audīre","słuchać",{forms:"audio, audire",conj:"4",mean:"słuchać"}]].forEach(([k,lab,m,v])=>{
+    g.append(h("div",{class:"conj-card",style:"--c:"+CONJ[k].c},h("h3",{},CONJ[k].n+" koniugacja"),h("div",{class:"small muted"},lab+" – "+m),paradigmTable(v)));
+  });
+  el.append(g);
+}
+
+/* ---- karta 23 czasowników ---- */
+function tableView(el){
+  el.innerHTML="";
+  let filt="all";
+  const chips=h("div",{class:"chips"},[["all","Wszystkie 23"],["1","I"],["2","II"],["3","III"],["4","IV"]].map(([k,l])=>h("button",{class:"chip"+(k==="all"?" on":""),"data-k":k},l)));
+  const list=h("div",{class:"card",style:"padding:0;overflow:hidden"}); const det=h("div");
+  chips.onclick=e=>{const b=e.target.closest(".chip"); if(!b) return; filt=b.dataset.k; $$(".chip",chips).forEach(c=>c.classList.toggle("on",c===b)); draw();};
+  el.append(h("p",{class:"muted"},"16 czasowników podanych na zajęciach + 7 z dołu tablicy (voco, respondeo, taceo, pello, tango, quaero, surgo). Kliknij, aby zobaczyć uzasadnienie, odmianę i tryb rozkazujący."),chips,h("div",{style:"height:10px"}),h("div",{class:"grid2"},list,det));
+  function draw(){
+    list.innerHTML="";
+    VERBS.filter(v=>v.table&&(filt==="all"||v.conj===filt)).forEach(v=>list.append(h("button",{class:"verb-row",onclick:()=>showVerb(det,v)},
+      h("span",{},h("b",{},v.forms),h("br"),h("small",{},v.mean)),h("span",{class:"c-pill",style:"--c:"+CONJ[v.conj].c},CONJ[v.conj].n))));
+  }
+  draw(); showVerb(det,VERBS[0]);
+}
+function showVerb(det,v){
+  det.innerHTML="";
+  const imp=imperative(v); const cj=CONJ[v.conj];
+  det.append(h("div",{class:"card stack"},
+    h("div",{class:"row",style:"justify-content:space-between"},h("h2",{},v.forms),cj?h("span",{class:"c-pill",style:"--c:"+cj.c},cj.n+" koniugacja"):h("span",{class:"pill"},v.conj==="irr"?"nieregularny":v.conj==="dep"?"deponens":"nieosobowy")),
+    h("div",{style:"font-family:var(--f-read);font-size:18px"},v.mean),
+    cj?h("div",{class:"rule",html:"<b>Dlaczego "+cj.n+"?</b> "+esc(cj.why)}):null,
+    LA_TABLE_NOTES[v.key]&&v.table?h("div",{class:"tip small",html:"<b>Uwaga z tablicy:</b> "+esc(LA_TABLE_NOTES[v.key])}):null,
+    h("h3",{},"Praesens indicativi activi"),paradigmTable(v),
+    imp?h("div",{class:"tip",html:`<b>Imperativus</b> (rozkaz): <b>${imp[0]}</b> (do jednej osoby) · <b>${imp[1]}</b> (do wielu)`}):null));
+}
+
+/* ---- trener „dlaczego ta koniugacja?” ---- */
+function trainerView(el){
+  el.innerHTML="";
+  const pool=VERBS.filter(v=>/^(1|2|3|3io|4)$/.test(v.conj));
+  let v=null, step=1, streak=0, best=Store.get("la:trainBest",0), onlyTable=true;
+  const sc=h("div",{class:"score"}); const box=h("div",{class:"stack"});
+  const tog=h("button",{class:"btn sm",onclick:()=>{onlyTable=!onlyTable; tog.textContent=onlyTable?"Zakres: 23 z tablicy":"Zakres: wszystkie czasowniki"; next();}},"Zakres: 23 z tablicy");
+  el.append(h("p",{class:"muted"},"Krok 1: wybierz koniugację. Krok 2: wybierz właściwe uzasadnienie. Seria rośnie tylko wtedy, gdy oba kroki są dobre."),h("div",{class:"row"},tog),sc,box);
+  const opts=["1","2","3","3io","4"];
+  function upd(){ sc.innerHTML=`<span>Seria bez błędu: <b class="mono">${streak}</b></span><span>Rekord: <b class="mono">${best}</b></span>`; }
+  function next(){
+    const p=onlyTable?pool.filter(x=>x.table):pool; v=pick(p); step=1; upd(); box.innerHTML="";
+    box.append(h("div",{class:"flash",style:"min-height:150px"},h("div",{class:"front"},v.forms.split(",").slice(0,2).join(", ")),h("div",{class:"muted"},v.mean)));
+    const row=h("div",{class:"row",style:"justify-content:center"});
+    opts.forEach(k=>row.append(h("button",{class:"btn",style:"min-width:90px",onclick:e=>answer1(k,e.target,row)},CONJ[k].n)));
+    box.append(h("h3",{},"Krok 1: która koniugacja?"),row);
+  }
+  function answer1(k,btn,row){
+    if(row.dataset.done) return; row.dataset.done=1;
+    const ok=k===v.conj; btn.classList.add(ok?"ok":"bad");
+    if(!ok){ $$("button",row).find(b=>b.textContent===CONJ[v.conj].n).classList.add("ok"); streak=0; upd(); }
+    const reasons=shuffle(opts).slice(0,5);
+    const ol=h("div",{class:"q-opts"});
+    reasons.forEach(r=>{ const b=h("button",{class:"q-opt"},CONJ[r].why); b.onclick=()=>{ if(ol.dataset.done) return; ol.dataset.done=1; const ok2=r===v.conj; b.classList.add(ok2?"ok":"bad"); if(!ok2) [...ol.children][reasons.indexOf(v.conj)].classList.add("ok");
+      if(ok&&ok2){ streak++; if(streak>best){best=streak;Store.set("la:trainBest",best);} } else streak=0; upd();
+      box.append(h("button",{class:"btn pri",onclick:next},"Następny czasownik →")); }; ol.append(b); });
+    box.append(h("h3",{},"Krok 2: dlaczego?"),ol);
+  }
+  next();
+}
+
+/* ---- symulator odmiany ---- */
+function simView(el){
+  el.innerHTML="";
+  const pool=VERBS.filter(v=>/^(1|2|3|3io|4)$/.test(v.conj)||IRR_TAB[v.key]);
+  let v=null, mode="full";
+  const sel=h("select",{class:"input",id:"sim-verb",onchange:e=>{v=pool[+e.target.value]; draw();}},pool.map((x,i)=>h("option",{value:i},x.forms.split(",").slice(0,2).join(", ")+" – "+x.mean)));
+  const modeBtn=h("button",{class:"btn sm",onclick:()=>{mode=mode==="full"?"one":"full";modeBtn.textContent=mode==="full"?"Tryb: cała tabela":"Tryb: szybki strzał (1 forma)";draw();}},"Tryb: cała tabela");
+  const rnd=h("button",{class:"btn sm",onclick:()=>{const i=Math.floor(Math.random()*pool.length); sel.value=i; v=pool[i]; draw();}},"🎲 Losuj czasownik");
+  const tbl=h("button",{class:"btn sm",onclick:()=>{const t=pool.filter(x=>x.table); const x=pick(t); sel.value=pool.indexOf(x); v=x; draw();}},"Losuj z tablicy");
+  const body=h("div",{class:"card stack",style:"margin-top:12px"});
+  el.append(h("p",{class:"muted"},"Wpisz odmianę w czasie teraźniejszym (praesens indicativi activi). Iloczas (ā, ē) możesz pomijać."),h("div",{class:"row"},sel,rnd,tbl,modeBtn),body);
+  v=pool.find(x=>x.table)||pool[0]; sel.value=pool.indexOf(v);
+  function draw(){
+    body.innerHTML=""; const f=forms(v); const cj=CONJ[v.conj];
+    body.append(h("div",{class:"row",style:"justify-content:space-between"},h("h2",{},v.forms),cj?h("span",{class:"c-pill",style:"--c:"+cj.c},cj.n):h("span",{class:"pill"},"nieregularny")));
+    if(mode==="one"){
+      const i=Math.floor(Math.random()*6);
+      const inp=h("input",{class:"input",id:"sim-one",placeholder:PERS[i],autocomplete:"off",autocapitalize:"off",spellcheck:"false"});
+      const fb=h("div");
+      const chk=()=>{ const ok=deMac(inp.value.trim().toLowerCase())===deMac(f[i]); inp.classList.add(ok?"ok":"bad"); fb.innerHTML=""; fb.append(h("div",{class:"feedback "+(ok?"ok":"bad")},ok?"Dobrze!":"Poprawnie: "+f[i]),h("button",{class:"btn pri",style:"margin-top:8px",onclick:()=>{const j=Math.floor(Math.random()*pool.length); v=pool[j]; sel.value=j; draw();}},"Następny →")); };
+      inp.addEventListener("keydown",e=>{if(e.key==="Enter")chk();});
+      body.append(h("div",{class:"q-prompt"},"Podaj formę: ",h("b",{},PERS[i]),h("span",{class:"muted"}," ("+PERS_S[i]+")")),h("div",{class:"row"},inp,h("button",{class:"btn pri",onclick:chk},"Sprawdź")),fb);
+      setTimeout(()=>inp.focus(),30); return;
+    }
+    const g=h("div",{class:"sim-grid"}); const inps=[];
+    f.forEach((x,i)=>{ const inp=h("input",{class:"input",id:"sim-"+i,autocomplete:"off",autocapitalize:"off",spellcheck:"false"}); inps.push(inp);
+      g.append(h("span",{class:"p"},PERS_S[i]),inp,h("span",{class:"small muted"},PERS[i].split(" (")[0])); });
+    const fb=h("div");
+    const p=paradigm(v);
+    const hint=h("button",{class:"btn sm",onclick:()=>{ if(!p){toast("To czasownik nieregularny – zapamiętaj tabelę.");return;} inps.forEach((inp,i)=>{ if(!inp.value) inp.placeholder=p[i][0]+p[i][1]+"…"; }); }},"Podpowiedź: rdzeń + spójka");
+    const fill=h("button",{class:"btn sm ghost",onclick:()=>{ inps.forEach((inp,i)=>inp.value=f[i]); }},"Wypełnij wzorem");
+    const chk=h("button",{class:"btn pri",onclick:()=>{ let good=0; inps.forEach((inp,i)=>{ const ok=deMac(inp.value.trim().toLowerCase())===deMac(f[i]); inp.classList.remove("ok","bad"); inp.classList.add(ok?"ok":"bad"); if(ok) good++; else inp.title="Poprawnie: "+f[i]; });
+      fb.innerHTML=""; fb.append(h("div",{class:"feedback "+(good===6?"ok":"bad")},good===6?"Bezbłędnie! 6/6":"Dobrze: "+good+"/6. Poprawna odmiana: "+f.join(", "))); }},"Sprawdź");
+    body.append(g,h("div",{class:"row"},chk,hint,fill),fb);
+    const imp=imperative(v); if(imp) body.append(h("div",{class:"tip small",html:`Tryb rozkazujący: <b>${imp[0]}</b> · <b>${imp[1]}</b>`}));
+  }
+  draw();
+}
+
+/* ---- modlitwy ---- */
+const GLOSS=Object.fromEntries(LA_GLOSS.trim().split("\n").map(l=>{const [w,g]=l.split("|"); return [w,g];}));
+const gNorm=w=>deMac(w).toLowerCase().replace(/j/g,"i").replace(/[^a-z]/g,"");
+function glossFor(w){ const k=gNorm(w); return GLOSS[k]||(k.endsWith("que")&&GLOSS[k.slice(0,-3)]? GLOSS[k.slice(0,-3)]+" + -que (i)":null); }
+function prayersView(el){
+  el.innerHTML="";
+  let part=0, pr=LA_PRAYERS[0], mode="read";
+  const chips=h("div",{class:"chips"},[[0,"Wszystkie"],[1,"Kolokwium cz. 1 (26.10)"],[2,"Kolokwium cz. 2 (16.11)"]].map(([k,l])=>h("button",{class:"chip"+(k===0?" on":""),"data-k":k},l)));
+  const list=h("div",{class:"chips",style:"margin-top:8px"});
+  const modes=h("div",{class:"tabs",style:"margin:14px 0 10px"},[["read","Czytaj i klikaj słowa"],["cloze","Uzupełnij luki"],["quiz","Co znaczy to słowo?"],["order","Na pamięć (sprawdź)"]].map(([k,l])=>h("button",{"data-k":k,class:k==="read"?"on":""},l)));
+  const body=h("div",{class:"card"});
+  el.append(h("p",{class:"muted"},"Na kolokwium: modlitwy na pamięć oraz pytania o znaczenie słów. Kliknij dowolne słowo, żeby zobaczyć jego znaczenie i formę."),chips,list,modes,body);
+  chips.onclick=e=>{const b=e.target.closest(".chip"); if(!b) return; part=+b.dataset.k; $$(".chip",chips).forEach(c=>c.classList.toggle("on",c===b)); drawList();};
+  modes.onclick=e=>{const b=e.target.closest("button"); if(!b) return; mode=b.dataset.k; $$("button",modes).forEach(c=>c.classList.toggle("on",c===b)); draw();};
+  function drawList(){ list.innerHTML=""; LA_PRAYERS.filter(p=>!part||p.part===part).forEach(p=>list.append(h("button",{class:"chip"+(p===pr?" on":""),onclick:()=>{pr=p;drawList();draw();}},p.title))); }
+  const words=t=>t.replace(/\s*\*\s*/g," / ").split(/(\s+)/);
+  function draw(){
+    body.innerHTML="";
+    body.append(h("div",{class:"eyebrow-s"},pr.pl+(pr.part===1?" · kolokwium cz. 1":" · kolokwium cz. 2")),h("h2",{style:"margin:4px 0 12px"},pr.title));
+    if(mode==="read"){
+      const pop=h("div",{class:"gloss-pop hide"});
+      const p=h("div",{class:"prayer"});
+      for(const tok of words(pr.la)){
+        if(/^\s+$/.test(tok)||tok==="/"){ p.append(tok==="/"?h("br"):tok); continue; }
+        const g=glossFor(tok);
+        const s=h("span",{class:"w",tabindex:"0"},tok);
+        const act=()=>{ $$(".w.sel",p).forEach(x=>x.classList.remove("sel")); s.classList.add("sel"); pop.classList.remove("hide"); pop.innerHTML=`<b>${esc(tok.replace(/[,.;:*\[\]]/g,""))}</b> – ${esc(g||"(brak w słowniczku)")}`; };
+        s.onclick=act; s.onkeydown=e=>{if(e.key==="Enter")act();};
+        p.append(s);
+      }
+      const trBtn=h("button",{class:"btn sm",onclick:()=>{tr.classList.toggle("hide");}},"Pokaż / ukryj tłumaczenie");
+      const tr=h("p",{class:"hide",style:"font-family:var(--f-read);font-size:17px;color:var(--muted);margin-top:12px"},pr.tr);
+      body.append(p,pop,h("div",{style:"margin-top:12px"},trBtn),tr);
+      if(pr.id==="requiem") body.append(h("div",{class:"tip small",html:"Za kilka osób: <b>dona eis … luceat eis. Requiescant</b> in pace. Za jedną osobę: <b>dona ei … luceat ei. Requiescat</b> in pace. (Uwaga z lektoratu: zmiana eis → ei oraz Requiescant → Requiescat.)"}));
+      if(pr.id==="pater") body.append(h("div",{class:"tip small",html:"Z lektoratu: <b>quotidianum</b> czytamy [kwotidianum]."}));
+    }
+    if(mode==="cloze"){
+      const toks=words(pr.la); const idxs=toks.map((t,i)=>(/\w/.test(t)&&t.replace(/\W/g,"").length>2)?i:-1).filter(i=>i>=0);
+      const hidden=new Set(shuffle(idxs).slice(0,Math.max(3,Math.round(idxs.length*0.3))));
+      const p=h("div",{class:"prayer"}); const gaps=[];
+      toks.forEach((t,i)=>{ if(t==="/"){p.append(h("br"));return;} if(!hidden.has(i)){ p.append(t); return; }
+        const clean=t.replace(/[,.;:*\[\]]/g,""); const punct=t.slice(clean.length+(t.startsWith("[")?1:0));
+        const inp=h("input",{class:"gap",style:"width:"+(clean.length+1)+"ch",autocomplete:"off",autocapitalize:"off",spellcheck:"false","aria-label":"luka"}); inp.dataset.a=clean; gaps.push(inp); p.append(inp,punct.replace(/[\[\]]/g,"")); });
+      const fb=h("div",{style:"margin-top:10px"});
+      body.append(p,h("div",{class:"row",style:"margin-top:12px"},h("button",{class:"btn pri",onclick:()=>{ let g=0; gaps.forEach(x=>{const ok=gNorm(x.value)===gNorm(x.dataset.a); x.classList.remove("ok","bad"); x.classList.add(ok?"ok":"bad"); if(ok) g++; else x.title=x.dataset.a;}); fb.innerHTML=""; fb.append(h("div",{class:"feedback "+(g===gaps.length?"ok":"bad")},`Dobrze: ${g}/${gaps.length}`+(g<gaps.length?" – najedź/przytrzymaj czerwone pole, by zobaczyć słowo, albo kliknij „Pokaż”":""))); }},"Sprawdź"),
+        h("button",{class:"btn sm",onclick:()=>gaps.forEach(x=>{if(!x.classList.contains("ok")) x.value=x.dataset.a;})},"Pokaż brakujące"),h("button",{class:"btn sm ghost",onclick:draw},"Nowe luki")),fb);
+    }
+    if(mode==="quiz"){
+      const ws=[...new Set(words(pr.la).filter(t=>/\w/.test(t)).map(t=>t.replace(/[,.;:*\[\]]/g,"")).filter(w=>glossFor(w)))];
+      let n=0,good=0; const qb=h("div",{class:"stack"}); body.append(qb);
+      const ask=()=>{ qb.innerHTML=""; if(n>=10){ qb.append(h("div",{class:"feedback "+(good>=8?"ok":"bad")},`Wynik: ${good}/10`),h("button",{class:"btn pri",onclick:()=>{n=0;good=0;ask();}},"Jeszcze raz")); return; }
+        const w=pick(ws); const correct=glossFor(w); const others=shuffle(ws.filter(x=>glossFor(x)!==correct)).slice(0,3).map(glossFor);
+        const opts=shuffle([correct,...others]);
+        qb.append(h("div",{class:"small muted"},`Pytanie ${n+1}/10 · wynik ${good}`),h("div",{class:"q-prompt"},"Co znaczy: ",h("b",{},w),"?"));
+        const ol=h("div",{class:"q-opts"}); opts.forEach(o=>{ const b=h("button",{class:"q-opt"},o); b.onclick=()=>{ if(ol.dataset.d) return; ol.dataset.d=1; const ok=o===correct; if(ok) good++; b.classList.add(ok?"ok":"bad"); if(!ok)[...ol.children][opts.indexOf(correct)].classList.add("ok"); qb.append(h("button",{class:"btn pri",onclick:()=>{n++;ask();}},"Dalej →")); }; ol.append(b); });
+        qb.append(ol); };
+      ask();
+    }
+    if(mode==="order"){
+      const ta=h("textarea",{class:"input",id:"pr-mem",rows:"6",placeholder:"Napisz modlitwę z pamięci, potem kliknij „Porównaj”.",style:"font-family:var(--f-read);font-size:17px"});
+      const out=h("div",{class:"prayer",style:"margin-top:12px;font-size:17px"});
+      body.append(ta,h("div",{class:"row",style:"margin-top:10px"},h("button",{class:"btn pri",onclick:()=>{
+        const ref=words(pr.la).filter(t=>/\w/.test(t)); const got=ta.value.split(/\s+/).filter(Boolean); out.innerHTML=""; let ok=0;
+        ref.forEach((w,i)=>{ const good=got[i]&&gNorm(got[i])===gNorm(w); if(good) ok++; out.append(h("span",{style:"color:"+(good?"var(--ok)":"var(--bad)")+";font-weight:"+(good?400:700)},w)," "); });
+        out.prepend(h("div",{class:"feedback "+(ok===ref.length?"ok":"bad"),style:"margin-bottom:8px;font-family:var(--f-ui);font-size:14px"},`Zgodnych słów na właściwym miejscu: ${ok}/${ref.length}. Na czerwono – słowa do poprawy.`)); }},"Porównaj")),out);
+    }
+  }
+  drawList(); draw();
+}
+
+/* ---- słownik ---- */
+function parseDict(){
+  const out=[];
+  VERBS.forEach(v=>out.push({la:v.forms,pl:v.mean,cat:"czasownik",sub:v.conj==="irr"?"nieregularny":v.conj==="dep"?"deponens":v.conj==="imp"?"nieosobowy":(CONJ[v.conj]?CONJ[v.conj].n+" kon.":""),tag:v.tag,id:"v:"+v.key+v.conj}));
+  LA_NOUNS.trim().split("\n").forEach(l=>{const [f,g,m,d,t]=l.split("|"); out.push({la:f+" "+g+".",pl:m,cat:"rzeczownik",sub:d==="irr"?"nieregularny":d+" dekl.",tag:t||"",id:"n:"+f});});
+  LA_ADJ.trim().split("\n").forEach(l=>{const [f,m,ty,t]=l.split("|"); out.push({la:f,pl:m,cat:"przymiotnik",sub:ty==="12"?"I/II dekl.":"III dekl.",tag:t||"",id:"a:"+f});});
+  LA_OTHER.trim().split("\n").forEach(l=>{const [f,m,c]=l.split("|"); out.push({la:f,pl:m,cat:c==="kościół"?"inne":c,sub:c,tag:c==="kościół"?"kościół":"",id:"o:"+f+m});});
+  LA_NUM.forEach(([la,pl,rom,ord,ordpl])=>{ out.push({la:la+" ("+rom+")",pl:pl,cat:"liczebnik",sub:"główny",tag:"",id:"num:"+rom}); out.push({la:ord,pl:ordpl,cat:"liczebnik",sub:"porządkowy",tag:"",id:"ord:"+rom}); });
+  LA_PHRASES.trim().split("\n").forEach(l=>{const [f,m,g]=l.split("|"); out.push({la:f,pl:m,cat:"sentencja",sub:g,tag:g,id:"p:"+f});});
+  return out;
+}
+const DICT=parseDict();
+function dictView(el){
+  el.innerHTML="";
+  let q="", cat="", tag="";
+  const cats=[["","Wszystko"],["czasownik","Czasowniki"],["rzeczownik","Rzeczowniki"],["przymiotnik","Przymiotniki"],["zaimek","Zaimki"],["przyimek","Przyimki"],["spójnik","Spójniki"],["przysłówek","Przysłówki"],["liczebnik","Liczebniki"],["sentencja","Sentencje i zwroty"]];
+  const tags=[["","każdy temat"],["modlitwy","z modlitw"],["kościół","kościół i liturgia"],["filozofia","filozofia"],["logika","logika"],["lektorat","z lektoratu"],["z tablicy","z tablicy"]];
+  const inp=h("input",{class:"input",id:"la-dict-q",placeholder:"Szukaj po łacinie lub po polsku…",oninput:e=>{q=e.target.value;draw();}});
+  const c1=h("div",{class:"chips"},cats.map(([k,l])=>h("button",{class:"chip"+(k===""?" on":""),"data-k":k},l)));
+  const c2=h("div",{class:"chips"},tags.map(([k,l])=>h("button",{class:"chip"+(k===""?" on":""),"data-k":k},l)));
+  c1.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; cat=b.dataset.k; $$(".chip",c1).forEach(c=>c.classList.toggle("on",c===b)); draw();};
+  c2.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; tag=b.dataset.k; $$(".chip",c2).forEach(c=>c.classList.toggle("on",c===b)); draw();};
+  const cnt=h("div",{class:"small muted"}), out=h("div",{class:"scroll-y"});
+  el.append(h("div",{class:"stack"},inp,c1,c2,cnt),h("div",{style:"height:10px"}),out);
+  function draw(){
+    const nq=norm(q);
+    const r=DICT.filter(d=>(!cat||d.cat===cat)&&(!tag||d.tag===tag||(tag==="z tablicy"&&d.tag==="z tablicy"))&&(!nq||norm(d.la+" "+d.pl).includes(nq)));
+    cnt.textContent=r.length+" haseł (łącznie w słowniku: "+DICT.length+")";
+    out.innerHTML="";
+    r.slice(0,400).forEach(d=>out.append(h("div",{class:"dict-row"},h("b",{},d.la),h("span",{class:"tr"},d.pl),h("span",{class:"pill"},d.sub||d.cat))));
+    if(r.length>400) out.append(h("p",{class:"small muted"},"Pokazano 400 pierwszych – zawęź wyszukiwanie."));
+  }
+  draw();
+}
+
+/* ---- liczebniki i cyfry rzymskie ---- */
+function toRoman(n){ const m=[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]]; let s=""; for(const [v,r] of m) while(n>=v){s+=r;n-=v;} return s; }
+function numView(el){
+  el.innerHTML="";
+  let mode=0; const box=h("div",{class:"card stack"}); let score=[0,0];
+  const modeBtns=h("div",{class:"chips"},["Cyfry rzymskie → arabskie","Arabskie → rzymskie","Liczebnik łaciński → liczba"].map((l,i)=>h("button",{class:"chip"+(i===0?" on":""),"data-i":i},l)));
+  modeBtns.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; mode=+b.dataset.i; $$(".chip",modeBtns).forEach(c=>c.classList.toggle("on",c===b)); ask();};
+  el.append(h("p",{class:"muted"},"Przydatne przy datach na nagrobkach, w dokumentach kościelnych i numeracji soborów."),modeBtns,h("div",{style:"height:10px"}),box);
+  const VALS=[[1,"unus"],[2,"duo"],[3,"tres"],[4,"quattuor"],[5,"quinque"],[6,"sex"],[7,"septem"],[8,"octo"],[9,"novem"],[10,"decem"],[11,"undecim"],[12,"duodecim"],[13,"tredecim"],[14,"quattuordecim"],[15,"quindecim"],[16,"sedecim"],[17,"septendecim"],[18,"duodeviginti"],[19,"undeviginti"],[20,"viginti"],[30,"triginta"],[40,"quadraginta"],[50,"quinquaginta"],[60,"sexaginta"],[70,"septuaginta"],[80,"octoginta"],[90,"nonaginta"],[100,"centum"],[500,"quingenti"],[1000,"mille"]];
+  function ask(){
+    box.innerHTML=""; let q,a;
+    if(mode===0){ const n=pick([Math.floor(Math.random()*40)+1,Math.floor(Math.random()*200)+1,Math.floor(Math.random()*2100)+1]); q=toRoman(n); a=String(n); }
+    if(mode===1){ const n=pick([Math.floor(Math.random()*40)+1,Math.floor(Math.random()*500)+1,1900+Math.floor(Math.random()*130)]); q=String(n); a=toRoman(n); }
+    if(mode===2){ const [n,w]=pick(VALS); q=w; a=String(n); }
+    const inp=h("input",{class:"input",id:"num-ans",autocomplete:"off",autocapitalize:"characters"}); const fb=h("div");
+    const chk=()=>{ const ok=inp.value.trim().toUpperCase()===a.toUpperCase(); score[ok?0:1]++; fb.innerHTML=""; fb.append(h("div",{class:"feedback "+(ok?"ok":"bad")},ok?"Dobrze!":"Poprawnie: "+a),h("button",{class:"btn pri",style:"margin-top:8px",onclick:ask},"Następne →")); };
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")chk();});
+    box.append(h("div",{class:"small muted"},`Dobrze ${score[0]} · źle ${score[1]}`),h("div",{class:"front",style:"font-size:34px;font-weight:800;letter-spacing:.04em"},q),h("div",{class:"row"},inp,h("button",{class:"btn pri",onclick:chk},"Sprawdź")),fb);
+    setTimeout(()=>inp.focus(),30);
+  }
+  ask();
+  const t=h("table",{class:"nt"},h("thead",{},h("tr",{},["Liczba","Liczebnik główny","Porządkowy"].map(x=>h("th",{},x)))),h("tbody",{},LA_NUM.map(r=>h("tr",{},h("td",{},r[2]),h("td",{},r[0]+" – "+r[1]),h("td",{},r[3]+" – "+r[4])))));
+  el.append(h("h3",{style:"margin:18px 0 8px"},"Tabela liczebników"),h("div",{class:"table-wrap"},t));
+}
+
+/* ---- notatki z lektoratu (z Twojej wiadomości) ---- */
+const LA_NOTE_HTML=`
+<div class="eyebrow">ŁACINA – notatki z lektoratu</div>
+<h4><span class="num">1.</span> Modlitwa za zmarłych – liczba pojedyncza i mnoga</h4>
+<ul>
+<li><b>Za kilka osób:</b> Requiem aeternam dona <b>eis</b>, Domine, et lux perpetua luceat <b>eis</b>. <b>Requiescant</b> in pace. Amen. <i>(Wieczny odpoczynek racz im dać, Panie, a światłość wiekuista niechaj im świeci. Niech odpoczywają w pokoju wiecznym. Amen)</i></li>
+<li><b>Za jedną osobę:</b> Requiem aeternam dona <b>ei</b>, Domine, et lux perpetua luceat <b>ei</b>. <b>Requiescat</b> in pace. Amen. <i>(Wieczny odpoczynek racz jemu/jej dać, Panie, a światłość wiekuista niechaj mu/jej świeci. Niech odpoczywa w pokoju wiecznym. Amen)</i></li>
+<li><b>De mortuis nil nisi bene.</b> – O zmarłych nie należy mówić niczego jak tylko dobrze (Diogenes Laercjusz).</li>
+<li><b>Requiescant a laboribus suis.</b> – Niech odpoczną od trudów swoich (Apokalipsa 14,13).</li>
+</ul>
+<h4><span class="num">2.</span> Tituli sepulcrales – napisy nagrobne</h4>
+<ul>
+<li><b>H.S.E.</b> – Hic sepultus / sepulta est – Tu jest pogrzebany/a</li>
+<li><b>D.O.M.</b> – Deo Optimo Maximo – Bogu Najlepszemu Największemu / Domus Omnium Mortuorum – Dom wszystkich zmarłych</li>
+<li><b>R.I.P.</b> – Requiesce in pace – Spoczywaj w pokoju / Requiescat in pace – Niech spoczywa w pokoju / Requiescant in pace – Niech spoczywają w pokoju</li>
+</ul>
+<h4><span class="num">3.</span> Indicativus praesentis activi</h4>
+<p>Tryb oznajmujący czasu teraźniejszego strony czynnej: <b>thema praesentis + końcówki: -o, -s, -t, -mus, -tis, -nt</b></p>
+<div class="table-wrap"><table class="nt"><thead><tr><th></th><th>I. amo, amare – kochać (th. praes.: ama-)</th><th>II. video, vidēre – widzieć (th. praes.: vide-)</th></tr></thead><tbody>
+<tr><td>sg. 1.</td><td>amo – kocham</td><td>vide-o – widzę</td></tr>
+<tr><td>sg. 2.</td><td>ama-s – kochasz</td><td>vide-s – widzisz</td></tr>
+<tr><td>sg. 3.</td><td>ama-t – kocha</td><td>vide-t – widzi</td></tr>
+<tr><td>pl. 1.</td><td>ama-mus – kochamy</td><td>vide-mus – widzimy</td></tr>
+<tr><td>pl. 2.</td><td>ama-tis – kochacie</td><td>vide-tis – widzicie</td></tr>
+<tr><td>pl. 3.</td><td>ama-nt – kochają</td><td>vide-nt – widzą</td></tr>
+</tbody></table></div>
+<h4><span class="num">4.</span> Cztery formy podstawowe w słowniku</h4>
+<p><b>LAUDO, LAUDARE, LAUDAVI, LAUDATUM</b></p>
+<ul>
+<li><b>laudo</b> – chwalę (1 os. l. poj. cz. teraźniejszego trybu oznajmującego strony czynnej = persona prima singularis indicativi praesentis activi)</li>
+<li><b>laudare</b> – chwalić (bezokolicznik czasu teraźniejszego strony czynnej = infinitivus praesentis activi)</li>
+<li><b>laudavi</b> – pochwaliłem/am (1 os. l. poj. cz. przeszłego dokonanego trybu oznajmującego strony czynnej = persona prima singularis indicativi perfecti activi)</li>
+<li><b>laudatum</b> – aby pochwalić (celownik czasownikowy = supinum)</li>
+</ul>
+<p>Supinum występuje po czasownikach oznaczających ruch i wyraża cel tego ruchu, np. <b>festino scriptum</b> – śpieszę, aby pisać.</p>
+<h4><span class="num">5.</span> Coniugationes – 4 koniugacje</h4>
+<ul>
+<li><b>I</b> – thema praesentis kończy się na <b>-a</b>, bezokolicznik na <b>-are</b>, np. laboro, laborare – pracować</li>
+<li><b>II</b> – thema praesentis kończy się na <b>-e</b>, bezokolicznik na <b>-ēre</b>, np. studeo, studēre – starać się o coś, uczyć się</li>
+<li><b>III</b> – thema praesentis kończy się na <b>spółgłoskę</b>, bezokolicznik na <b>-ĕre</b>, np. ago, agĕre – czynić</li>
+<li><b>IV</b> – thema praesentis kończy się na <b>-i</b>, bezokolicznik na <b>-ire</b>, np. audio, audire – słuchać</li>
+</ul>
+<h4><span class="num">6.</span> Kolokwia z modlitw (ustnie / na pamięć)</h4>
+<ul>
+<li><b>Cz. 1 – 26.10.2026:</b> Signum Sanctae Crucis, Doxologia (Gloria Patri), Oratio Dominica (Pater noster), Salutatio Angelica (Ave Maria) + pytania o znaczenie słów.</li>
+<li><b>Cz. 2 – 16.11.2026:</b> Oratio ad Angelum Custodem (Angele Dei), Oratio pro fidelibus defunctis (Requiem aeternam), Credo do wyboru (Skład Apostolski albo nicejsko-konstantynopolitańskie).</li>
+</ul>
+<p>Pełne teksty, słowniczek każdego słowa i ćwiczenia – zakładka <b>Modlitwy</b>.</p>`;
+
+/* ---- fiszki ---- */
+function laDecks(){
+  const mk=(id,name,arr)=>({id:"la:"+id,name,cards:arr});
+  const vt=VERBS.filter(v=>v.table).map(v=>({id:v.key,front:v.forms,back:v.mean+" — "+(CONJ[v.conj]?CONJ[v.conj].n+" koniugacja":"")}));
+  const va=VERBS.map(v=>({id:v.key+v.conj,front:v.forms.split(",").slice(0,2).join(","),back:v.mean}));
+  const nn=LA_NOUNS.trim().split("\n").map(l=>{const [f,g,m]=l.split("|"); return {id:f,front:f+" "+g+".",back:m};});
+  const aa=LA_ADJ.trim().split("\n").map(l=>{const [f,m]=l.split("|"); return {id:f,front:f,back:m};});
+  const oo=LA_OTHER.trim().split("\n").map(l=>{const [f,m]=l.split("|"); return {id:f+m,front:f,back:m};});
+  const gl=LA_GLOSS.trim().split("\n").map(l=>{const [f,m]=l.split("|"); return {id:f,front:f,back:m};});
+  const ph=LA_PHRASES.trim().split("\n").map(l=>{const [f,m]=l.split("|"); return {id:f,front:f,back:m};});
+  const nu=LA_NUM.flatMap(r=>[{id:r[2],front:r[0],back:r[1]+" ("+r[2]+")"},{id:"o"+r[2],front:r[3],back:r[4]}]);
+  const conj=VERBS.filter(v=>/^(1|2|3|3io|4)$/.test(v.conj)).map(v=>({id:"c"+v.key,front:v.forms.split(",").slice(0,2).join(","),back:CONJ[v.conj].n}));
+  return [mk("tablica","23 czasowniki z tablicy",vt),mk("modl","Słówka z modlitw",gl),mk("verbs","Wszystkie czasowniki",va),mk("nouns","Rzeczowniki",nn),mk("adj","Przymiotniki",aa),mk("other","Zaimki, przyimki, spójniki, przysłówki",oo),mk("phr","Sentencje i zwroty",ph),mk("num","Liczebniki",nu),mk("conj","Rozpoznaj koniugację",conj)];
+}
+MODULES.lacina={
+  tabsBefore:[
+    {id:"lektorat",label:"Notatki z lektoratu",render:x=>{x.innerHTML=""; x.append(h("div",{class:"reader"},h("div",{class:"note",html:LA_NOTE_HTML})));}},
+  ],
+  tabs:[
+    {id:"legenda",label:"Koniugacje – legenda",render:legendView},
+    {id:"tablica",label:"23 czasowniki z tablicy",render:tableView},
+    {id:"trener",label:"Trener „Dlaczego ta koniugacja?”",render:trainerView},
+    {id:"symulator",label:"Symulator odmiany",render:simView},
+    {id:"modlitwy",label:"Modlitwy",render:prayersView},
+    {id:"slownik",label:"Słownik ("+DICT.length+")",render:dictView},
+    {id:"fiszki",label:"Fiszki – 5 koszyków",render:x=>flashcardsView(x,laDecks(),{allowTyping:true,dirs:[["front","back","łacina → polski"],["back","front","polski → łacina"]]})},
+    {id:"liczby",label:"Liczebniki i cyfry rzymskie",render:numView}
+  ],
+  mastery:()=>{ const d=laDecks(); let s=0; d.forEach(x=>s+=Leitner.mastery(x.id,x.cards)); return s/d.length; }
+};
+window.searchExtra=(function(prev){ return ()=>[...(prev?prev():[]),...DICT.map(d=>({k:"Łacina",t:d.la,sub:d.pl,txt:norm(d.la),txt2:norm(d.pl),go:()=>{go("lacina","slownik");setTimeout(()=>{const i=$("#la-dict-q"); if(i){i.value=d.la.split(",")[0]; i.dispatchEvent(new Event("input"));}},80);}}))]; })(window.searchExtra);
+})();
+
+/* ===== WŁOSKI – moduł ===== */
+(function(){
+const VOW=/^[aeiouàèéìòóùAEIOU]/, SIMP=/^(s[^aeiouàèéìòóù]|z|gn|ps|pn|x|y)/i;
+function artDef(w,g,pl){ if(g==="m") return pl? ((VOW.test(w)||SIMP.test(w))?"gli":"i") : (VOW.test(w)?"l'":SIMP.test(w)?"lo":"il"); return pl?"le":(VOW.test(w)?"l'":"la"); }
+function artInd(w,g){ if(g==="m") return SIMP.test(w)?"uno":"un"; return VOW.test(w)?"un'":"una"; }
+function withArt(a,w){ return a.endsWith("'")? a+w : a+" "+w; }
+function plural(w,g,expl){
+  if(expl) return expl;
+  if(/[àèéìòóù]$/.test(w)||/[^aeiou]$/.test(w)) return w;
+  if(/io$/.test(w)) return w.slice(0,-1);
+  if(/co$/.test(w)) return w.slice(0,-1)+"hi"; if(/go$/.test(w)) return w.slice(0,-1)+"hi";
+  if(/ca$/.test(w)) return w.slice(0,-1)+"he"; if(/ga$/.test(w)) return w.slice(0,-1)+"he";
+  if(/[aeiou][cg]ia$/.test(w)) return w.slice(0,-1)+"e"; if(/[cg]ia$/.test(w)) return w.slice(0,-2)+"e";
+  if(/o$/.test(w)) return w.slice(0,-1)+"i"; if(/e$/.test(w)) return w.slice(0,-1)+"i";
+  if(/a$/.test(w)) return g==="m"? w.slice(0,-1)+"i" : w.slice(0,-1)+"e";
+  return w;
+}
+function conj(inf,type){
+  if(IT_IRR[inf]) return IT_IRR[inf];
+  const st=inf.slice(0,-3);
+  if(type==="are"){
+    if(/[cg]$/.test(st)) return [st+"o",st+"hi",st+"a",st+"hiamo",st+"ate",st+"ano"];
+    if(/i$/.test(st)) return [st+"o",st,st+"a",st+"amo",st+"ate",st+"ano"];
+    return [st+"o",st+"i",st+"a",st+"iamo",st+"ate",st+"ano"];
+  }
+  if(type==="ere") return [st+"o",st+"i",st+"e",st+"iamo",st+"ete",st+"ono"];
+  if(type==="ire") return [st+"o",st+"i",st+"e",st+"iamo",st+"ite",st+"ono"];
+  if(type==="isc") return [st+"isco",st+"isci",st+"isce",st+"iamo",st+"ite",st+"iscono"];
+  return null;
+}
+/* liczebniki */
+const U=["zero","uno","due","tre","quattro","cinque","sei","sette","otto","nove","dieci","undici","dodici","tredici","quattordici","quindici","sedici","diciassette","diciotto","diciannove"];
+const T=["","","venti","trenta","quaranta","cinquanta","sessanta","settanta","ottanta","novanta"];
+function num(n){
+  if(n<20) return U[n];
+  if(n<100){ let t=T[Math.floor(n/10)]; const u=n%10; if(u===1||u===8) t=t.slice(0,-1); return t+(u?(u===3?"tré":U[u]):""); }
+  if(n<1000){ const hh=Math.floor(n/100), r=n%100; let p=hh===1?"cento":U[hh]+"cento"; if(!r) return p; let rest=num(r); if(/^ott/.test(rest)&&r>=80&&r<90) p=p.slice(0,-1); return p+rest; }
+  if(n<10000){ const k=Math.floor(n/1000), r=n%1000; const p=k===1?"mille":U[k]+"mila"; return r? p+num(r):p; }
+  return String(n);
+}
+const ORD=["primo","secondo","terzo","quarto","quinto","sesto","settimo","ottavo","nono","decimo"];
+/* parsowanie danych */
+const CATS=IT_CATS.map(c=>({...c,items:c.data.trim().split("\n").map(l=>{const [w,m,g,pl]=l.split("|"); return {w,m,g:g||"",pl:pl||"",cat:c.id,type:c.type};})}));
+const ALL=CATS.flatMap(c=>c.items);
+const NOUNS=ALL.filter(x=>x.type==="noun"&&(x.g==="m"||x.g==="f")&&/^[a-zàèéìòù']+$/.test(x.w));
+const VERBS=ALL.filter(x=>x.type==="verb");
+function display(x){ if(x.type==="noun"&&(x.g==="m"||x.g==="f")&&/^[a-zàèéìòù']+$/.test(x.w)) return withArt(artDef(x.w,x.g),x.w); return x.w; }
+function speak(t){ try{ const u=new SpeechSynthesisUtterance(t.replace(/\(.*?\)/g,"")); u.lang="it-IT"; u.rate=.9; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
+const canSpeak=(()=>{ try{ return "speechSynthesis" in window; }catch(e){ return false; } })();
+const sayBtn=t=>canSpeak? h("button",{class:"btn sm ghost",title:"Wymowa","aria-label":"Posłuchaj wymowy",onclick:e=>{e.stopPropagation();speak(t);}},"🔊"):null;
+
+/* ---- gramatyka ---- */
+function grammarView(el){
+  el.innerHTML="";
+  const list=h("div",{class:"lec-list"});
+  IT_LESSONS.forEach((l,i)=>list.append(h("button",{class:"lec",onclick:()=>open(i)},h("span",{class:"n mono"},i+1),h("span",{},h("b",{},l.title.replace(/^\d+\.\s*/,"")),h("small",{},"Lekcja "+(i+1))))));
+  el.append(h("p",{class:"muted"},"Gramatyka krok po kroku – każda lekcja to jedna zasada, tabelka i typowe błędy. Po lekcji przejdź do zakładki „Ćwiczenia”."),list);
+  function open(i){
+    const l=IT_LESSONS[i]; el.innerHTML="";
+    el.append(h("div",{class:"reader"},h("div",{class:"reader-h"},h("button",{class:"btn sm ghost",onclick:()=>grammarView(el)},"← Wszystkie lekcje"),h("span",{class:"pill terra"},"Lekcja "+(i+1)+" z "+IT_LESSONS.length)),
+      h("h2",{style:"font-size:22px;font-weight:800;margin-bottom:10px"},l.title),h("div",{class:"lesson",html:l.html}),
+      h("div",{class:"row",style:"justify-content:space-between;margin-top:20px"},i>0?h("button",{class:"btn sm",onclick:()=>open(i-1)},"← Poprzednia"):h("span"),i<IT_LESSONS.length-1?h("button",{class:"btn sm pri",onclick:()=>open(i+1)},"Następna lekcja →"):h("span"))));
+    window.scrollTo({top:0});
+  }
+}
+
+/* ---- słownictwo ---- */
+function vocabView(el){
+  el.innerHTML="";
+  let cat=CATS[0].id, q="";
+  const inp=h("input",{class:"input",id:"it-voc-q",placeholder:"Szukaj po włosku lub po polsku we wszystkich działach…",oninput:e=>{q=e.target.value;draw();}});
+  const chips=h("div",{class:"chips"},[...CATS.map(c=>h("button",{class:"chip"+(c.id===cat?" on":""),"data-k":c.id},c.name+" ("+c.items.length+")")),h("button",{class:"chip","data-k":"num"},"Liczby 0–2000")]);
+  chips.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; cat=b.dataset.k; q=""; inp.value=""; $$(".chip",chips).forEach(c=>c.classList.toggle("on",c===b)); draw();};
+  const out=h("div",{class:"scroll-y"}), cnt=h("div",{class:"small muted"});
+  el.append(h("div",{class:"stack"},inp,chips,cnt),h("div",{style:"height:10px"}),out);
+  function draw(){
+    out.innerHTML="";
+    if(!q&&cat==="num"){ const ns=[...Array(31).keys(),40,50,60,70,80,90,100,101,108,180,200,300,1000,2000,2026];
+      ns.forEach(n=>out.append(h("div",{class:"dict-row"},h("b",{},String(n)),h("span",{class:"tr"},num(n)),sayBtn(num(n)))));
+      ORD.forEach((o,i)=>out.append(h("div",{class:"dict-row"},h("b",{},(i+1)+"."),h("span",{class:"tr"},o+" – "+["pierwszy","drugi","trzeci","czwarty","piąty","szósty","siódmy","ósmy","dziewiąty","dziesiąty"][i]),sayBtn(o))));
+      cnt.textContent="Liczebniki główne i porządkowe"; return; }
+    const nq=norm(q);
+    const items= q? ALL.filter(x=>norm(x.w+" "+x.m).includes(nq)) : (CATS.find(c=>c.id===cat)||CATS[0]).items;
+    cnt.textContent=items.length+" słówek"+(q?" (wyniki ze wszystkich działów)":"")+" · łącznie: "+(ALL.length+120)+" z liczebnikami";
+    items.forEach(x=>{ const d=display(x); const extra= x.type==="noun"&&(x.g==="m"||x.g==="f")? (x.g==="m"?"r. męski":"r. żeński")+(/^[a-zàèéìòù']+$/.test(x.w)?" · lm. "+withArt(artDef(plural(x.w,x.g,x.pl),x.g,true),plural(x.w,x.g,x.pl)):"") : x.type==="verb"? ({are:"-are",ere:"-ere",ire:"-ire",isc:"-ire (-isc-)",irr:"nieregularny"})[x.g] : "";
+      out.append(h("div",{class:"dict-row"},h("span",{},h("b",{},d),extra?h("small",{class:"muted",style:"display:block"},extra):null),h("span",{class:"tr"},x.m),sayBtn(x.w))); });
+  }
+  draw();
+}
+
+/* ---- ćwiczenia ---- */
+const EX=[
+ {id:"conj",g:"Gramatyka",t:"Odmiana czasowników (wpisz formę)"},
+ {id:"conjtab",g:"Gramatyka",t:"Odmień przez wszystkie osoby"},
+ {id:"essav",g:"Gramatyka",t:"Essere czy avere?"},
+ {id:"art",g:"Gramatyka",t:"Rodzajnik określony (il, lo, la, l', i, gli, le)"},
+ {id:"ind",g:"Gramatyka",t:"Rodzajnik nieokreślony (un, uno, una, un')"},
+ {id:"plur",g:"Gramatyka",t:"Liczba mnoga"},
+ {id:"prep",g:"Gramatyka",t:"Przyimki ściągnięte (di + il = del)"},
+ {id:"mc",g:"Słownictwo",t:"Wybierz tłumaczenie (ABCD)"},
+ {id:"type",g:"Słownictwo",t:"Napisz po włosku"},
+ {id:"chiam",g:"Gramatyka",t:"Chiamarsi, essere, avere – odmiana"},
+ {id:"conti",g:"Słownictwo",t:"Rachunki po włosku (0–30)"},
+ {id:"num",g:"Słownictwo",t:"Liczebniki: cyfra → słowo"},
+ {id:"numr",g:"Słownictwo",t:"Liczebniki: słowo → cyfra"}
+];
+function exView(el){
+  el.innerHTML="";
+  let cur=Store.get("it:ex","conj"); let score=[0,0];
+  const nav=h("div",{class:"stack"});
+  ["Gramatyka","Słownictwo"].forEach(g=>{ nav.append(h("div",{class:"gl-sec",style:"margin:4px 0"},g),h("div",{class:"chips"},EX.filter(e=>e.g===g).map(e=>h("button",{class:"chip"+(e.id===cur?" on":""),"data-k":e.id},e.t)))); });
+  nav.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; cur=b.dataset.k; Store.set("it:ex",cur); score=[0,0]; $$(".chip",nav).forEach(c=>c.classList.toggle("on",c===b)); ask();};
+  const catSel=h("select",{class:"input",id:"it-ex-cat",style:"max-width:340px",onchange:()=>ask()},h("option",{value:""},"Słówka: wszystkie działy"),CATS.map(c=>h("option",{value:c.id},c.name)));
+  const box=h("div",{class:"card stack",style:"margin-top:14px"});
+  el.append(nav,h("div",{style:"height:8px"}),catSel,box);
+  function upd(){ return h("div",{class:"score"},h("span",{},"Dobrze ",h("b",{class:"mono"},score[0])),h("span",{},"Źle ",h("b",{class:"mono"},score[1]))); }
+  function fin(ok,correct,expl){ score[ok?0:1]++; Leitner.log(ok); const fb=h("div",{class:"stack"},h("div",{class:"feedback "+(ok?"ok":"bad")},ok?"Dobrze! ":"Poprawnie: "+correct),expl?h("div",{class:"tip small",html:expl}):null,h("button",{class:"btn pri",onclick:ask},"Następne →")); box.append(fb); fb.querySelector(".btn.pri").focus(); $(".score",box).replaceWith(upd()); }
+  function typed(prompt,answer,expl,accept=[]){
+    const inp=h("input",{class:"input",id:"it-ans",autocomplete:"off",autocapitalize:"off",spellcheck:"false",placeholder:"Wpisz i naciśnij Enter"});
+    let done=false; const chk=()=>{ if(done) return; done=true; const g=norm(inp.value); const ok=[answer,...accept].some(a=>norm(a)===g); inp.classList.add(ok?"ok":"bad"); fin(ok,answer,expl); };
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")chk();});
+    box.append(h("div",{class:"q-prompt",html:prompt}),h("div",{class:"row"},inp,h("button",{class:"btn pri",onclick:chk},"Sprawdź")));
+    setTimeout(()=>inp.focus(),30);
+  }
+  function choice(prompt,opts,answer,expl){
+    const ol=h("div",{class:"q-opts",style:"grid-template-columns:repeat(auto-fit,minmax(120px,1fr))"});
+    opts.forEach(o=>{ const b=h("button",{class:"q-opt"},o); b.onclick=()=>{ if(ol.dataset.d) return; ol.dataset.d=1; const ok=o===answer; b.classList.add(ok?"ok":"bad"); if(!ok) [...ol.children].find(x=>x.textContent===answer).classList.add("ok"); fin(ok,answer,expl); }; ol.append(b); });
+    box.append(h("div",{class:"q-prompt",html:prompt}),ol);
+  }
+  function pool(){ const c=catSel.value; return c? CATS.find(x=>x.id===c).items : ALL; }
+  function ask(){
+    box.innerHTML=""; box.append(upd());
+    catSel.classList.toggle("hide",!["mc","type"].includes(cur));
+    if(cur==="conj"){ const v=pick(VERBS); const i=Math.floor(Math.random()*6); const f=conj(v.w,v.g);
+      typed(`<b>${v.w}</b> (${esc(v.m)}) → <b>${IT_PERS[i]}</b> <span class="muted">(${IT_PERS_PL[i]})</span>`,f[i],`Cała odmiana: ${f.map((x,k)=>IT_PERS[k].split(" ")[0]+" <b>"+x+"</b>").join(", ")}${v.g==="isc"?"<br>Pamiętaj o -isc- (oprócz noi i voi).":""}`); }
+    if(cur==="conjtab"){ const v=pick(VERBS); const f=conj(v.w,v.g); const g=h("div",{class:"sim-grid"}); const ins=[];
+      f.forEach((x,i)=>{ const inp=h("input",{class:"input",id:"it-ct-"+i,autocomplete:"off",autocapitalize:"off",spellcheck:"false"}); ins.push(inp); g.append(h("span",{class:"p"},IT_PERS[i]),inp,h("span",{class:"small muted"},IT_PERS_PL[i])); });
+      box.append(h("div",{class:"q-prompt",html:`Odmień: <b>${v.w}</b> – ${esc(v.m)} <span class="pill">${({are:"-are",ere:"-ere",ire:"-ire",isc:"-ire (-isc-)",irr:"nieregularny"})[v.g]}</span>`}),g,
+        h("button",{class:"btn pri",onclick:()=>{ let ok=0; ins.forEach((inp,i)=>{const good=norm(inp.value)===norm(f[i]); inp.classList.remove("ok","bad"); inp.classList.add(good?"ok":"bad"); if(good) ok++;}); fin(ok===6,f.join(", "),"Dobrze: "+ok+"/6"); }},"Sprawdź"));
+      setTimeout(()=>ins[0].focus(),30); }
+    if(cur==="essav"){ const st=pick(CATS.find(c=>c.id==="stati").items.filter(x=>/^(essere|avere) /.test(x.w))); const verb=st.w.split(" ")[0]; let comp=st.w.slice(verb.length+1);
+      const i=Math.floor(Math.random()*6); const plu=i>=3; if(comp.includes(" / ")) comp=comp.split(" / ")[plu?1:0]; comp=comp.replace("…","20");
+      const ans=IT_IRR[verb][i]; const other=IT_IRR[verb==="essere"?"avere":"essere"][i];
+      choice(`${IT_PERS[i].split(" ")[0].replace(/^./,c=>c.toUpperCase())} <b>___</b> ${esc(comp)}. <span class="muted">(${esc(st.m)})</span>`,shuffle([ans,other]),ans,
+        verb==="essere"?"<b>Essere</b> + przymiotnik – jaki jestem (stanco, triste, felice…).":"<b>Avere</b> + rzeczownik – co „mam” (fame, sete, freddo, caldo, paura…)."); }
+    if(cur==="art"){ const n=pick(NOUNS); const pl=Math.random()<.4; const w=pl?plural(n.w,n.g,n.pl):n.w; const a=artDef(w,n.g,pl);
+      if(pl&&w===n.w&&n.pl===""&&/[àèéìòù]$/.test(w)){}
+      choice(`<b>___ ${w}</b> <span class="muted">(${esc(n.m)}${pl?", liczba mnoga":""}; rodzaj ${n.g==="m"?"męski":"żeński"})</span>`,pl?["i","gli","le"]:["il","lo","la","l'"],a,
+        "Zasada: "+(n.g==="m"?(pl?"męski lm.: <b>i</b>, ale <b>gli</b> przed samogłoską i s+spółgł./z/gn/ps":"męski lp.: <b>il</b>, <b>lo</b> przed s+spółgł./z/gn/ps, <b>l'</b> przed samogłoską"):(pl?"żeński lm.: zawsze <b>le</b>":"żeński lp.: <b>la</b>, <b>l'</b> przed samogłoską"))); }
+    if(cur==="ind"){ const n=pick(NOUNS); const a=artInd(n.w,n.g);
+      choice(`<b>___ ${n.w}</b> <span class="muted">(${esc(n.m)}; rodzaj ${n.g==="m"?"męski":"żeński"})</span>`,["un","uno","una","un'"],a,"Apostrof tylko w rodzaju żeńskim: <b>un'amica</b>, ale <b>un amico</b>. <b>Uno</b> przed s+spółgłoska, z, gn, ps."); }
+    if(cur==="plur"){ const cand=NOUNS.filter(n=>plural(n.w,n.g,n.pl)!==n.w||n.pl); const n=pick(cand); const p=plural(n.w,n.g,n.pl);
+      typed(`Liczba mnoga: <b>${withArt(artDef(n.w,n.g),n.w)}</b> <span class="muted">(${esc(n.m)})</span> → ?`,p,`${withArt(artDef(n.w,n.g),n.w)} → <b>${withArt(artDef(p,n.g,true),p)}</b>`,[withArt(artDef(p,n.g,true),p)]); }
+    if(cur==="prep"){ const P={di:"de",a:"a",da:"da",in:"ne",su:"su"}; const A=["il","lo","l'","la","i","gli","le"]; const p=pick(Object.keys(P)); const a=pick(A);
+      const base=P[p]; const ans= a==="il"? base+"l" : a==="i"? base+"i" : a==="l'"? base+"ll'" : base+"l"+a;
+      typed(`<b>${p}</b> + <b>${a}</b> = ?`,ans,"Przyimek + „l” + rodzajnik: przed <b>il</b> jedno l (del, al, nel), przed resztą podwójne (della, dello, dell'), przed <b>i</b> → dei, ai, nei."); }
+    if(cur==="mc"){ const P=pool(); const x=pick(P); const dir=Math.random()<.5; const others=shuffle(P.filter(y=>y!==x&&y.m!==x.m)).slice(0,3);
+      if(dir) choice(`Co znaczy: <b>${esc(display(x))}</b>?`,shuffle([x,...others]).map(y=>y.m),x.m);
+      else choice(`Jak powiesz po włosku: <b>${esc(x.m)}</b>?`,shuffle([x,...others]).map(y=>display(y)),display(x)); }
+    if(cur==="type"){ const P=pool(); const x=pick(P); typed(`Po włosku: <b>${esc(x.m)}</b>`,display(x),null,[x.w]); }
+    if(cur==="chiam"){ const v=pick(["chiamarsi","essere","avere"]); const i=Math.floor(Math.random()*6); const f=IT_IRR[v];
+      typed(`<b>${v}</b> → <b>${IT_PERS[i]}</b> <span class="muted">(${IT_PERS_PL[i]})</span>`,f[i],`Cała odmiana: ${f.map((x,k)=>IT_PERS[k].split(" ")[0]+" <b>"+x+"</b>").join(", ")}`,v==="chiamarsi"?[f[i].split(" ")[1]]:[]); }
+    if(cur==="conti"){ const op=pick(["più","meno"]); let a=Math.floor(Math.random()*16), b=Math.floor(Math.random()*15); if(op==="meno"&&b>a)[a,b]=[b,a]; const r=op==="più"?a+b:a-b;
+      typed(`<b>${num(a)} ${op} ${num(b)} fa…</b> <span class="muted">(napisz wynik słowem)</span>`,num(r),`${a} ${op==="più"?"+":"−"} ${b} = ${r} → <b>${num(r)}</b>`,[String(r)]); }
+    if(cur==="num"){ const n=pick([Math.floor(Math.random()*31),Math.floor(Math.random()*101),Math.floor(Math.random()*1000),2000+Math.floor(Math.random()*30)]); const w=num(n);
+      typed(`Napisz słowami: <b class="mono" style="font-size:28px">${n}</b>`,w,"Klocki: "+w,[w.replace("centootto","centotto")]); }
+    if(cur==="numr"){ const n=pick([Math.floor(Math.random()*31),Math.floor(Math.random()*101),Math.floor(Math.random()*1000)]); typed(`Jaka to liczba: <b>${num(n)}</b>?`,String(n)); if(canSpeak) box.append(h("div",{},sayBtn(num(n)))); }
+  }
+  ask();
+}
+
+/* ---- liczebniki – lekcja + tabela ---- */
+function numbersView(el){
+  el.innerHTML="";
+  const t=h("table",{class:"nt"}); const tb=h("tbody");
+  for(let r=0;r<10;r++){ const tr=h("tr"); for(let c=0;c<4;c++){ const n=c*10+r; tr.append(h("td",{},h("b",{class:"mono"},n)," ",num(n))); } tb.append(tr); }
+  t.append(tb);
+  el.append(h("div",{class:"lesson",html:IT_LESSONS.find(l=>l.id==="liczebniki").html}),h("h3",{style:"margin:14px 0 6px"},"0–39"),h("div",{class:"table-wrap"},t),
+    h("p",{class:"muted small"},"Ćwicz w zakładce „Ćwiczenia” → Liczebniki. Przykład z dzisiejszą datą: "+num(new Date().getDate())+" "+["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"][new Date().getMonth()]+" "+num(new Date().getFullYear())+"."));
+}
+
+function itDecks(){
+  const decks=CATS.map(c=>({id:"it:"+c.id,name:c.name,cards:c.items.map(x=>({id:x.w,front:display(x),back:x.m}))}));
+  decks.unshift({id:"it:all",name:"Wszystkie słówka",cards:ALL.map(x=>({id:x.cat+":"+x.w,front:display(x),back:x.m}))});
+  decks.push({id:"it:num",name:"Liczebniki",cards:[...Array(31).keys(),40,50,60,70,80,90,100,1000].map(n=>({id:"n"+n,front:num(n),back:String(n)})).concat(ORD.map((o,i)=>({id:"o"+i,front:o,back:(i+1)+". (porządkowy)"})))});
+  decks.push({id:"it:conj",name:"Odmiana: essere, avere i nieregularne",cards:Object.entries(IT_IRR).flatMap(([v,f])=>f.map((x,i)=>({id:v+i,front:v+" – "+IT_PERS[i],back:x})))});
+  return decks;
+}
+MODULES.wloski={
+  tabs:[
+    {id:"gramatyka",label:"Gramatyka dla każdego",render:grammarView},
+    {id:"slowka",label:"Słownictwo ("+(ALL.length)+")",render:vocabView},
+    {id:"cwiczenia",label:"Ćwiczenia",render:exView},
+    {id:"fiszki",label:"Fiszki – 5 koszyków",render:x=>flashcardsView(x,itDecks(),{allowTyping:true,dirs:[["front","back","włoski → polski"],["back","front","polski → włoski"]]})},
+    {id:"liczby",label:"Liczebniki",render:numbersView}
+  ],
+  mastery:()=>{ const d=itDecks(); let s=0; d.forEach(x=>s+=Leitner.mastery(x.id,x.cards)); return s/d.length; }
+};
+window.searchExtra=(function(prev){ return ()=>[...(prev?prev():[]),...ALL.map(x=>({k:"Włoski",t:display(x),sub:x.m,txt:norm(x.w),txt2:norm(x.m),go:()=>{go("wloski","slowka");setTimeout(()=>{const i=$("#it-voc-q"); if(i){i.value=x.w; i.dispatchEvent(new Event("input"));}},80);}}))]; })(window.searchExtra);
+window.IT_TEST={num,conj,plural,artDef,artInd};
+})();
+
+/* ===== MUZYKA – koło kwintowe, czytanie nut, interwały ===== */
+(function(){
+const LET=["c","d","e","f","g","a","h"], SEMI=[0,2,4,5,7,9,11];
+const OCT_NAME={1:"kontra",2:"wielka",3:"mała",4:"razkreślna",5:"dwukreślna",6:"trzykreślna"};
+const SUP={1:"¹",2:"²",3:"³"};
+const midi=n=>12*(n.o+1)+SEMI[n.l]+n.a;
+const dia=n=>n.l+7*n.o;
+function pname(l,a){ const b=LET[l];
+  if(a===0) return b;
+  if(a===1) return b+"is";
+  if(a===-1) return ({c:"ces",d:"des",e:"es",f:"fes",g:"ges",a:"as",h:"b"})[b];
+  if(a===2) return b+"isis"; if(a===-2) return ({c:"ceses",d:"deses",e:"eses",f:"feses",g:"geses",a:"asas",h:"heses"})[b]; return b; }
+function fullName(n){ let s=pname(n.l,n.a); if(n.o<=2) s=s[0].toUpperCase()+s.slice(1); const sup=n.o>=4?SUP[n.o-3]:(n.o===1?"₁":""); return s+sup; }
+function octLabel(n){ return "oktawa "+(OCT_NAME[n.o]||""); }
+/* ---- dźwięk ---- */
+let AC=null;
+function ac(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended") AC.resume(); }catch(e){} return AC; }
+function tone(m,t=0,dur=1.1){ const c=ac(); if(!c) return; const f=440*Math.pow(2,(m-69)/12); const t0=c.currentTime+t;
+  [[1,.5],[2,.18],[3,.07]].forEach(([k,g])=>{ const o=c.createOscillator(), gn=c.createGain(); o.type=k===1?"triangle":"sine"; o.frequency.value=f*k; gn.gain.setValueAtTime(0,t0); gn.gain.linearRampToValueAtTime(g*.35,t0+.015); gn.gain.exponentialRampToValueAtTime(.0008,t0+dur); o.connect(gn).connect(c.destination); o.start(t0); o.stop(t0+dur+.05); }); }
+/* ---- pięciolinia (SVG) ---- */
+/* kształty klucza i znaków chromatycznych (FreeSerif, GNU FreeFont) */
+const GLY={"g": "M434 2Q464 -103 464 -170Q464 -223 427 -257Q390 -291 337 -291Q287 -291 250 -262Q213 -232 213 -190Q213 -160 234 -134Q254 -107 284 -107Q313 -107 332 -128Q350 -150 350 -178Q350 -240 280 -240Q298 -268 338 -268Q353 -268 368 -264Q384 -259 401 -248Q418 -237 428 -214Q439 -190 439 -157Q439 -136 411 -6Q389 -12 356 -12Q259 -12 190 60Q120 132 120 232Q120 267 132 303Q143 339 158 366Q172 394 200 428Q229 463 248 484Q268 504 303 539Q280 621 280 689Q280 779 313 840Q346 900 379 900Q389 900 402 887Q414 874 426 851Q438 828 446 790Q455 753 455 710Q455 551 342 447L368 329Q384 332 397 332Q458 332 500 282Q542 233 542 162Q542 44 434 2ZM426 746Q426 801 394 801Q358 801 333 748Q308 695 308 630Q308 588 321 557Q359 580 392 640Q426 699 426 746ZM498 128Q498 183 466 216Q434 249 383 249L428 23Q498 52 498 128ZM407 17 361 247Q334 241 312 214Q289 187 289 158Q289 143 295 128Q301 114 310 104Q318 94 327 86Q336 78 342 74Q348 71 348 71L340 66Q307 75 278 106Q248 137 248 184Q248 231 278 270Q307 310 343 323L325 430Q168 299 168 177Q168 104 223 55Q278 6 348 6Q365 6 407 17Z", "f": "M564 704Q582 704 594 691Q607 678 607 661Q607 644 593 631Q579 618 563 618Q521 618 521 663Q521 681 534 692Q547 704 564 704ZM607 469Q607 450 594 437Q581 424 564 424Q521 424 521 469Q521 485 534 498Q546 511 564 511Q582 511 594 497Q607 483 607 469ZM285 757Q366 757 421 702Q476 646 476 569Q476 531 466 495Q455 459 432 426Q409 394 386 367Q363 340 326 313Q289 286 264 268Q239 249 196 226Q154 203 136 194Q117 184 80 166L75 182Q76 183 102 200Q128 217 144 228Q160 238 192 263Q223 288 244 310Q265 331 292 364Q318 396 334 427Q350 458 362 498Q373 538 373 578Q373 735 262 735Q225 735 199 726Q173 716 162 702Q150 688 145 678Q140 667 140 659Q140 644 160 644Q168 644 179 648Q190 651 194 651Q221 651 239 634Q257 617 257 592Q257 563 235 544Q213 525 183 525Q144 525 119 548Q94 571 94 607Q94 673 150 715Q207 757 285 757Z", "sharp": "M365 24 319 6V-193L275 -209V-10L138 -63V-262L94 -279V-80L50 -96V0L94 17V262L50 245V341L94 358V589L138 606V376L275 429V659L319 675V446L365 464V366L319 348V104L365 122ZM275 88V332L138 279V34Z", "flat": "M222 441Q275 441 302 408Q329 375 329 317Q329 273 300 234Q270 195 192 117Q115 39 56 -34V783L99 802V402Q148 441 222 441ZM232 308Q232 373 183 373Q159 373 134 358Q110 344 99 319V87Q159 155 196 214Q232 274 232 308Z", "nat": "M324 -273 280 -290V3L56 -87V656L99 675V344L324 433ZM280 93V328L99 254V19Z"};
+const CLEF={treble:{bottom:30,glyph:"\u{1D11E}",gy:0},bass:{bottom:18,glyph:"\u{1D122}",gy:0}};
+const STEP=6, BOT=108, LX=12, RX=548;
+const yOf=(d,clef)=>BOT-(d-CLEF[clef].bottom)*STEP;
+function staffSVG(opts){
+  const {clef="treble",notes=[],sig=null,w=560,hit=null,hRange=null}=opts;
+  const ns="http://www.w3.org/2000/svg"; const svg=document.createElementNS(ns,"svg");
+  svg.setAttribute("viewBox",`0 0 ${w} 170`); svg.setAttribute("class","staff"); svg.setAttribute("role","img");
+  const add=(tag,attrs,txt)=>{ const e=document.createElementNS(ns,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(txt!=null) e.textContent=txt; svg.append(e); return e; };
+  const gl=(name,x,y,sc,cls)=>add("path",{d:GLY[name],transform:`translate(${x},${y}) scale(${sc},${-sc})`,class:"gly"+(cls?" "+cls:"")});
+  const accAt=(a,x,y,cls)=>{ if(a===1) gl("sharp",x,y+198*.034,.034,cls); else if(a===-1) gl("flat",x,y+4.5,.036,cls); else gl("nat",x,y+192*.034,.034,cls); };
+  if(hit&&hRange){ for(let d=hRange[0]; d<=hRange[1]; d++){ const y=yOf(d,clef); add("rect",{x:140,y:y-3,width:w-180,height:6,class:"hit","data-d":d}); } }
+  for(let i=0;i<5;i++) add("line",{x1:LX,x2:w-12,y1:BOT-i*12,y2:BOT-i*12,class:"ln"});
+  add("line",{x1:LX,x2:LX,y1:BOT-48,y2:BOT,class:"ln"});
+  // klucz
+  if(clef==="treble") gl("g",12,BOT-1,.0685); else gl("f",14,BOT-48-2+757*.066,.066);
+  // znaki przykluczowe
+  let x0=78;
+  if(sig&&sig.n){ const pos=SIGPOS[clef][sig.t]; for(let i=0;i<sig.n;i++){ accAt(sig.t==="s"?1:-1,x0+i*13,yOf(pos[i],clef)); } x0+=sig.n*14+10; }
+  // nuty
+  for(const nt of notes){
+    const d=dia(nt), y=yOf(d,clef), x=nt.x||300, b=CLEF[clef].bottom;
+    for(let k=b-2;k>=d;k-=2) add("line",{x1:x-14,x2:x+14,y1:yOf(k,clef),y2:yOf(k,clef),class:"lg"});
+    for(let k=b+10;k<=d;k+=2) add("line",{x1:x-14,x2:x+14,y1:yOf(k,clef),y2:yOf(k,clef),class:"lg"});
+    if(nt.a) accAt(nt.a,x-27,y,nt.cls); else if(nt.nat) accAt(0,x-25,y,nt.cls);
+    const g=add("g",{transform:`translate(${x},${y}) rotate(-20)`});
+    const e1=document.createElementNS(ns,"ellipse"); e1.setAttribute("rx","8.2"); e1.setAttribute("ry","5.6"); e1.setAttribute("class","nh"+(nt.cls?" "+nt.cls:"")); g.append(e1);
+    const e2=document.createElementNS(ns,"ellipse"); e2.setAttribute("rx","4.4"); e2.setAttribute("ry","2.6"); e2.setAttribute("transform","rotate(40)"); e2.setAttribute("fill","var(--card)"); g.append(e2);
+  }
+  return svg;
+}
+const SIGPOS={treble:{s:[38,35,39,36,33,37,34],f:[34,37,33,36,32,35,31]},bass:{s:[24,21,25,22,19,23,20],f:[20,23,19,22,18,21,17]}};
+/* ---- koło kwintowe ---- */
+const KEYS=[
+ {maj:"C",min:"a",n:0,t:"s",tonic:[0,0],mt:[5,0]},
+ {maj:"G",min:"e",n:1,t:"s",tonic:[4,0],mt:[2,0]},
+ {maj:"D",min:"h",n:2,t:"s",tonic:[1,0],mt:[6,0]},
+ {maj:"A",min:"fis",n:3,t:"s",tonic:[5,0],mt:[3,1]},
+ {maj:"E",min:"cis",n:4,t:"s",tonic:[2,0],mt:[0,1]},
+ {maj:"H",min:"gis",n:5,t:"s",tonic:[6,0],mt:[4,1],en:{maj:"Ces",min:"as",n:7,t:"f",tonic:[0,-1],mt:[5,-1]}},
+ {maj:"Fis",min:"dis",n:6,t:"s",tonic:[3,1],mt:[1,1],en:{maj:"Ges",min:"es",n:6,t:"f",tonic:[4,-1],mt:[2,-1]}},
+ {maj:"Des",min:"b",n:5,t:"f",tonic:[1,-1],mt:[6,-1],en:{maj:"Cis",min:"ais",n:7,t:"s",tonic:[0,1],mt:[5,1]}},
+ {maj:"As",min:"f",n:4,t:"f",tonic:[5,-1],mt:[3,0]},
+ {maj:"Es",min:"c",n:3,t:"f",tonic:[2,-1],mt:[0,0]},
+ {maj:"B",min:"g",n:2,t:"f",tonic:[6,-1],mt:[4,0]},
+ {maj:"F",min:"d",n:1,t:"f",tonic:[3,0],mt:[1,0]}
+];
+const SHARPS=["fis","cis","gis","dis","ais","eis","his"], FLATS=["b","es","as","des","ges","ces","fes"];
+const SH_L=[3,0,4,1,5,2,6], FL_L=[6,2,5,1,4,0,3];
+const accWord=(n,t)=>n===0?"brak znaków":n+" "+(t==="s"?(n===1?"krzyżyk":n<5?"krzyżyki":"krzyżyków"):(n===1?"bemol":n<5?"bemole":"bemoli"));
+function scaleOf(k,minor){
+  const [l0,a0]=minor?k.mt:k.tonic; const set=k.t==="s"?SH_L.slice(0,k.n):FL_L.slice(0,k.n);
+  const out=[]; for(let i=0;i<8;i++){ const l=(l0+i)%7; const a=set.includes(l)?(k.t==="s"?1:-1):0; out.push({l,a}); } return out;
+}
+function playScale(sc){ let o=sc[0].l>=5?3:4; sc.forEach((x,i)=>{ if(i>0&&x.l<=sc[i-1].l) o++; tone(midi({l:x.l,o,a:x.a}),i*.32,.5); }); }
+function cofView(el){
+  el.innerHTML="";
+  let sel=0, useEn=false;
+  const ns="http://www.w3.org/2000/svg"; const svg=document.createElementNS(ns,"svg"); svg.setAttribute("viewBox","0 0 440 440"); svg.setAttribute("class","cof");
+  const cx=220,cy=220;
+  const arc=(r1,r2,a0,a1)=>{ const p=(r,a)=>[cx+r*Math.cos(a),cy+r*Math.sin(a)]; const [x1,y1]=p(r2,a0),[x2,y2]=p(r2,a1),[x3,y3]=p(r1,a1),[x4,y4]=p(r1,a0); return `M${x1},${y1} A${r2},${r2} 0 0 1 ${x2},${y2} L${x3},${y3} A${r1},${r1} 0 0 0 ${x4},${y4} Z`; };
+  const segs=[];
+  KEYS.forEach((k,i)=>{ const a0=(-90-15+i*30)*Math.PI/180, a1=a0+30*Math.PI/180, am=(a0+a1)/2;
+    const gM=document.createElementNS(ns,"g"); gM.setAttribute("class","seg"); gM.setAttribute("tabindex","0"); gM.setAttribute("role","button"); gM.setAttribute("aria-label",k.maj+"-dur");
+    const pM=document.createElementNS(ns,"path"); pM.setAttribute("d",arc(140,212,a0,a1)); gM.append(pM);
+    const tM=document.createElementNS(ns,"text"); tM.setAttribute("x",cx+184*Math.cos(am)); tM.setAttribute("y",cy+184*Math.sin(am)); tM.setAttribute("font-size",k.en?"15":"19"); tM.textContent=k.en?k.maj+"/"+k.en.maj:k.maj; gM.append(tM);
+    const tA=document.createElementNS(ns,"text"); tA.setAttribute("x",cx+156*Math.cos(am)); tA.setAttribute("y",cy+156*Math.sin(am)); tA.setAttribute("class","acc-t"); tA.textContent=k.n?k.n+(k.t==="s"?"♯":"♭"):"0"; gM.append(tA);
+    const gm=document.createElementNS(ns,"g"); gm.setAttribute("class","seg minor"); gm.setAttribute("tabindex","0"); gm.setAttribute("role","button");
+    const pm=document.createElementNS(ns,"path"); pm.setAttribute("d",arc(82,138,a0,a1)); gm.append(pm);
+    const tm=document.createElementNS(ns,"text"); tm.setAttribute("x",cx+110*Math.cos(am)); tm.setAttribute("y",cy+110*Math.sin(am)); tm.setAttribute("font-size",k.en?"12":"15"); tm.textContent=k.en?k.min+"/"+k.en.min:k.min; gm.append(tm);
+    [gM,gm].forEach(g=>{ g.addEventListener("click",()=>{sel=i;useEn=false;draw();}); g.addEventListener("keydown",e=>{if(e.key==="Enter"){sel=i;useEn=false;draw();}}); svg.append(g); });
+    segs.push([gM,gm]);
+  });
+  const c1=document.createElementNS(ns,"text"); c1.setAttribute("x",cx); c1.setAttribute("y",cy-10); c1.setAttribute("font-size","13"); c1.textContent="dur – zewnątrz"; svg.append(c1);
+  const c2=document.createElementNS(ns,"text"); c2.setAttribute("x",cx); c2.setAttribute("y",cy+10); c2.setAttribute("font-size","13"); c2.textContent="moll – wewnątrz"; svg.append(c2);
+  const det=h("div",{class:"stack"});
+  el.append(h("div",{class:"cof-wrap"},h("div",{class:"card"},svg,h("p",{class:"small muted",style:"text-align:center;margin:8px 0 0"},"Zgodnie z ruchem wskazówek zegara – kwinty w górę (przybywa krzyżyków). Przeciwnie – kwinty w dół (przybywa bemoli).")),det));
+  function draw(){
+    segs.forEach(([a,b],i)=>{a.classList.toggle("on",i===sel);b.classList.toggle("on",i===sel);});
+    const base=KEYS[sel]; const k=useEn&&base.en?{...base,...base.en}:base;
+    const list=k.n? (k.t==="s"?SHARPS:FLATS).slice(0,k.n).join(", "):"–";
+    const sc=scaleOf(k,false), scm=scaleOf(k,true);
+    det.innerHTML="";
+    const nm=s=>s[0].toUpperCase()+s.slice(1);
+    det.append(h("div",{class:"card stack"},
+      h("div",{class:"row",style:"justify-content:space-between"},h("h2",{},k.maj+"-dur  ·  "+k.min+"-moll"),base.en?h("button",{class:"btn sm",onclick:()=>{useEn=!useEn;draw();}},"Enharmonicznie: "+(useEn?base.maj:base.en.maj)+"-dur"):null),
+      h("div",{},h("b",{},accWord(k.n,k.t)),k.n?": "+list:""),
+      h("div",{class:"staff-wrap"},staffSVG({clef:"treble",sig:{n:k.n,t:k.t},w:300})),
+      h("div",{class:"staff-wrap"},staffSVG({clef:"bass",sig:{n:k.n,t:k.t},w:300})),
+      h("div",{class:"small"},h("b",{},"Gama "+k.maj+"-dur: "),sc.map(x=>nm(pname(x.l,x.a))).join(" – ")),
+      h("div",{class:"small"},h("b",{},"Gama "+k.min+"-moll (naturalna): "),scm.map(x=>pname(x.l,x.a)).join(" – ")),
+      h("div",{class:"row"},h("button",{class:"btn sm pri",onclick:()=>playScale(sc)},"▶ Zagraj gamę durową"),
+        h("button",{class:"btn sm",onclick:()=>playScale(scm)},"▶ Molową"))));
+  }
+  draw();
+  el.append(h("div",{class:"grid2",style:"margin-top:16px"},
+    h("div",{class:"card stack"},h("h3",{},"Krzyżyki (♯)"),h("div",{},"Kolejność dopisywania: ",h("b",{},SHARPS.join(", "))),
+      h("div",{class:"table-wrap"},h("table",{class:"nt"},h("tbody",{},KEYS.slice(0,8).map((k,i)=>{const kk=i===7?k.en:k; return h("tr",{},h("td",{},h("b",{},kk.maj+"-dur")),h("td",{},kk.n+"♯"),h("td",{class:"small"},kk.n?SHARPS.slice(0,kk.n).join(", "):"–"));})))),
+      h("div",{class:"tip small",html:"<b>Sposób:</b> ostatni krzyżyk + pół tonu w górę = tonika (np. fis, cis → <b>D</b>-dur)."})),
+    h("div",{class:"card stack"},h("h3",{},"Bemole (♭)"),h("div",{},"Kolejność dopisywania (odwrotność krzyżyków): ",h("b",{},FLATS.join(", "))),
+      h("div",{class:"table-wrap"},h("table",{class:"nt"},h("tbody",{},[KEYS[11],KEYS[10],KEYS[9],KEYS[8],KEYS[7],KEYS[6].en,KEYS[5].en].map(k=>h("tr",{},h("td",{},h("b",{},k.maj+"-dur")),h("td",{},k.n+"♭"),h("td",{class:"small"},FLATS.slice(0,k.n).join(", "))))))),
+      h("div",{class:"tip small",html:"<b>Sposób:</b> przedostatni bemol = tonika (b, es, as → <b>Es</b>-dur). Jeden bemol = F-dur."}))));
+}
+function cofQuiz(el){
+  el.innerHTML=""; let sc=[0,0];
+  const box=h("div",{class:"card stack"}); el.append(h("p",{class:"muted"},"Pytania o liczbę znaków, tonacje równoległe, kolejność krzyżyków i bemoli oraz rozpoznawanie tonacji z zapisu."),box);
+  const ALLK=[...KEYS,...KEYS.filter(k=>k.en).map(k=>({...k,...k.en}))];
+  function ask(){
+    box.innerHTML=""; box.append(h("div",{class:"score"},h("span",{},"Dobrze ",h("b",{},sc[0])),h("span",{},"Źle ",h("b",{},sc[1]))));
+    const k=pick(ALLK); const type=Math.floor(Math.random()*5);
+    let q,opts,ans,extra=null;
+    const sig=x=>x.n?x.n+(x.t==="s"?"♯":"♭"):"0";
+    if(type===0){ q=`Ile znaków przykluczowych ma <b>${k.maj}-dur</b>?`; ans=sig(k); opts=shuffle([...new Set([ans,...shuffle(ALLK.map(sig)).slice(0,8)])]).slice(0,4); if(!opts.includes(ans)) opts[0]=ans; }
+    if(type===1){ q=`Która tonacja durowa ma <b>${accWord(k.n,k.t)}</b>?`; ans=k.maj+"-dur"; opts=[ans,...shuffle(ALLK.filter(x=>x.maj!==k.maj&&sig(x)!==sig(k))).slice(0,3).map(x=>x.maj+"-dur")]; }
+    if(type===2){ q=`Tonacja równoległa (paralelna) molowa do <b>${k.maj}-dur</b>:`; ans=k.min+"-moll"; opts=[ans,...shuffle(ALLK.filter(x=>x.min!==k.min)).slice(0,3).map(x=>x.min+"-moll")]; }
+    if(type===3){ const t=Math.random()<.5?"s":"f"; const L=t==="s"?SHARPS:FLATS; const i=Math.floor(Math.random()*6); q=`Kolejność ${t==="s"?"krzyżyków":"bemoli"}: po <b>${L.slice(0,i+1).join(", ")}</b> następuje…`; ans=L[i+1]; opts=[ans,...shuffle(L.filter(x=>x!==ans)).slice(0,3)]; }
+    if(type===4){ const clef=Math.random()<.5?"treble":"bass"; q=`Rozpoznaj tonację durową z zapisu (klucz ${clef==="treble"?"wiolinowy":"basowy"}):`; extra=h("div",{class:"staff-wrap"},staffSVG({clef,sig:{n:k.n,t:k.t},w:300})); ans=k.maj+"-dur"; opts=[ans,...shuffle(ALLK.filter(x=>x.maj!==k.maj&&!(x.n===k.n&&x.t===k.t))).slice(0,3).map(x=>x.maj+"-dur")]; }
+    opts=shuffle(opts);
+    box.append(h("div",{class:"q-prompt",html:q}),extra);
+    const ol=h("div",{class:"q-opts",style:"grid-template-columns:repeat(auto-fit,minmax(110px,1fr))"});
+    opts.forEach(o=>{const b=h("button",{class:"q-opt"},o); b.onclick=()=>{ if(ol.dataset.d)return; ol.dataset.d=1; const ok=o===ans; sc[ok?0:1]++; Leitner.log(ok); b.classList.add(ok?"ok":"bad"); if(!ok)[...ol.children].find(x=>x.textContent===ans).classList.add("ok"); box.append(h("button",{class:"btn pri",onclick:ask},"Następne →")); }; ol.append(b);});
+    box.append(ol);
+  }
+  ask();
+}
+/* ---- czytanie nut ---- */
+const RANGE={treble:[26,42],bass:[14,30]}; // A3–C6, E2–C4 (indeks diatoniczny)
+function readView(el){
+  el.innerHTML="";
+  let mode=Store.get("mu:clef","treble"), cur=null, clef="treble", sc=[0,0], streak=0, missed=[], answered=false;
+  const best=()=>Store.get("mu:readBest",0);
+  const modes=h("div",{class:"chips"},[["treble","Klucz wiolinowy (G)"],["bass","Klucz basowy (F)"],["mix","Oba na zmianę"]].map(([k,l])=>h("button",{class:"chip"+(k===mode?" on":""),"data-k":k},l)));
+  modes.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; mode=b.dataset.k; Store.set("mu:clef",mode); $$(".chip",modes).forEach(c=>c.classList.toggle("on",c===b)); next();};
+  const stat=h("div",{class:"score"}), staffBox=h("div",{class:"staff-wrap"}), fb=h("div",{style:"min-height:46px;text-align:center"});
+  const btns=h("div",{class:"note-btns"},LET.map((l,i)=>h("button",{class:"btn",onclick:()=>answer(i)},l.toUpperCase())));
+  el.append(h("p",{class:"muted"},"Jaka to nuta? Kliknij literę (H = polskie h, B = h z bemolem). Punkty orientacyjne: w kluczu wiolinowym G na 2. linii, w basowym F na 4. linii. Klawisze C–H na klawiaturze też działają."),modes,stat,staffBox,fb,btns,
+    h("div",{class:"row",style:"justify-content:center;margin-top:10px"},h("button",{class:"btn sm",onclick:()=>cur&&tone(midi(cur))},"▶ Posłuchaj"),h("button",{class:"btn sm ghost",onclick:next},"Pomiń")));
+  function upd(){ stat.innerHTML=`<span>Dobrze <b>${sc[0]}</b></span><span>Źle <b>${sc[1]}</b></span><span>Seria <b>${streak}</b></span><span>Rekord serii <b>${best()}</b></span>`; }
+  function next(){
+    answered=false; fb.innerHTML=""; clef= mode==="mix"? (Math.random()<.5?"treble":"bass") : mode;
+    let d;
+    const own=missed.filter(m=>m.c===clef);
+    if(own.length&&Math.random()<.35){ d=pick(own).d; } else { const [a,b]=RANGE[clef]; do{ d=a+Math.floor(Math.random()*(b-a+1)); }while(cur&&dia(cur)===d); }
+    cur={l:((d%7)+7)%7,o:Math.floor(d/7),a:0};
+    staffBox.innerHTML=""; staffBox.append(staffSVG({clef,notes:[{...cur,x:300}]})); upd();
+  }
+  function answer(i){
+    if(answered||!cur) return; answered=true;
+    const ok=i===cur.l; sc[ok?0:1]++; Leitner.log(ok);
+    if(ok){ streak++; if(streak>best()) Store.set("mu:readBest",streak); missed=missed.filter(m=>!(m.d===dia(cur)&&m.c===clef)); } else { streak=0; missed.push({d:dia(cur),c:clef}); }
+    staffBox.innerHTML=""; staffBox.append(staffSVG({clef,notes:[{...cur,x:300,cls:ok?"ok":"bad"}]}));
+    fb.innerHTML=""; fb.append(h("div",{class:"feedback "+(ok?"ok":"bad"),style:"display:inline-block"},(ok?"Tak! ":"To nie "+LET[i].toUpperCase()+". To ")+fullName(cur)+" – "+octLabel(cur)));
+    tone(midi(cur),0,.9); upd();
+    setTimeout(next, ok?900:1900);
+  }
+  el._key=e=>{ const k=e.key.toLowerCase(); const map={c:0,d:1,e:2,f:3,g:4,a:5,h:6,b:6}; if(k in map&&!e.target.closest("input,textarea")) answer(map[k]); };
+  document.addEventListener("keydown",el._key);
+  const obs=new MutationObserver(()=>{ if(!document.body.contains(el)){ document.removeEventListener("keydown",el._key); obs.disconnect(); } }); obs.observe(document.body,{childList:true,subtree:true});
+  next();
+}
+/* ---- interwały ---- */
+const INUM=["pryma","sekunda","tercja","kwarta","kwinta","seksta","septyma","oktawa"];
+const IBASE=[0,2,4,5,7,9,11,12];
+const INUM_ACC=["prymę","sekundę","tercję","kwartę","kwintę","sekstę","septymę","oktawę"];
+const PERF=[1,4,5,8];
+function quality(num,diff){ if(PERF.includes(num)) return ({0:"czysta",1:"zwiększona","-1":"zmniejszona"})[diff]; return ({0:"wielka","-1":"mała",1:"zwiększona","-2":"zmniejszona"})[diff]; }
+function intervalOf(a,b){ const num=dia(b)-dia(a)+1; const diff=(midi(b)-midi(a))-IBASE[num-1]; return {num,q:quality(num,diff),diff}; }
+const iName=x=>INUM[x.num-1]+" "+x.q+(x.num===4&&x.q==="zwiększona"?" (tryton)":x.num===5&&x.q==="zmniejszona"?" (tryton)":"");
+function buildFrom(n,num,q,up=true){
+  const base=IBASE[num-1]; const diffMap=PERF.includes(num)?{czysta:0,zwiększona:1,zmniejszona:-1}:{wielka:0,mała:-1,zwiększona:1,zmniejszona:-2};
+  const semis=base+diffMap[q]; const dT=up?dia(n)+num-1:dia(n)-(num-1); const l=((dT%7)+7)%7, o=Math.floor(dT/7);
+  const target=up?midi(n)+semis:midi(n)-semis; const a=target-midi({l,o,a:0}); return {l,o,a};
+}
+function intervalsView(el){
+  el.innerHTML="";
+  let sub=Store.get("mu:intMode","rec"), level=Store.get("mu:intLvl",1), clef=Store.get("mu:intClef","treble"), show="harm";
+  const top=h("div",{class:"stack"});
+  const subC=h("div",{class:"chips"},[["rec","Rozpoznawanie – jaki to interwał?"],["write","Zapisywanie – zbuduj interwał"],["table","Ściąga"]].map(([k,l])=>h("button",{class:"chip"+(k===sub?" on":""),"data-k":k},l)));
+  const lvlC=h("div",{class:"chips"},[[1,"Poziom 1: białe klawisze"],[2,"Poziom 2: z ♯ i ♭"]].map(([k,l])=>h("button",{class:"chip"+(k===level?" on":""),"data-k":k},l)));
+  const clefC=h("div",{class:"chips"},[["treble","Klucz wiolinowy"],["bass","Klucz basowy"]].map(([k,l])=>h("button",{class:"chip"+(k===clef?" on":""),"data-k":k},l)));
+  subC.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; sub=b.dataset.k; Store.set("mu:intMode",sub); $$(".chip",subC).forEach(c=>c.classList.toggle("on",c===b)); run();};
+  lvlC.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; level=+b.dataset.k; Store.set("mu:intLvl",level); $$(".chip",lvlC).forEach(c=>c.classList.toggle("on",c===b)); run();};
+  clefC.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; clef=b.dataset.k; Store.set("mu:intClef",clef); $$(".chip",clefC).forEach(c=>c.classList.toggle("on",c===b)); run();};
+  const body=h("div",{class:"card stack",style:"margin-top:12px"});
+  let sc=[0,0];
+  top.append(subC,h("div",{class:"row"},lvlC,clefC)); el.append(top,body);
+  const RNG={treble:[28,38],bass:[16,26]};
+  function randLow(){ const [a,b]=RNG[clef]; const d=a+Math.floor(Math.random()*(b-a+1)); const n={l:((d%7)+7)%7,o:Math.floor(d/7),a:0}; if(level===2&&Math.random()<.45){ n.a=Math.random()<.5?1:-1; } return n; }
+  function genPair(){
+    for(let t=0;t<200;t++){
+      const lo=randLow(); const num=1+Math.floor(Math.random()*8);
+      if(level===1){ const dT=dia(lo)+num-1; const hi={l:((dT%7)+7)%7,o:Math.floor(dT/7),a:0}; const iv=intervalOf(lo,hi); if(iv.q) return {lo,hi,iv}; }
+      else { const qs=PERF.includes(num)?["czysta","czysta","zwiększona","zmniejszona"]:["wielka","mała","wielka","mała","zwiększona","zmniejszona"]; const q=pick(qs); if(num===1&&q==="zmniejszona") continue; const hi=buildFrom(lo,num,q); if(Math.abs(hi.a)<=1) return {lo,hi,iv:{num,q}}; }
+    }
+  }
+  const score=()=>h("div",{class:"score"},h("span",{},"Dobrze ",h("b",{},sc[0])),h("span",{},"Źle ",h("b",{},sc[1])));
+  function run(){
+    body.innerHTML="";
+    if(sub==="table"){ body.append(h("h3",{},"Interwały – liczba półtonów"),h("div",{class:"table-wrap"},h("table",{class:"nt"},h("thead",{},h("tr",{},["Interwał","Skrót","Półtony","Przykład od c¹"].map(x=>h("th",{},x)))),
+      h("tbody",{},[[1,"czysta"],[2,"mała"],[2,"wielka"],[3,"mała"],[3,"wielka"],[4,"czysta"],[4,"zwiększona"],[5,"zmniejszona"],[5,"czysta"],[6,"mała"],[6,"wielka"],[7,"mała"],[7,"wielka"],[8,"czysta"]].map(([n,q])=>{ const c={l:0,o:4,a:0}; const t=buildFrom(c,n,q); const semis=midi(t)-midi(c);
+        return h("tr",{},h("td",{},h("b",{},INUM[n-1]+" "+q),n===4&&q==="zwiększona"||n===5&&q==="zmniejszona"?" (tryton)":""),h("td",{},n+({czysta:"cz",mała:"m",wielka:"w",zwiększona:"zw",zmniejszona:"zmn"})[q]),h("td",{class:"mono"},semis),h("td",{},"c¹ – "+fullName(t),h("button",{class:"btn sm ghost",onclick:()=>{tone(midi(c),0,.6);tone(midi(t),.6,.9);}},"▶"))); })))),
+      h("div",{class:"rule",html:"<b>Jak liczyć?</b> 1) <b>Liczba</b>: policz nazwy dźwięków od dolnego do górnego włącznie (c–e: c, d, e = 3 → tercja). 2) <b>Rodzaj</b>: policz półtony. Pryma, kwarta, kwinta i oktawa bywają <b>czyste</b>; sekunda, tercja, seksta i septyma – <b>małe</b> albo <b>wielkie</b>. O pół tonu więcej niż czysta/wielka = <b>zwiększona</b>, mniej niż czysta/mała = <b>zmniejszona</b>."}),
+      h("div",{class:"tip",html:"<b>Ściąga z klawiatury:</b> na białych klawiszach półtony są tylko między <b>E–F</b> i <b>H–C</b>. Dlatego tercje c–e, f–a, g–h są wielkie, a d–f, e–g, a–c, h–d małe. Jedyny tryton na białych: <b>F–H</b> (kwarta zwiększona) i <b>H–F</b> (kwinta zmniejszona)."})); return; }
+    if(sub==="rec"){
+      const {lo,hi,iv}=genPair(); body.append(score());
+      const draw=()=>{ st.innerHTML=""; st.append(staffSVG({clef,notes: show==="harm"?[{...lo,x:300},{...hi,x:(dia(hi)-dia(lo)===1?318:300)}]:[{...lo,x:230},{...hi,x:370}]})); };
+      const st=h("div",{class:"staff-wrap"});
+      const shBtn=h("button",{class:"btn sm",onclick:()=>{show=show==="harm"?"mel":"harm"; shBtn.textContent=show==="harm"?"Zapis: harmoniczny (razem)":"Zapis: melodyczny (po kolei)"; draw();}},show==="harm"?"Zapis: harmoniczny (razem)":"Zapis: melodyczny (po kolei)");
+      draw();
+      let selN=null, selQ=null;
+      const nRow=h("div",{class:"chips"},INUM.map((n,i)=>h("button",{class:"chip","data-k":i+1},n)));
+      const qRow=h("div",{class:"chips"},["czysta","mała","wielka","zwiększona","zmniejszona"].map(q=>h("button",{class:"chip","data-k":q},q)));
+      nRow.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; selN=+b.dataset.k; $$(".chip",nRow).forEach(c=>c.classList.toggle("on",c===b));};
+      qRow.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; selQ=b.dataset.k; $$(".chip",qRow).forEach(c=>c.classList.toggle("on",c===b));};
+      const fb=h("div"); let done=false;
+      const chk=h("button",{class:"btn pri",onclick:()=>{ if(done) return; if(!selN||!selQ){ toast("Wybierz liczbę i rodzaj interwału"); return; } done=true;
+        const okN=selN===iv.num, okQ=selQ===iv.q, ok=okN&&okQ; sc[ok?0:1]++; Leitner.log(ok);
+        fb.append(h("div",{class:"feedback "+(ok?"ok":"bad")},ok?"Dobrze! ":"", (ok?"":okN?"Liczba dobra, rodzaj nie. ":"")+fullName(lo)+" – "+fullName(hi)+" = "+iName(iv)+" ("+(midi(hi)-midi(lo))+" półt.)"),h("button",{class:"btn pri",style:"margin-top:8px",onclick:run},"Następny →"));
+        tone(midi(lo),0,.6); tone(midi(hi),.55,.9); }},"Sprawdź");
+      body.append(h("div",{class:"row",style:"justify-content:space-between"},h("h3",{},"Jaki to interwał (w górę od dolnej nuty)?"),shBtn),st,
+        h("div",{class:"row"},h("button",{class:"btn sm",onclick:()=>{tone(midi(lo),0,.6);tone(midi(hi),.6,.9);}},"▶ Melodycznie"),h("button",{class:"btn sm",onclick:()=>{tone(midi(lo),0,1.2);tone(midi(hi),0,1.2);}},"▶ Harmonicznie")),
+        h("div",{class:"small muted"},"1) Liczba:"),nRow,h("div",{class:"small muted"},"2) Rodzaj:"),qRow,chk,fb);
+    }
+    if(sub==="write"){
+      let task=null;
+      for(let t=0;t<200&&!task;t++){ const up=level===1?true:Math.random()<.7; const lo=randLow(); const num=1+Math.floor(Math.random()*8);
+        const qs=PERF.includes(num)?(level===1?["czysta","czysta","czysta","zwiększona","zmniejszona"]:["czysta","zwiększona","zmniejszona"]):(level===1?["wielka","mała"]:["wielka","mała","zwiększona","zmniejszona"]);
+        const q=pick(qs); if(num===1&&q!=="czysta"&&level===1) continue; if(num===1&&q==="zmniejszona") continue;
+        const tg=buildFrom(lo,num,q,up); if(Math.abs(tg.a)>1) continue; if(level===1&&tg.a!==0&&Math.random()<.5) continue;
+        const [a,b]=RANGE[clef]; if(dia(tg)<a-1||dia(tg)>b+1) continue;
+        task={lo,num,q,up,tg}; }
+      const {lo,num,q,up,tg}=task; body.append(score());
+      let placed=null, acc=0;
+      const st=h("div",{class:"staff-wrap"});
+      const [a,b]=RANGE[clef];
+      const drawS=(cls)=>{ st.innerHTML=""; const notes=[{...lo,x:220}]; if(placed!=null) notes.push({l:((placed%7)+7)%7,o:Math.floor(placed/7),a:acc,x:380,cls:cls||"ghost",nat:false});
+        const svg=staffSVG({clef,notes,hit:true,hRange:[a-1,b+1]}); svg.addEventListener("click",e=>{const r=e.target.closest("rect.hit"); if(!r||done) return; placed=+r.dataset.d; drawS(); }); st.append(svg); };
+      let done=false; drawS();
+      const accRow=h("div",{class:"chips"},[[-1,"♭ bemol"],[0,"♮ bez znaku"],[1,"♯ krzyżyk"]].map(([k,l])=>h("button",{class:"chip"+(k===0?" on":""),"data-k":k},l)));
+      accRow.onclick=e=>{const bb=e.target.closest(".chip"); if(!bb||done)return; acc=+bb.dataset.k; $$(".chip",accRow).forEach(c=>c.classList.toggle("on",c===bb)); if(placed!=null) drawS();};
+      const fb=h("div");
+      const chk=h("button",{class:"btn pri",onclick:()=>{ if(done) return; if(placed==null){ toast("Kliknij na pięciolinii, gdzie ma stać nuta"); return; } done=true;
+        const user={l:((placed%7)+7)%7,o:Math.floor(placed/7),a:acc}; const ok=dia(user)===dia(tg)&&user.a===tg.a; sc[ok?0:1]++; Leitner.log(ok);
+        st.innerHTML=""; const notes=[{...lo,x:220},{...user,x:380,cls:ok?"ok":"bad"}]; if(!ok) notes.push({...tg,x:470,cls:"ok"}); st.append(staffSVG({clef,notes}));
+        fb.append(h("div",{class:"feedback "+(ok?"ok":"bad")},ok?"Dobrze! "+fullName(tg):"Twoja nuta: "+fullName(user)+". Poprawnie: "+fullName(tg)+" (zielona)"),h("button",{class:"btn pri",style:"margin-top:8px",onclick:run},"Następne zadanie →"));
+        tone(midi(lo),0,.6); tone(midi(tg),.6,.9); }},"Sprawdź");
+      body.append(h("h3",{},`Zbuduj ${INUM_ACC[num-1]} ${q.replace(/a$/,"ą")} ${up?"w górę":"w dół"} od ${fullName(lo)}`),
+        h("p",{class:"small muted",style:"margin:0"},"Kliknij na pięciolinii (linia lub pole), żeby postawić nutę, potem wybierz znak chromatyczny i sprawdź."),st,accRow,h("div",{class:"row"},chk,h("button",{class:"btn sm",onclick:()=>tone(midi(lo))},"▶ Dźwięk wyjściowy")),fb);
+    }
+  }
+  run();
+}
+/* ---- klawiatura ---- */
+function pianoView(el){
+  el.innerHTML="";
+  const wrap=h("div",{class:"piano"}); const info=h("div",{style:"text-align:center;min-height:30px;margin-top:10px;font-weight:700"});
+  const W=["C","D","E","F","G","A","H","C"]; const ww=100/8;
+  W.forEach((n,i)=>{ const m=60+[0,2,4,5,7,9,11,12][i]; const b=h("button",{class:"wk",style:`left:${i*ww}%;width:${ww}%`,onclick:()=>{tone(m);info.textContent=n+" – biały klawisz"+(i===7?" (c²)":i===0?" (c¹)":"");}},n); wrap.append(b); });
+  [[0,"Cis/Des",61],[1,"Dis/Es",63],[3,"Fis/Ges",66],[4,"Gis/As",68],[5,"Ais/B",70]].forEach(([i,n,m])=>{ const b=h("button",{class:"bk",style:`left:${(i+1)*ww-ww*.3}%;width:${ww*.6}%`,onclick:()=>{tone(m);info.textContent=n+" – czarny klawisz";}},n.replace("/","/\n")); wrap.append(b); });
+  el.append(h("div",{class:"card stack"},h("h3",{},"Klawiatura fortepianowa (oktawa C–D–E–F–G–A–H)"),wrap,info,
+    h("ul",{class:"small"},h("li",{},h("b",{},"Białe klawisze: "),"C, D, E, F, G, A, H"),h("li",{},h("b",{},"Czarne – grupa 2 klawiszy: "),"Cis/Des, Dis/Es"),h("li",{},h("b",{},"Czarne – grupa 3 klawiszy: "),"Fis/Ges, Gis/As, Ais/B"),h("li",{},h("b",{},"Półtony naturalne (brak czarnego klawisza pomiędzy): "),"E–F oraz H–C"))));
+}
+MODULES.muzyka={
+  tabs:[
+    {id:"kolo",label:"Koło kwintowe",render:cofView},
+    {id:"kolo-quiz",label:"Quiz z koła kwintowego",render:cofQuiz},
+    {id:"nuty",label:"Czytanie nut (G i F)",render:readView},
+    {id:"interwaly",label:"Interwały",render:intervalsView},
+    {id:"klawiatura",label:"Klawiatura",render:pianoView}
+  ],
+  mastery:()=>Math.min(1,(Store.get("mu:readBest",0))/40)
+};
+window.MU_TEST={intervalOf,buildFrom,fullName,iName,scaleOf,KEYS,midi};
+})();
+
+/* ===== LOGIKA – ćwiczenia z przykładów z wykładów ===== */
+(function(){
+const SETS={
+ ilosc:{title:"Podział nazw ze względu na ilość desygnatów",opts:["pusta","jednostkowa","ogólna"],hint:"Liczymy desygnaty: 0 → pusta, dokładnie 1 → jednostkowa, co najmniej 2 → ogólna (nieskończenie wiele → ogólna uniwersalna). Liczba gramatyczna nie decyduje!",items:[
+  ["szklana góra","pusta","zakres = ∅"],["flogiston","pusta","nie istnieje (nazwa empirycznie pusta)"],["Kubuś Puchatek","pusta","nazwa empirycznie pusta"],["koło kwadratowe","pusta","analitycznie pusta – wewnętrznie sprzeczna"],["żonaty kawaler","pusta","analitycznie pusta"],["większa połowa","pusta","analitycznie pusta"],["obecny król Francji","pusta","deskrypcja bez desygnatu"],
+  ["Jowisz","jednostkowa","nazwa własna – zawsze jednostkowa (konwencja)"],["najwyższa góra świata","jednostkowa","deskrypcja określona"],["zbiór wszystkich liczb parzystych","jednostkowa","jeden zbiór"],["ręce Fryderyka Chopina (jako zbiór)","jednostkowa","jeden zbiór"],["Wszechświat","jednostkowa","jednostkowa z nazwy"],["Warszawa","jednostkowa","nazwa własna"],
+  ["ręka Fryderyka Chopina","ogólna","2 desygnaty"],["człowiek","ogólna","ogólna, a nawet uniwersalna"],["Polak","ogólna","wiele desygnatów"],["ptak","ogólna","uniwersalna"],["ser","ogólna","uniwersalna"],["coś","ogólna","najbardziej ogólna nazwa"],["zbiór liczb parzystych (dowolny)","ogólna","wiele takich zbiorów"],["student","ogólna","wiele desygnatów"]]},
+ kateg:{title:"Zdania kategoryczne: a, e, i, o",opts:["SaP – ogólnotwierdzące","SeP – ogólnoprzeczące","SiP – szczegółowotwierdzące","SoP – szczegółowoprzeczące"],hint:"a, i – z affirmo (twierdzę); e, o – z nego (przeczę). Pierwsza samogłoska – ogólne, druga – szczegółowe. „Pewien” = co najmniej jeden.",items:[
+  ["Każdy człowiek jest śmiertelny.","SaP – ogólnotwierdzące"],["Każdy Polak jest człowiekiem.","SaP – ogólnotwierdzące"],["Wszyscy klerycy są studentami.","SaP – ogólnotwierdzące"],
+  ["Żaden człowiek nie jest kamieniem.","SeP – ogólnoprzeczące"],["Żaden kwadrat nie jest kołem.","SeP – ogólnoprzeczące"],["Żaden sofista nie jest mędrcem.","SeP – ogólnoprzeczące"],
+  ["Pewien punkt jest czarny.","SiP – szczegółowotwierdzące"],["Niektórzy studenci są wysocy.","SiP – szczegółowotwierdzące"],["Pewne zwierzęta są rozumne.","SiP – szczegółowotwierdzące"],
+  ["Pewien punkt nie jest czarny.","SoP – szczegółowoprzeczące"],["Niektórzy ludzie nie są Polakami.","SoP – szczegółowoprzeczące"],["Pewne nazwy nie są ostre.","SoP – szczegółowoprzeczące"]]},
+ cechy:{title:"Typy cech",opts:["konstytutywna (istotna)","konsekutywna","konieczna niecharakterystyczna","przygodna"],hint:"Konstytutywne tworzą definicję; konsekutywne z niej wynikają; konieczne niecharakterystyczne ma każdy desygnat, ale nie definiują; przygodne mogą być lub nie.",items:[
+  ["rozumność człowieka (człowiek = zwierzę rozumne)","konstytutywna (istotna)"],["posiadanie serca przez człowieka","konieczna niecharakterystyczna"],["bycie studentem z Polski","przygodna"],["twierdzenie matematyczne wyprowadzone z definicji figury","konsekutywna"],["posiadanie serca przez psa","konieczna niecharakterystyczna"],["wysoki wzrost Jana","przygodna"]]},
+ supp:{title:"Supozycje i poziomy języka",opts:["supozycja materialna (metajęzyk)","supozycja osobowa","supozycja zwykła"],hint:"Materialna – nazwa oznacza samą siebie jako napis (cudzysłów, metajęzyk); osobowa – konkretny desygnat; zwykła – pojęcie ogólne, gatunek.",items:[
+  ["„Kot” składa się z trzech liter.","supozycja materialna (metajęzyk)"],["„Boston” ma dwie sylaby.","supozycja materialna (metajęzyk)"],["Ten czarny kot śpi na parapecie.","supozycja osobowa"],["Ten kot jest czarny.","supozycja osobowa"],["Pies jest gatunkiem ssaka.","supozycja zwykła"],["Człowiek jest gatunkiem.","supozycja zwykła"]]},
+ sprz:{title:"Nazwy sprzeczne czy przeciwne?",opts:["sprzeczne","przeciwne"],hint:"Sprzeczne: X i nie-X (z kreseczką) – razem obejmują wszystko, nic pomiędzy. Przeciwne: zwykłe przeciwieństwa – może być coś pomiędzy.",items:[
+  ["pies – nie-pies","sprzeczne"],["sprawiedliwy – nie-sprawiedliwy","sprzeczne"],["sprawiedliwy – niesprawiedliwy","przeciwne"],["biały – czarny","przeciwne"],["człowiek – nie-człowiek","sprzeczne"],["wysoki – niski","przeciwne"]]}
+};
+function drill(el,key){
+  const S=SETS[key]; el.innerHTML=""; let sc=[0,0], deck=shuffle(S.items), i=0;
+  const box=h("div",{class:"card stack"});
+  el.append(h("p",{class:"muted"},S.hint),box);
+  function ask(){
+    box.innerHTML=""; if(i>=deck.length){ deck=shuffle(S.items); i=0; }
+    const [q,a,why]=deck[i];
+    box.append(h("div",{class:"score"},h("span",{},"Dobrze ",h("b",{},sc[0])),h("span",{},"Źle ",h("b",{},sc[1])),h("span",{},"Przykład ",h("b",{},(i+1)+"/"+deck.length))),h("div",{class:"q-prompt"},h("b",{},q)));
+    const ol=h("div",{class:"q-opts",style:"grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"});
+    S.opts.forEach(o=>{ const b=h("button",{class:"q-opt"},o); b.onclick=()=>{ if(ol.dataset.d)return; ol.dataset.d=1; const ok=o===a; sc[ok?0:1]++; Leitner.log(ok); b.classList.add(ok?"ok":"bad"); if(!ok)[...ol.children].find(x=>x.textContent===a).classList.add("ok");
+      box.append(h("div",{class:"feedback "+(ok?"ok":"bad")},(ok?"Dobrze. ":"Poprawnie: "+a+". ")+(why||"")),h("button",{class:"btn pri",onclick:()=>{i++;ask();}},"Następny →")); }; ol.append(b); });
+    box.append(ol);
+  }
+  ask();
+}
+function logicEx(el){
+  el.innerHTML="";
+  let cur=Store.get("lo:ex","ilosc");
+  const chips=h("div",{class:"chips"},Object.entries(SETS).map(([k,s])=>h("button",{class:"chip"+(k===cur?" on":""),"data-k":k},s.title)));
+  const body=h("div",{style:"margin-top:12px"});
+  chips.onclick=e=>{const b=e.target.closest(".chip"); if(!b)return; cur=b.dataset.k; Store.set("lo:ex",cur); $$(".chip",chips).forEach(c=>c.classList.toggle("on",c===b)); drill(body,cur);};
+  el.append(h("p",{class:"muted"},"Ćwiczenia na przykładach z wykładów (uzupełnionych kilkoma podobnymi). Podział ze względu na ilość desygnatów – według prowadzącego najważniejszy, będzie na ćwiczeniach."),chips,body);
+  drill(body,cur);
+}
+MODULES.logika={tabs:[{id:"cwiczenia",label:"Ćwiczenia z nazw i zdań",render:logicEx}]};
+})();
+
+
+setupShell();
+</script>
+</body>
+</html>
