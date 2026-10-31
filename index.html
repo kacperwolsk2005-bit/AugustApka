@@ -5421,7 +5421,13 @@ function initIdentity(){
   ni.on("init",u=>onUser(u));
   ni.on("login",u=>{ onUser(u); ni.close(); toast("Witaj, "+((u.user_metadata&&u.user_metadata.full_name)||u.email)+"!"); });
   ni.on("logout",()=>{ user=null; onUser(null); render(); });
-  try{ ni.init({locale:"pl"}); }catch(e){ ni.init(); }
+  // Widżet Netlify sam się uruchamia po wczytaniu strony i wtedy obsługuje linki z maili
+  // (#invite_token, #confirmation_token, #recovery_token). Drugie init() psuło zaproszenia,
+  // więc tylko ustawiamy język, a init() wołamy wyłącznie, gdyby widżet nie wystartował sam.
+  try{ if(typeof ni.setLocale==="function") ni.setLocale("pl"); }catch(e){}
+  let started=false; ni.on("init",()=>{ started=true; });
+  const fallback=()=>setTimeout(()=>{ if(!started){ try{ ni.init({locale:"pl"}); }catch(e){} } },2500);
+  if(document.readyState==="complete") fallback(); else window.addEventListener("load",fallback);
 }
 if(window.netlifyIdentity) initIdentity(); else window.addEventListener("load",initIdentity);
 
