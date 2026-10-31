@@ -5341,7 +5341,7 @@ async function token(){ if(!user) return null; try{ return await user.jwt(); }ca
 async function api(method,body){
   const t=await token(); if(!t) throw new Error("brak tokenu");
   const r=await fetch(API,{method,headers:{"Authorization":"Bearer "+t,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined,cache:"no-store"});
-  if(!r.ok) throw new Error("HTTP "+r.status); return r.json();
+  if(!r.ok){ let t=""; try{ t=(await r.text()).slice(0,120); }catch(_){} throw new Error("HTTP "+r.status+(t&&r.status!==404?": "+t.replace(/<[^>]+>/g," ").trim():"")); } return r.json();
 }
 // łączenie: dla każdego klucza wygrywa nowszy znacznik czasu
 function merge(local,remote){
@@ -5361,7 +5361,7 @@ async function pull(){
     if(changedLocal){ applying=true; Store.load(out); applying=false; try{ SEARCH_IDX=null; }catch(e){} render(); }
     if(changedRemote||!res) await api("PUT",{data:out});
     setState("zsynchronizowano",Date.now()); if(changedLocal) dot("☁️ Pobrano postęp z konta");
-  }catch(e){ setState(navigator.onLine?"błąd synchronizacji – spróbuję ponownie":"offline – zapiszę po powrocie internetu"); }
+  }catch(e){ setState(navigator.onLine?"błąd synchronizacji ("+(e&&e.message||"?")+") – spróbuję ponownie":"offline – zapiszę po powrocie internetu"); }
   busy=false; if(pending){ pending=false; schedule(1500); }
 }
 async function push(){
@@ -5370,7 +5370,7 @@ async function push(){
     const res=await api("GET"); const {out,changedLocal}=merge(Store.raw(),(res&&res.data)||{});
     if(changedLocal){ applying=true; Store.load(out); applying=false; }
     await api("PUT",{data:out}); setState("zsynchronizowano",Date.now()); dot("☁️ Zapisano na koncie");
-  }catch(e){ setState(navigator.onLine?"błąd synchronizacji – spróbuję ponownie":"offline – zapiszę po powrocie internetu"); }
+  }catch(e){ setState(navigator.onLine?"błąd synchronizacji ("+(e&&e.message||"?")+") – spróbuję ponownie":"offline – zapiszę po powrocie internetu"); }
   busy=false; if(pending){ pending=false; schedule(1500); }
 }
 function schedule(ms=2500){ clearTimeout(timer); timer=setTimeout(push,ms); }
