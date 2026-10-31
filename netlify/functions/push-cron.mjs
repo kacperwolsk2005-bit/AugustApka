@@ -22,8 +22,9 @@ export default async () => {
     const items = (rec.plan || []).filter((p) => p.d === today && st[p.kind] !== false);
     if (!items.length) continue;
     const dl = items.filter((p) => p.kind === "deadlines"), dy = items.filter((p) => p.kind === "daily");
-    const title = dl.length ? "📅 " + dl[0].t : "📚 Czas na powtórkę";
-    const lines = [...dl.slice(dl.length ? 1 : 0), ...dy].map((p) => p.t).slice(0, 4);
+    const all = [...dl, ...dy];
+    const title = dl.length ? "📅 " + dl[0].t : all[0].t;
+    const lines = all.slice(1).map((p) => p.t).slice(0, 4);
     const payload = JSON.stringify({ title, body: lines.join("\n") || "Otwórz AugustApkę i powtórz materiał.", url: "/#home", tag: "aug-" + today });
     const alive = [];
     for (const s of rec.subs) {
