@@ -1,0 +1,9 @@
+{
+  "name": "augustapka",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AugustApka – aplikacja do nauki dla Rocznika św. Augustyna",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
