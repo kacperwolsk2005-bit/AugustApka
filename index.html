@@ -426,6 +426,16 @@ svg.cof .acc-t{font-size:11px;font-weight:700;fill:var(--muted)}
 /* okno logowania Netlify musi być nad bramką */
 #netlify-identity-widget{z-index:1000!important}
 
+/* formularz logowania */
+.login-form{width:100%;gap:10px;text-align:left}
+.pw-wrap{position:relative}
+.pw-wrap .input{padding-right:46px;width:100%}
+.pw-wrap .pw-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);padding:4px 8px}
+.login-err{color:var(--bad);background:var(--bad-soft);border-radius:10px;padding:8px 10px}
+.linkbtn{background:none;border:0;color:var(--green-ink);text-decoration:underline;cursor:pointer;padding:2px}
+.ok-t{color:var(--ok)} .bad-t{color:var(--bad)}
+.gate{overflow-y:auto;align-items:safe center}
+
 </style>
 </head>
 <body>
@@ -5300,7 +5310,20 @@ function profileView(el){
   else { const s=C.status(); const stat=h("div",{class:"small"},"Stan: ",h("b",{},s.text),s.at?" · ostatnio: "+new Date(s.at).toLocaleString("pl-PL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"");
     sync.append(h("p",{class:"small"},"Postęp zapisuje się automatycznie na koncie kilka sekund po każdej zmianie i pobiera się przy otwarciu aplikacji. Gdy dwa urządzenia zmienią to samo, wygrywa nowsza zmiana."),stat,
       h("div",{class:"row"},h("button",{class:"btn pri sm",onclick:async ev=>{ ev.currentTarget.disabled=true; await C.syncNow(); profileView(el); }},"⟳ Synchronizuj teraz"),
-        h("button",{class:"btn sm ghost",onclick:async()=>{ await C.logout(); }},"Wyloguj się"))); }
+        h("button",{class:"btn sm ghost",onclick:async()=>{ await C.logout(); }},"Wyloguj się")));
+    const p1=h("input",{class:"input",type:"password",id:"pw-new",autocomplete:"new-password",placeholder:"Nowe hasło (min. 8 znaków)"});
+    const p2=h("input",{class:"input",type:"password",id:"pw-new2",autocomplete:"new-password",placeholder:"Powtórz nowe hasło"});
+    const pmsg=h("div",{class:"small"});
+    const pbtn=h("button",{type:"submit",class:"btn sm"},"Zmień hasło");
+    const pf=h("form",{class:"stack",style:"gap:8px;margin-top:6px"},h("input",{type:"email",autocomplete:"username",value:u.email,hidden:true,readonly:true}),h("b",{class:"small"},"🔑 Zmiana hasła"),p1,p2,pmsg,h("div",{},pbtn));
+    pf.onsubmit=async e=>{ e.preventDefault(); pmsg.className="small";
+      if(p1.value.length<8){ pmsg.textContent="Hasło musi mieć co najmniej 8 znaków."; pmsg.classList.add("bad-t"); return; }
+      if(p1.value!==p2.value){ pmsg.textContent="Hasła nie są takie same."; pmsg.classList.add("bad-t"); return; }
+      pbtn.disabled=true; pbtn.textContent="Zmieniam…";
+      try{ await C.changePassword(p1.value); p1.value=""; p2.value=""; pmsg.textContent="✓ Hasło zmienione. Przy następnym logowaniu użyj nowego."; pmsg.classList.add("ok-t"); toast("Hasło zmienione"); }
+      catch(x){ pmsg.textContent="Nie udało się zmienić hasła – sprawdź internet i spróbuj ponownie."; pmsg.classList.add("bad-t"); }
+      pbtn.disabled=false; pbtn.textContent="Zmień hasło"; };
+    sync.append(h("hr",{style:"border:0;border-top:1px solid var(--line);margin:8px 0 2px;width:100%"}),pf); }
   const grid=h("div",{class:"stats-grid"},
     [["Notatki przerobione",st.readN],["Na liście powtórek",st.revN],["Do powtórki dziś",st.due],["Moje notatki",st.own],["Dobre odpowiedzi",st.ok],["Błędy",st.bad],["Dni nauki",st.days],["Seria dni z rzędu",st.streak],["Sesje Pomodoro",st.ses],["Minuty skupienia",st.min]].map(([l,v])=>h("div",{class:"stat"},h("b",{class:"mono"},v),h("span",{},l))));
   const subj=h("div",{class:"stack",style:"gap:8px"},SUBJECTS.filter(s=>s.id!=="slownik").map(s=>{ let m=0; try{ m=subjectMastery(s.id)||0; }catch(e){} const p=Math.round(m*100);
@@ -5384,13 +5407,40 @@ function openLogin(){
   if(!ni){ toast("Nie udało się wczytać logowania Netlify – sprawdź internet albo wyłącz blokadę reklam dla tej strony"); return; }
   try{ ni.open("login"); }catch(e){ toast("Logowanie niedostępne: "+e.message); }
 }
+const PL_ERR=e=>{ const m=((e&&e.json&&(e.json.error_description||e.json.msg||e.json.error))||(e&&e.message)||"").toString();
+  if(/not confirmed/i.test(m)) return "E-mail nie został jeszcze potwierdzony – kliknij link z maila od Netlify.";
+  if(/invalid|no user|password/i.test(m)) return "Nieprawidłowy e-mail albo hasło.";
+  if(/fetch|network|failed/i.test(m)) return "Brak połączenia z internetem.";
+  return m||"Nie udało się zalogować."; };
+async function loginDirect(email,pw,remember){
+  const ni=NI(); let g=null; try{ g=ni&&ni.gotrue; }catch(e){}
+  if(!g||typeof g.login!=="function"){ openLogin(); return; }
+  const u=await g.login(email,pw,remember);
+  try{ localStorage.setItem("augustapka.remember",remember?"1":"0"); }catch(e){}
+  onUser(u); toast("Witaj, "+((u.user_metadata&&u.user_metadata.full_name)||u.email)+"!");
+}
 function gate(show){
   let g=document.querySelector(".gate");
   if(!show){ if(g) g.remove(); return; }
   if(g) return;
+  const em=h("input",{class:"input",type:"email",name:"email",id:"login-email",autocomplete:"username",inputmode:"email",autocapitalize:"off",placeholder:"E-mail",required:true});
+  const pw=h("input",{class:"input",type:"password",name:"password",id:"login-pass",autocomplete:"current-password",placeholder:"Hasło",required:true});
+  const show1=h("button",{type:"button",class:"btn sm ghost pw-eye","aria-label":"Pokaż hasło",onclick:()=>{ pw.type=pw.type==="password"?"text":"password"; show1.textContent=pw.type==="password"?"👁":"🙈"; }},"👁");
+  const rem=h("input",{type:"checkbox",id:"login-remember",checked:true});
+  const err=h("div",{class:"login-err small hide"});
+  const btn=h("button",{type:"submit",class:"btn pri",style:"width:100%"},"Zaloguj się");
+  const form=h("form",{class:"login-form stack",autocomplete:"on"},em,h("div",{class:"pw-wrap"},pw,show1),
+    h("label",{class:"chk small",style:"justify-content:flex-start"},rem,"Zapamiętaj mnie na tym urządzeniu"),err,btn);
+  form.onsubmit=async e=>{ e.preventDefault(); err.classList.add("hide"); btn.disabled=true; btn.textContent="Loguję…";
+    try{ await loginDirect(em.value.trim(),pw.value,rem.checked); }catch(x){ err.textContent=PL_ERR(x); err.classList.remove("hide"); }
+    btn.disabled=false; btn.textContent="Zaloguj się"; };
+  const forgot=h("button",{type:"button",class:"linkbtn small"},"Nie pamiętasz hasła?");
+  forgot.onclick=async()=>{ const mail=em.value.trim(); if(!mail){ err.textContent="Wpisz najpierw swój e-mail, a potem kliknij „Nie pamiętasz hasła?”."; err.classList.remove("hide"); em.focus(); return; }
+    try{ const g=NI()&&NI().gotrue; if(!g) throw new Error("network"); await g.requestPasswordRecovery(mail); err.classList.add("hide"); toast("Wysłano maila z linkiem do ustawienia nowego hasła"); }
+    catch(x){ err.textContent="Nie udało się wysłać maila. "+PL_ERR(x); err.classList.remove("hide"); } };
   g=h("div",{class:"gate"},h("div",{class:"card stack"},logoEl("vert_color","vert_white","gate-logo"),h("h1",{style:"font-size:26px;margin:0"},"AugustApka"),
-    h("p",{class:"small"},"Zaloguj się, żeby mieć swój profil i ten sam postęp na telefonie i laptopie."),
-    h("button",{class:"btn pri",style:"width:100%",onclick:()=>openLogin()},"Zaloguj się"),
+    h("p",{class:"small",style:"margin:0"},"Zaloguj się, żeby mieć swój profil i ten sam postęp na telefonie i laptopie."),
+    form,forgot,
     h("p",{class:"small muted"},"Konto zakłada się z zaproszenia – poproś o nie administratora rocznika. Zaproszenie przychodzi mailem: kliknij link i ustaw hasło."),
     h("button",{class:"btn sm ghost",onclick:()=>{ try{ localStorage.setItem("augustapka.guest","1"); }catch(e){} gate(false); }},"Kontynuuj bez konta (postęp tylko na tym urządzeniu)")));
   document.body.append(g);
@@ -5410,8 +5460,15 @@ function onUser(u){
 }
 window.CLOUD={
   user:()=>user,
-  login:()=>openLogin(),
-  logout:async()=>{ clearTimeout(timer); if(user){ try{ await push(); }catch(e){} } applying=true; Store.load({}); applying=false; setMeta({uid:null,at:null}); try{ localStorage.removeItem("augustapka.guest"); }catch(e){} if(NI()) await NI().logout(); },
+  login:()=>{ try{ localStorage.removeItem("augustapka.guest"); }catch(e){} gate(true); },
+  logout:async()=>{ clearTimeout(timer); const u=user; if(u){ try{ await push(); }catch(e){} }
+    applying=true; Store.load({}); applying=false; setMeta({uid:null,at:null});
+    try{ localStorage.removeItem("augustapka.guest"); }catch(e){}
+    try{ if(u&&typeof u.logout==="function") await u.logout(); }catch(e){}
+    try{ if(NI()) await NI().logout(); }catch(e){}
+    try{ localStorage.removeItem("gotrue.user"); }catch(e){}
+    if(user){ user=null; onUser(null); render(); } },
+  changePassword:async(pw)=>{ if(!user) throw new Error("Niezalogowany"); user=await user.update({password:pw}); return true; },
   syncNow:async()=>{ await push(); },
   status:()=>state,
   updateName:async(n)=>{ user=await user.update({data:{full_name:n}}); window.PROFILE&&PROFILE.refreshBtn(); }
