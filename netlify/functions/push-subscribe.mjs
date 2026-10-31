@@ -48,14 +48,17 @@ export const handler = async (event, context) => {
     if (!pub || !priv) return json(500, { error: "Brak kluczy VAPID w ustawieniach Netlify" });
     webpush.setVapidDetails(SUBJECT(), pub, priv);
     const payload = JSON.stringify({ title: "AugustApka 🔔", body: "Powiadomienia działają! Tak będą wyglądać przypomnienia.", url: "/#profil", tag: "aug-test" });
-    let ok = 0; const alive = [];
+    let ok = 0; const alive = []; var errors = [];
     for (const s of rec.subs) {
       try { await webpush.sendNotification(s, payload, { TTL: 600 }); ok++; alive.push(s); }
-      catch (e) { if (e.statusCode !== 404 && e.statusCode !== 410) alive.push(s); }
+      catch (e) {
+        errors.push({ status: e.statusCode || null, msg: String(e.body || e.message || e).slice(0, 200), host: (() => { try { return new URL(s.endpoint).host; } catch { return "?"; } })() });
+        if (e.statusCode !== 404 && e.statusCode !== 410) alive.push(s);
+      }
     }
     rec.subs = alive; tested = ok;
   }
   rec.email = user.email || null;
   await store.setJSON(key, rec);
-  return json(200, { ok: true, devices: rec.subs.length, tested, settings: rec.settings });
+  return json(200, { ok: true, devices: rec.subs.length, tested, errors: typeof errors !== "undefined" ? errors : undefined, settings: rec.settings });
 };
