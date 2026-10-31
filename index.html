@@ -423,6 +423,9 @@ svg.cof .acc-t{font-size:11px;font-weight:700;fill:var(--muted)}
 
 @media (max-width:420px){.brand>span{display:none}}
 
+/* okno logowania Netlify musi być nad bramką */
+#netlify-identity-widget{z-index:1000!important}
+
 </style>
 </head>
 <body>
@@ -5376,13 +5379,18 @@ window.addEventListener("online",()=>user&&pull());
 document.addEventListener("visibilitychange",()=>{ if(!user) return; if(document.visibilityState==="hidden"&&timer){ clearTimeout(timer); push(); } else if(document.visibilityState==="visible") pull(); });
 
 /* ---- bramka logowania ---- */
+function openLogin(){
+  const ni=NI();
+  if(!ni){ toast("Nie udało się wczytać logowania Netlify – sprawdź internet albo wyłącz blokadę reklam dla tej strony"); return; }
+  try{ ni.open("login"); }catch(e){ toast("Logowanie niedostępne: "+e.message); }
+}
 function gate(show){
   let g=document.querySelector(".gate");
   if(!show){ if(g) g.remove(); return; }
   if(g) return;
   g=h("div",{class:"gate"},h("div",{class:"card stack"},logoEl("vert_color","vert_white","gate-logo"),h("h1",{style:"font-size:26px;margin:0"},"AugustApka"),
     h("p",{class:"small"},"Zaloguj się, żeby mieć swój profil i ten sam postęp na telefonie i laptopie."),
-    h("button",{class:"btn pri",style:"width:100%",onclick:()=>NI()&&NI().open("login")},"Zaloguj się"),
+    h("button",{class:"btn pri",style:"width:100%",onclick:()=>openLogin()},"Zaloguj się"),
     h("p",{class:"small muted"},"Konto zakłada się z zaproszenia – poproś o nie administratora rocznika. Zaproszenie przychodzi mailem: kliknij link i ustaw hasło."),
     h("button",{class:"btn sm ghost",onclick:()=>{ try{ localStorage.setItem("augustapka.guest","1"); }catch(e){} gate(false); }},"Kontynuuj bez konta (postęp tylko na tym urządzeniu)")));
   document.body.append(g);
@@ -5402,7 +5410,7 @@ function onUser(u){
 }
 window.CLOUD={
   user:()=>user,
-  login:()=>NI()&&NI().open("login"),
+  login:()=>openLogin(),
   logout:async()=>{ clearTimeout(timer); if(user){ try{ await push(); }catch(e){} } applying=true; Store.load({}); applying=false; setMeta({uid:null,at:null}); try{ localStorage.removeItem("augustapka.guest"); }catch(e){} if(NI()) await NI().logout(); },
   syncNow:async()=>{ await push(); },
   status:()=>state,
