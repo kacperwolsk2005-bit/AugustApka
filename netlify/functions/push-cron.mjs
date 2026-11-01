@@ -62,9 +62,9 @@ export default async () => {
     if ((st.hour ?? 19) !== hour || rec.sent === today) continue;
     const items = (rec.plan || []).filter((p) => p.d === today && st[p.kind] !== false);
     if (!items.length) continue;
-    const dl = items.filter((p) => p.kind === "deadlines"), dy = items.filter((p) => p.kind === "daily");
-    const all = [...dl, ...dy];
-    const title = dl.length ? "📅 " + dl[0].t : all[0].t;
+    const pr = items.filter((p) => p.kind === "prayer"), dl = items.filter((p) => p.kind === "deadlines"), dy = items.filter((p) => p.kind === "daily");
+    const all = [...pr, ...dl, ...dy];
+    const title = pr.length ? pr[0].t : dl.length ? "📅 " + dl[0].t : all[0].t;
     const lines = all.slice(1).map((p) => p.t).slice(0, 4);
     const payload = JSON.stringify({ title, body: lines.join("\n") || "Otwórz AugustApkę i powtórz materiał.", url: "/#home", tag: "aug-" + today });
     const alive = [];

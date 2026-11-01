@@ -34,7 +34,7 @@ export const handler = async (event, context) => {
   });
 
   if (body.settings) rec.settings = clean(body.settings);
-  if (Array.isArray(body.plan)) rec.plan = body.plan.slice(0, 120).map((p) => ({ d: String(p.d).slice(0, 10), kind: p.kind === "daily" ? "daily" : "deadlines", t: String(p.t || "").slice(0, 160) }));
+  if (Array.isArray(body.plan)) rec.plan = body.plan.slice(0, 120).map((p) => ({ d: String(p.d).slice(0, 10), kind: p.kind === "daily" ? "daily" : p.kind === "prayer" ? "prayer" : "deadlines", t: String(p.t || "").slice(0, 160) }));
 
   if (body.action === "subscribe" && body.sub && body.sub.endpoint) {
     rec.subs = rec.subs.filter((s) => s.endpoint !== body.sub.endpoint);
