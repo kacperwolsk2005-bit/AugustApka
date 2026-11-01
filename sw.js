@@ -1,5 +1,5 @@
 // AugustApka – service worker: działa offline, a przy internecie zawsze pobiera najnowszą wersję
-const CACHE = "augustapka-v3";
+const CACHE = "augustapka-v4";
 const CORE = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
@@ -14,9 +14,9 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(req.url);
   // logowanie i synchronizacja zawsze przez sieć
   if (url.pathname.startsWith("/.netlify/") || url.hostname === "identity.netlify.com") return;
-  // czcionki Google: najpierw pamięć podręczna
-  if (url.hostname.endsWith("fonts.googleapis.com") || url.hostname.endsWith("fonts.gstatic.com")) {
-    e.respondWith(caches.open(CACHE).then((c) => c.match(req).then((hit) => hit || fetch(req).then((res) => { c.put(req, res.clone()); return res; }))));
+  // czcionki Google i przeglądarka PDF (pdf.js): najpierw pamięć podręczna – działają też offline
+  if (url.hostname.endsWith("fonts.googleapis.com") || url.hostname.endsWith("fonts.gstatic.com") || (url.hostname === "cdnjs.cloudflare.com" && url.pathname.includes("/pdf.js/"))) {
+    e.respondWith(caches.open(CACHE).then((c) => c.match(req).then((hit) => hit || fetch(req).then((res) => { if (res.ok || res.type === "opaque") c.put(req, res.clone()); return res; }))));
     return;
   }
   if (url.origin !== location.origin) return;
