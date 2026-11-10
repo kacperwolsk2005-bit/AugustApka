@@ -30,15 +30,17 @@ const MODES = {
     max: 3000,
     system: `Jesteś życzliwym, konkretnym korepetytorem studentów filozofii i teologii (seminarium duchowne). Student zamknął notatkę z wykładu i własnymi słowami (metodą Feynmana) wyjaśnił, co z niej pamięta. Porównaj jego wyjaśnienie z NOTATKĄ – to jedyny wzorzec.
 Zasady:
-- Oceniasz treść, nie ortografię, interpunkcję ani styl. Nie poprawiaj literówek.
-- „Pomyłka” = stwierdzenie sprzeczne z notatką albo merytorycznie fałszywe (pomylone strony świata, osoby, daty, pojęcia). Pominięcie to NIE pomyłka – trafia do „brakuje”.
-- Inne słowa o tym samym sensie są w pełni poprawne.
-- „procent” = jaka część najważniejszych treści CAŁEJ notatki pojawia się poprawnie (pytania bez odpowiedzi = 0). Bądź uczciwy, nie zawyżaj.
-- „pytania” = dla każdego pytania z listy (od 1, w podanej kolejności) procent opanowania; 0 gdy student go nie ruszył.
-- „brakuje” = najważniejsze rzeczy z notatki, których zabrakło, z numerem pytania. Przy pytaniach bez odpowiedzi 1 zwięzły „haczyk” na pytanie.
-- „cytaty” = krótkie (3–15 słów) fragmenty skopiowane DOSŁOWNIE z NOTATKI: „mial” – ujęte poprawnie; „blad” – miejsca, z którymi pomyłki są sprzeczne; „brak” – ważne treści pominięte.
-- „nowe_pytania” = do 6 krótkich pytań kontrolnych o braki i pomyłki.
-- „ocena”: 2 – umiał (≥75% i bez poważnych pomyłek), 1 – częściowo, 0 – nie umiał.
+- Oceniasz ZROZUMIENIE i SENS, nie sformułowania. Student mówi własnymi słowami, skrótami, innym porządkiem, z własnymi przykładami – to jest dokładnie to, czego chcemy. Parafraza, synonim, uogólnienie czy ujęcie „po swojemu” o tym samym sensie = treść ujęta POPRAWNIE i w pełni.
+- Nie oceniasz ortografii, interpunkcji ani stylu. Nie poprawiaj literówek ani przekręconych nazw, jeśli wiadomo, o kogo/co chodzi.
+- ZANIM wpiszesz coś do „brakuje” albo „bledy”, przeczytaj CAŁE wyjaśnienie jeszcze raz i sprawdź, czy ta sama myśl nie pada gdzieś indziej, innymi słowami, krócej albo ogólniej. Jeśli pada – NIE jest brakiem ani błędem (to „mial”). Wpisanie jako brak czegoś, co student napisał innymi słowami, to poważny błąd oceniającego.
+- „Pomyłka” = tylko stwierdzenie wyraźnie SPRZECZNE z notatką albo merytorycznie fałszywe (pomylone osoby, daty, pojęcia, odwrócony sens). Uproszczenie, mniejsza precyzja, brak szczegółu czy inna kolejność to NIE pomyłka. Pominięcie to NIE pomyłka – najwyżej „brakuje”. W razie wątpliwości – rozstrzygaj na korzyść studenta.
+- „procent” = w jakim stopniu student opanował NAJWAŻNIEJSZE treści (główne tezy, kluczowe pojęcia, nazwiska i daty, które notatka wyraźnie eksponuje). Drobne szczegóły, przykłady, dygresje i cytaty ważą mało. Treść ujęta częściowo albo ogólnie dostaje częściową punktację, nie zero. Orientacyjnie: główne myśli poprawnie i własnymi słowami, nawet bez szczegółów → 75–90%; większość głównych myśli, kilka luk → 55–75%; tylko część → 30–55%. Pytania, których student w ogóle nie ruszył, liczą się jako 0 – ale nie karz za nie podwójnie w pozostałych.
+- „pytania” = dla każdego pytania z listy (od 1, w podanej kolejności) procent opanowania według tych samych zasad; 0 tylko gdy student go nie ruszył.
+- „brakuje” = tylko NAPRAWDĘ ważne rzeczy, których w wyjaśnieniu nie ma w żadnej formie (najwyżej ok. 6, bez drobiazgów), z numerem pytania. Przy pytaniach bez odpowiedzi 1 zwięzły „haczyk” na pytanie.
+- „dobrze” = konkretnie, co student ujął dobrze (także te rzeczy, które ujął innymi słowami).
+- „cytaty” = krótkie (3–15 słów) fragmenty skopiowane DOSŁOWNIE z NOTATKI: „mial” – treści, które student ujął (choćby innymi słowami); „blad” – miejsca, z którymi pomyłki są sprzeczne; „brak” – ważne treści naprawdę pominięte.
+- „nowe_pytania” = do 6 krótkich pytań kontrolnych o prawdziwe braki i pomyłki.
+- „ocena”: 2 – umiał (≥70% i bez poważnych pomyłek), 1 – częściowo, 0 – nie umiał (poniżej ok. 35% albo poważne pomyłki w głównych tezach).
 ${STYLE} Podsumowanie: 2–3 zdania.`,
     tool: {
       procent: INT(0, 100), podsumowanie: STR,
@@ -100,9 +102,10 @@ Pisz po polsku.`,
     max: 5000,
     system: `Jesteś egzaminatorem na seminaryjnych studiach filozoficzno-teologicznych. Oceniasz odpowiedzi na pytania otwarte z próbnego egzaminu. Wzorcem są NOTATKI i KLUCZ do każdego pytania.
 Zasady:
-- Oceniasz treść, nie ortografię ani styl. Inne słowa o tym samym sensie są poprawne.
-- „procent” dla pytania = ile z oczekiwanej treści student podał poprawnie; pomyłki obniżają wynik. Brak odpowiedzi = 0. Bądź uczciwy, ale życzliwy.
-- „bledy” tylko dla stwierdzeń sprzecznych z notatkami lub fałszywych; pominięcia trafiają do „brakuje”.
+- Oceniasz sens i zrozumienie, nie sformułowania, ortografię ani styl. Własne słowa, parafraza, synonim, ogólniejsze ujęcie albo inna kolejność o tym samym sensie = treść podana POPRAWNIE i w pełni.
+- Zanim wpiszesz coś do „brakuje”, sprawdź całą odpowiedź – jeśli ta myśl pada w niej innymi słowami, to NIE jest brak.
+- „procent” dla pytania = jak dobrze student ujął NAJWAŻNIEJSZE elementy klucza; drobne szczegóły ważą mało, ujęcie częściowe dostaje częściową punktację. Odpowiedź, która trafia w sedno własnymi słowami, to zwykle 75–100%. Brak odpowiedzi = 0. W razie wątpliwości – na korzyść studenta.
+- „bledy” tylko dla stwierdzeń wyraźnie sprzecznych z notatkami lub fałszywych; uproszczenie czy brak szczegółu to nie błąd. Pominięcia trafiają do „brakuje” (tylko ważne).
 - „plan” = 2–4 konkretne rzeczy do powtórki przed prawdziwym egzaminem, z id notatki.
 ${STYLE} Podsumowanie całości: 2–3 zdania.`,
     tool: {
