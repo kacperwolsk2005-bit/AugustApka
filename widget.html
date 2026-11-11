@@ -37,6 +37,12 @@ h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)
 .foot a{color:var(--mut)}
 .warn{background:var(--hiS);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:14px}
 .hideDom .b.dom{display:none}
+/* tapeta: miejsce na ikony pulpitu po lewej, bez przycisków, zawsze widok tygodnia */
+.wall body{padding:4vh 3vw 6vh 8vw;min-height:100vh;background:radial-gradient(circle at 85% 0%,var(--hiS),transparent 55%),var(--bg)}
+.wall .foot .tg,.wall .foot a{display:none}
+.wall .col{overflow:hidden;position:relative}
+.wall .col .x{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wall .col.cut::after{content:"";position:absolute;left:0;right:0;bottom:0;height:28px;background:linear-gradient(transparent,var(--card))}
 .tg{background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:2px 10px;font-size:12px;cursor:pointer}
 /* szeroko (laptop): bieżący dzień + cały tydzień */
 @media (min-width:900px){
@@ -60,7 +66,10 @@ const API="/.netlify/functions/widget";
 const LK="plan-dnia.k", LC="plan-dnia.cache", LD="plan-dnia.dom";
 let k=(location.hash.match(/k=([A-Za-z0-9_-]{20,64})/)||[])[1];
 try{ if(k) localStorage.setItem(LK,k); else k=localStorage.getItem(LK); }catch(e){}
-if(location.hash) history.replaceState(null,"",location.pathname);
+// tryb tapety (Lively Wallpaper na Windows, Plash na Macu): link z „&tapeta” – adres zostaje, żeby przeżył odświeżenie
+const WALL=/(^#|&)tapeta\b/.test(location.hash);
+if(WALL){ document.documentElement.classList.add("wall"); const z=()=>{ document.getElementById("app").style.zoom=Math.max(1,Math.min(2.2,innerWidth/1700)).toFixed(2); }; addEventListener("resize",z); addEventListener("DOMContentLoaded",z); setTimeout(z,0); }
+else if(location.hash) history.replaceState(null,"",location.pathname);
 let data=null; try{ data=JSON.parse(localStorage.getItem(LC)||"null"); }catch(e){}
 let showDom=true; try{ showDom=localStorage.getItem(LD)!=="0"; }catch(e){}
 const pad=n=>String(n).padStart(2,"0");
@@ -107,7 +116,8 @@ function draw(err){
    `<div class="wrap"><div>${nowH}<h3>Dziś</h3><div class="list">${list(D,true)}</div><div class="tmr"><h3>Jutro</h3><div class="list">${list(J,false)}</div></div></div><div class="week">${week}</div></div>`+
    `<div class="foot"><span>${data&&data.at?"Plan z "+new Date(data.at).toLocaleString("pl-PL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):""}${err&&data?" · offline":""}</span><span><button class="tg" id="tg">${showDom?"Ukryj stałe punkty":"Pokaż stałe punkty"}</button> <a href="/">AugustApka</a></span></div>`;
   document.getElementById("tg").onclick=()=>{ showDom=!showDom; try{ localStorage.setItem(LD,showDom?"1":"0"); }catch(e){} draw(); };
-  const c=app.querySelector(".b.cur"); if(c&&!draw._sc){ draw._sc=1; c.scrollIntoView({block:"center"}); }
+  if(WALL){ const zz=+app.style.zoom||1; app.querySelectorAll(".col").forEach(c=>{ const mh=Math.max(220,(innerHeight-70)/zz-c.offsetTop); c.style.maxHeight=mh+"px"; c.classList.toggle("cut",c.scrollHeight>mh+2); }); }
+  const c=app.querySelector(".b.cur"); if(c&&!draw._sc&&!WALL){ draw._sc=1; c.scrollIntoView({block:"center"}); }
 }
 draw(); load();
 setInterval(draw,30000);
