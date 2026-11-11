@@ -53,6 +53,21 @@ h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)
 .wall.tight .col .b .x{-webkit-line-clamp:1}
 .wall .col .list{gap:1px}
 .wall .now{margin-bottom:8px}
+/* dzień liturgiczny, terminy, słówko, silentium */
+.lit{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut);margin:-4px 0 10px;flex-wrap:wrap}
+.lit .dot{width:10px;height:10px;border-radius:50%;background:var(--litc);box-shadow:0 0 0 1px rgba(127,127,127,.45),0 0 0 4px color-mix(in srgb,var(--litc) 22%,transparent);flex:none}
+.lit b{color:var(--ink)}
+.litbar{position:fixed;left:0;right:0;top:0;height:4px;background:var(--litc);display:none;z-index:2}
+.wall .litbar{display:block}
+.mc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:10px}
+.mc .l{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:700;margin-bottom:5px;display:flex;justify-content:space-between;gap:8px}
+.ev{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;padding:3px 0;font-size:13px}
+.ev .d{white-space:nowrap;font:700 12px ui-monospace,"SF Mono",Consolas,monospace;color:var(--hi);min-width:66px}.ev .d.soon{color:#E26C5A}
+.ev small{color:var(--mut)}
+.voc .w{font:600 18px Georgia,"Times New Roman",serif}.voc .g{color:var(--mut);font-size:12.5px;font-style:italic}.voc .t{font-size:14px;margin-top:2px}
+.sil{position:fixed;inset:0;background:rgba(6,9,8,.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#E9E4DA;z-index:5;text-align:center}
+.wall.silent .sil{display:flex}
+.sil .sa{font:italic 600 clamp(36px,3.2vw,64px) Georgia,"Times New Roman",serif;letter-spacing:.02em}.sil .sb{font-size:clamp(16px,1.15vw,24px);opacity:.8}.sil .sc{font:700 clamp(14px,.9vw,19px) ui-monospace,Consolas,monospace;color:#E9C46A}
 .tg{background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:2px 10px;font-size:12px;cursor:pointer}
 /* szeroko (laptop): bieżący dzień + cały tydzień */
 @media (min-width:900px){
@@ -124,12 +139,31 @@ function draw(err){
   let week=""; for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); const di=iso(d); const X=days.find(x=>x.d===di);
     week+=`<div class="col${di===T?" today":""}"><div class="hd"><span>${DNF[d.getDay()].slice(0,3)}</span><span>${d.getDate()}.${pad(d.getMonth()+1)}</span></div><div class="list">${list(X,di===T)}</div></div>`; }
   const stale=!D&&data;
+  // dzień liturgiczny
+  const L=D&&D.lit; if(L&&L.h) document.documentElement.style.setProperty("--litc",L.h);
+  const litH=L?`<div class="lit"><span class="dot"></span><b>${esc(L.t)}</b>${L.r?" · "+esc(L.r):""}${L.s?" · "+esc(L.s):""}${L.c?" · kolor "+esc(L.c):""}</div>`:"";
+  // najbliższe terminy
+  const dd=x=>Math.round((new Date(x+"T12:00")-new Date(T+"T12:00"))/864e5);
+  const dl=n=>n<=0?"dziś":n===1?"jutro":"za "+n+" dni";
+  const DNS=["nd","pon","wt","śr","czw","pt","sob"];
+  const evs=((data&&data.snap&&data.snap.ev)||[]).filter(e=>e.d>=T).slice(0,3);
+  const evH=evs.length?`<div class="mc"><div class="l"><span>Terminy</span><span>z kalendarza</span></div>`+evs.map(e=>{ const n=dd(e.d), dt=new Date(e.d+"T12:00");
+    return `<div class="ev"><span class="d${n<=3?" soon":""}">${dl(n)}</span><span>${esc(e.t)} <small>· ${esc(e.sj||e.ty)} · ${DNS[dt.getDay()]} ${dt.getDate()}.${pad(dt.getMonth()+1)}</small></span></div>`; }).join("")+`</div>`:"";
+  // słówko / pojęcie – co godzinę inne
+  const V=(data&&data.snap&&data.snap.voc)||[]; const vo=V.length?V[Math.floor(Date.now()/36e5)%V.length]:null;
+  const vocH=vo?`<div class="mc voc"><div class="l"><span>${esc(vo.k)}</span><span>co godzinę nowe</span></div><div class="w">${esc(vo.w)} ${vo.g?`<span class="g">${esc(vo.g)}</span>`:""}</div><div class="t">${esc(vo.t)}</div></div>`:"";
+  // silentium: po Komplecie do pierwszego punktu następnego dnia (tylko tapeta)
+  const kom=bs.filter(b=>/komplet/i.test(b.t)).pop(); const first=bs.find(vis);
+  const silent=WALL&&((kom&&m>=toMin(kom.e))||(first&&m<toMin(first.s)&&m<6*60));
+  const nb=kom&&m>=toMin(kom.e)?(J&&J.b.find(vis)):first; const nd=kom&&m>=toMin(kom.e)?tm:now;
+  const silH=`<div class="sil"><div class="sa">Silentium sacrum</div><div class="sb">Dobranoc. ${nd===tm?"Jutro":"Dziś"} ${DNF[nd.getDay()]}, ${nd.getDate()} ${MON[nd.getMonth()]}</div>${nb?`<div class="sc">${nb.s} ${esc(nb.t)}</div>`:""}</div>`;
+  document.documentElement.classList.toggle("silent",!!silent);
   app.className=showDom?"":"hideDom";
   app.innerHTML=
-   `<div class="top"><div class="date">${DNF[now.getDay()][0].toUpperCase()+DNF[now.getDay()].slice(1)}, ${now.getDate()} ${MON[now.getMonth()]}</div><div class="clock">${pad(now.getHours())}:${pad(now.getMinutes())}</div></div>`+
-   (err&&!data?`<div class="warn">${esc(err)}</div>`:"")+
+   `<div class="litbar"></div>`+silH+`<div class="top"><div class="date">${DNF[now.getDay()][0].toUpperCase()+DNF[now.getDay()].slice(1)}, ${now.getDate()} ${MON[now.getMonth()]}</div><div class="clock">${pad(now.getHours())}:${pad(now.getMinutes())}</div></div>`+
+   litH+(err&&!data?`<div class="warn">${esc(err)}</div>`:"")+
    (stale?`<div class="warn">Plan nie obejmuje dzisiejszego dnia. Otwórz AugustApkę (zalogowany) – plan odświeży się sam.</div>`:"")+
-   `<div class="wrap"><div>${nowH}<h3>${WALL?"Dalej dziś":"Dziś"}</h3><div class="list">${WALL&&D?(D.b.filter(b=>vis(b)&&toMin(b.e)>m&&b!==cur).slice(0,10).map(b=>row(b,m,true)).join("")||`<div class="note">${bs.length?"Koniec planu na dziś":esc(D.note||"—")}</div>`):list(D,true)}</div><div class="tmr"><h3>Jutro</h3><div class="list">${list(J,false)}</div></div></div><div class="week">${week}</div></div>`+
+   `<div class="wrap"><div>${nowH}${evH}<h3>${WALL?"Dalej dziś":"Dziś"}</h3><div class="list">${WALL&&D?(D.b.filter(b=>vis(b)&&toMin(b.e)>m&&b!==cur).slice(0,6).map(b=>row(b,m,true)).join("")||`<div class="note">${bs.length?"Koniec planu na dziś":esc(D.note||"—")}</div>`):list(D,true)}</div><div class="tmr"><h3>Jutro</h3><div class="list">${list(J,false)}</div></div>${vocH?`<div style="margin-top:12px">${vocH}</div>`:""}</div><div class="week">${week}</div></div>`+
    `<div class="foot"><span>${data&&data.at?"Plan z "+new Date(data.at).toLocaleString("pl-PL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):""}${err&&data?" · offline":""}</span><span><button class="tg" id="tg">${showDom?"Ukryj stałe punkty":"Pokaż stałe punkty"}</button> <a href="/">AugustApka</a></span></div>`;
   document.getElementById("tg").onclick=()=>{ showDom=!showDom; try{ localStorage.setItem(LD,showDom?"1":"0"); }catch(e){} draw(); };
   if(WALL) fit();
