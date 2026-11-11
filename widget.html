@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Plan dnia</title>
+<link rel="manifest" href="/widget.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2B4F45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plan dnia">
+<style>
+:root{--bg:#F7F3EC;--card:#FFFDF8;--ink:#1E2A26;--mut:#6B746F;--line:#E4DCCD;--acc:#2B4F45;--hi:#B5612F;--hiS:rgba(181,97,47,.10);--now:rgba(43,79,69,.08)}
+@media (prefers-color-scheme:dark){:root{--bg:#121A17;--card:#1A2420;--ink:#EDE7DC;--mut:#9DB0A8;--line:#2A3833;--acc:#7FB5A3;--hi:#E9C46A;--hiS:rgba(233,196,106,.12);--now:rgba(127,181,163,.10)}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:max(12px,env(safe-area-inset-top)) 14px 14px}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.date{font-weight:800;font-size:17px}
+.clock{font:700 26px/1 ui-monospace,"SF Mono",Consolas,monospace;color:var(--acc)}
+.now{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--acc));border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.now .l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:700}
+.now .t{font-size:18px;font-weight:700;margin:2px 0}
+.now .s{font-size:13px;color:var(--mut)}
+.bar{height:5px;background:var(--line);border-radius:3px;margin-top:7px;overflow:hidden}.bar i{display:block;height:100%;background:var(--c,var(--acc))}
+h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:12px 0 6px}
+.list{display:flex;flex-direction:column;gap:3px}
+.b{display:grid;grid-template-columns:4px 92px 1fr;gap:8px;align-items:center;padding:5px 6px;border-radius:8px}
+.b .k{align-self:stretch;border-radius:2px;background:var(--c)}
+.b .h{font:600 13px ui-monospace,"SF Mono",Consolas,monospace;color:var(--mut)}
+.b.past{opacity:.45}.b.cur{background:var(--hiS)}.b.cur .h{color:var(--hi)}
+.b.done .x::after{content:" ✓";color:var(--acc);font-weight:700}
+.note{color:var(--mut);font-size:14px;padding:6px}
+.week{display:none}
+.foot{margin-top:12px;font-size:12px;color:var(--mut);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.foot a{color:var(--mut)}
+.warn{background:var(--hiS);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:14px}
+.hideDom .b.dom{display:none}
+.tg{background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:2px 10px;font-size:12px;cursor:pointer}
+/* szeroko (laptop): bieżący dzień + cały tydzień */
+@media (min-width:900px){
+  .wrap{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  .col{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px;min-width:0}
+  .col.today{border-color:var(--hi);box-shadow:0 0 0 1px var(--hi) inset}
+  .col .hd{font-weight:700;font-size:13px;padding:2px 4px 6px;display:flex;justify-content:space-between;text-transform:capitalize}
+  .col .b{grid-template-columns:3px 1fr;gap:6px;padding:3px 4px}
+  .col .b .h{font-size:11px;grid-column:2}.col .b .x{grid-column:2;font-size:12.5px;line-height:1.25}
+  .col .b .k{grid-row:1/3}
+  .tmr{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app"><p class="note">Wczytuję plan…</p></div>
+<script>
+(function(){
+const API="/.netlify/functions/widget";
+const LK="plan-dnia.k", LC="plan-dnia.cache", LD="plan-dnia.dom";
+let k=(location.hash.match(/k=([A-Za-z0-9_-]{20,64})/)||[])[1];
+try{ if(k) localStorage.setItem(LK,k); else k=localStorage.getItem(LK); }catch(e){}
+if(location.hash) history.replaceState(null,"",location.pathname);
+let data=null; try{ data=JSON.parse(localStorage.getItem(LC)||"null"); }catch(e){}
+let showDom=true; try{ showDom=localStorage.getItem(LD)!=="0"; }catch(e){}
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const toMin=t=>{ const [a,b]=t.split(":").map(Number); return a*60+b; };
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const MON=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+const DNF=["niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"];
+const app=document.getElementById("app");
+
+async function load(){
+  if(!k) return;
+  try{ const r=await fetch(API+"?k="+encodeURIComponent(k),{cache:"no-store"}); const j=await r.json();
+    if(!r.ok) throw new Error(j.error||("HTTP "+r.status));
+    data={snap:j.snap,at:j.at,got:Date.now()}; try{ localStorage.setItem(LC,JSON.stringify(data)); }catch(e){} draw();
+  }catch(e){ draw(String(e.message||e)); }
+}
+function row(b,m,isToday){ const s=toMin(b.s), e=toMin(b.e); const cls=["b"]; if(isToday&&e<=m) cls.push("past"); if(isToday&&s<=m&&e>m) cls.push("cur"); if(b.st==="done") cls.push("done"); if(b.dom) cls.push("dom");
+  return `<div class="${cls.join(" ")}" style="--c:${esc(b.col||"#7A7A7A")}"><span class="k"></span><span class="h">${b.s}–${b.e}</span><span class="x">${esc(b.t)}</span></div>`; }
+function draw(err){
+  const now=new Date(), T=iso(now), m=now.getHours()*60+now.getMinutes();
+  if(!k){ app.innerHTML=`<div class="warn"><b>Brak klucza.</b> Otwórz ten widget z linku w AugustApce: <b>Kalendarz → Ustawienia → Widget z planem dnia</b>.</div>`; return; }
+  const days=(data&&data.snap&&data.snap.days)||[]; const D=days.find(x=>x.d===T);
+  const tm=new Date(now); tm.setDate(tm.getDate()+1); const J=days.find(x=>x.d===iso(tm));
+  const bs=D?D.b:[]; const vis=b=>showDom||!b.dom;
+  const cur=bs.find(b=>vis(b)&&toMin(b.s)<=m&&toMin(b.e)>m), nxt=bs.find(b=>vis(b)&&toMin(b.s)>m);
+  let nowH="";
+  if(cur){ const s=toMin(cur.s), e=toMin(cur.e), p=Math.round((m-s)/(e-s)*100);
+    nowH=`<div class="now" style="--c:${esc(cur.col)}"><div class="l">Teraz · jeszcze ${e-m} min</div><div class="t">${esc(cur.t)}</div><div class="s">${cur.s}–${cur.e}${nxt?` · potem ${nxt.s} ${esc(nxt.t)}`:""}</div><div class="bar"><i style="width:${p}%"></i></div></div>`; }
+  else if(nxt){ nowH=`<div class="now" style="--c:${esc(nxt.col)}"><div class="l">Następne za ${toMin(nxt.s)-m} min</div><div class="t">${esc(nxt.t)}</div><div class="s">${nxt.s}–${nxt.e}</div></div>`; }
+  else if(D){ const jf=J&&J.b.find(vis);
+    nowH=`<div class="now"${jf?` style="--c:${esc(jf.col)}"`:""}><div class="l">${bs.length?"Koniec planu na dziś":esc(D.note||"Dziś nic nie zaplanowano")}</div><div class="t">${jf?"Jutro "+jf.s+" · "+esc(jf.t):"Dobranoc 🌙"}</div></div>`; }
+  const list=(Dx,isT)=>Dx?(Dx.b.length?Dx.b.map(b=>row(b,m,isT)).join(""):`<div class="note">${esc(Dx.note||"—")}</div>`):`<div class="note">—</div>`;
+  // tydzień (na szerokim ekranie)
+  const mon=new Date(now); mon.setDate(mon.getDate()-((now.getDay()+6)%7));
+  let week=""; for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); const di=iso(d); const X=days.find(x=>x.d===di);
+    week+=`<div class="col${di===T?" today":""}"><div class="hd"><span>${DNF[d.getDay()].slice(0,3)}</span><span>${d.getDate()}.${pad(d.getMonth()+1)}</span></div><div class="list">${list(X,di===T)}</div></div>`; }
+  const stale=!D&&data;
+  app.className=showDom?"":"hideDom";
+  app.innerHTML=
+   `<div class="top"><div class="date">${DNF[now.getDay()][0].toUpperCase()+DNF[now.getDay()].slice(1)}, ${now.getDate()} ${MON[now.getMonth()]}</div><div class="clock">${pad(now.getHours())}:${pad(now.getMinutes())}</div></div>`+
+   (err&&!data?`<div class="warn">${esc(err)}</div>`:"")+
+   (stale?`<div class="warn">Plan nie obejmuje dzisiejszego dnia. Otwórz AugustApkę (zalogowany) – plan odświeży się sam.</div>`:"")+
+   `<div class="wrap"><div>${nowH}<h3>Dziś</h3><div class="list">${list(D,true)}</div><div class="tmr"><h3>Jutro</h3><div class="list">${list(J,false)}</div></div></div><div class="week">${week}</div></div>`+
+   `<div class="foot"><span>${data&&data.at?"Plan z "+new Date(data.at).toLocaleString("pl-PL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):""}${err&&data?" · offline":""}</span><span><button class="tg" id="tg">${showDom?"Ukryj stałe punkty":"Pokaż stałe punkty"}</button> <a href="/">AugustApka</a></span></div>`;
+  document.getElementById("tg").onclick=()=>{ showDom=!showDom; try{ localStorage.setItem(LD,showDom?"1":"0"); }catch(e){} draw(); };
+  const c=app.querySelector(".b.cur"); if(c&&!draw._sc){ draw._sc=1; c.scrollIntoView({block:"center"}); }
+}
+draw(); load();
+setInterval(draw,30000);
+setInterval(load,10*60000);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ load(); } });
+})();
+</script>
+</body>
+</html>

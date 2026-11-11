@@ -19,3 +19,19 @@
   for = "/manifest.webmanifest"
   [headers.values]
     Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/muzyka.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/widget.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/widget.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"

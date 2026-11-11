@@ -1,0 +1,17 @@
+{
+  "id": "/widget.html",
+  "name": "Plan dnia – AugustApka",
+  "short_name": "Plan dnia",
+  "description": "Twój plan dnia i tygodnia z AugustApki – zawsze aktualny.",
+  "lang": "pl",
+  "start_url": "/widget.html",
+  "scope": "/widget",
+  "display": "standalone",
+  "background_color": "#F7F3EC",
+  "theme_color": "#2B4F45",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
