@@ -57,6 +57,7 @@ h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)
 .lit{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut);margin:-4px 0 10px;flex-wrap:wrap}
 .lit .dot{width:10px;height:10px;border-radius:50%;background:var(--litc);box-shadow:0 0 0 1px rgba(127,127,127,.45),0 0 0 4px color-mix(in srgb,var(--litc) 22%,transparent);flex:none}
 .lit b{color:var(--ink)}
+.lit .sig{flex-basis:100%;color:var(--ink);opacity:.85;font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .litbar{position:fixed;left:0;right:0;top:0;height:4px;background:var(--litc);display:none;z-index:2}
 .wall .litbar{display:block}
 .mc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:10px}
@@ -141,7 +142,7 @@ function draw(err){
   const stale=!D&&data;
   // dzień liturgiczny
   const L=D&&D.lit; if(L&&L.h) document.documentElement.style.setProperty("--litc",L.h);
-  const litH=L?`<div class="lit"><span class="dot"></span><b>${esc(L.t)}</b>${L.r?" · "+esc(L.r):""}${L.s?" · "+esc(L.s):""}${L.c?" · kolor "+esc(L.c):""}</div>`:"";
+  const litH=L?`<div class="lit"><span class="dot"></span><b>${esc(L.t)}</b>${L.r?" · "+esc(L.r):""}${L.s?" · "+esc(L.s):""}${L.c?" · kolor "+esc(L.c):""}${L.g?`<span class="sig" title="Czytania dnia">📖 ${esc(L.g)}</span>`:""}</div>`:"";
   // najbliższe terminy
   const dd=x=>Math.round((new Date(x+"T12:00")-new Date(T+"T12:00"))/864e5);
   const dl=n=>n<=0?"dziś":n===1?"jutro":"za "+n+" dni";
