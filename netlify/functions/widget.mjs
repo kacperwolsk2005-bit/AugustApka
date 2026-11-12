@@ -17,6 +17,62 @@ function nowPL() {
 const toMin = (t) => { const [a, b] = String(t).split(":").map(Number); return a * 60 + (b || 0); };
 const addD = (iso, n) => { const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 
+
+// ---- Memento: wspominani zmarli kapłani (rocznice śmierci) ----
+// Diecezja bielsko-żywiecka: wpisy „Memento: …” z kalendarium diecezji (publiczny link subskrypcji iCal
+// podany na diecezja.bielsko.pl/kalendarium-diecezji-bielsko-zywieckiej). Archidiecezja krakowska: lista
+// „Zmarli księża” z diecezja.pl (data śmierci → rocznica). Pobierane raz na dobę, trzymane w Blobs.
+const MEM_BZ_ICS = process.env.MEMENTO_BZ_ICS || "https://calendar.google.com/calendar/ical/kalendarz.bz%40gmail.com/private-5647427e8904fc41130e1fabd6413e26/basic.ics";
+const MEM_KRK = "https://diecezja.pl/zmarli-ksieza/";
+export function parseIcsMemento(ics) {
+  const out = {}; const lines = String(ics).replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
+  let ev = null;
+  for (const l of lines) {
+    if (l === "BEGIN:VEVENT") ev = {}; else if (l === "END:VEVENT") {
+      if (ev && ev.sum && ev.d && /^memento\s*:/i.test(ev.sum)) { const k = ev.d.slice(4, 6) + "-" + ev.d.slice(6, 8);
+        const t = ev.sum.replace(/^memento\s*:\s*/i, "").replace(/\\([,;\\])/g, "$1").replace(/\\n/gi, " ").replace(/\s+/g, " ").trim();
+        (out[k] = out[k] || []); if (t && !out[k].includes(t)) out[k].push(t); }
+      ev = null;
+    } else if (ev) {
+      const m = l.match(/^([A-Z-]+)(?:;[^:]*)?:(.*)$/); if (!m) continue;
+      if (m[1] === "SUMMARY") ev.sum = m[2]; if (m[1] === "DTSTART") ev.d = m[2].replace(/[^0-9]/g, "").slice(0, 8);
+    }
+  }
+  for (const k in out) out[k].sort();
+  return out;
+}
+export function parseKrkList(html) {
+  const out = {}; const t = String(html);
+  const re = /Data śmierci:\s*(\d{1,2})\/(\d{1,2})\/(\d{4})[\s\S]{0,1500}?<h4[^>]*>\s*(?:<a[^>]*>)?\s*([^<]+?)\s*(?:<\/a>)?\s*<\/h4>/g; let m;
+  while ((m = re.exec(t))) {
+    const k = m[2].padStart(2, "0") + "-" + m[1].padStart(2, "0");
+    let n = m[4].replace(/&#8211;|&ndash;/g, "–").replace(/&amp;/g, "&").replace(/&#8217;/g, "’").replace(/\s*\([^)]*\)\s*$/, "").replace(/^śp\.?\s*\+?\s*/i, "").trim();
+    n = n.replace(/^Ks\./, "ks.").replace(/^Bp/, "bp");
+    const e = m[3] + " † " + n; (out[k] = out[k] || []); if (!out[k].includes(e)) out[k].push(e);
+  }
+  for (const k in out) out[k].sort();
+  return out;
+}
+async function grab(url, ms = 8000) {
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
+  try { const r = await fetch(url, { signal: c.signal, headers: { "user-agent": "AugustApka/1.0 (widget)" } }); if (!r.ok) throw new Error("HTTP " + r.status); return await r.text(); } finally { clearTimeout(t); }
+}
+async function memento(store) {
+  const key = "mem/v1"; let cur = null; try { cur = await store.get(key, { type: "json" }); } catch {}
+  if (cur && Date.now() - cur.at < 20 * 3600e3) return cur;
+  const next = { at: Date.now(), bz: (cur && cur.bz) || {}, krk: (cur && cur.krk) || {} };
+  try { const bz = parseIcsMemento(await grab(MEM_BZ_ICS)); if (Object.keys(bz).length) next.bz = bz; } catch {}
+  { const krk = {};
+    for (let p = 1; p <= 6; p++) { let html; try { html = await grab(p === 1 ? MEM_KRK : MEM_KRK + "page/" + p + "/"); } catch { break; }
+      const part = parseKrkList(html); if (!Object.keys(part).length) break;
+      for (const k in part) krk[k] = [...new Set([...(krk[k] || []), ...part[k]])].sort();
+      if (!html.includes("zmarli-ksieza/page/" + (p + 1))) break; }
+    if (Object.keys(krk).length) next.krk = krk; }
+  try { await store.setJSON(key, next); } catch {}
+  return next;
+}
+function memFor(M, from, n) { const o = {}; for (let i = 0; i < n; i++) { const d = addD(from, i), k = d.slice(5); const bz = M.bz[k] || [], krk = M.krk[k] || []; if (bz.length || krk.length) o[d] = { bz, krk }; } return o; }
+
 // gotowe teksty (np. dla KWGT na Androidzie): teraz / następne / reszta dnia / jutro
 function texts(snap, now) {
   const day = (iso) => (snap.days || []).find((x) => x.d === iso);
@@ -41,6 +97,12 @@ export const handler = async (event, context) => {
   const store = getStore("augustapka-widget");
   const q = event.queryStringParameters || {};
 
+  // ---- Memento na dany dzień (publiczne, bez klucza): ?mem=YYYY-MM-DD ----
+  if (event.httpMethod === "GET" && q.mem) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(q.mem)) return json(400, { error: "Zła data" });
+    const M = await memento(store); return json(200, { mem: memFor(M, q.mem, 1), at: M.at });
+  }
+
   // ---- odczyt przez widget: ?k=<klucz>[&f=kw|txt] ----
   if (event.httpMethod === "GET" && q.k) {
     if (!/^[A-Za-z0-9_-]{20,64}$/.test(q.k)) return json(400, { error: "Zły klucz" });
@@ -54,7 +116,8 @@ export const handler = async (event, context) => {
       const t = texts(rec.snap, now);
       return { statusCode: 200, headers: { ...HEAD, "content-type": "text/plain; charset=utf-8" }, body: [t.now, t.next, "", t.today].filter((x, i) => x || i === 2).join("\n") };
     }
-    return json(200, { now, at: rec.at, snap: rec.snap });
+    let mem = {}; try { mem = memFor(await memento(store), now.d, 7); } catch {}
+    return json(200, { now, at: rec.at, snap: rec.snap, mem });
   }
 
   // ---- zapis i ustawienia: tylko zalogowany użytkownik ----
