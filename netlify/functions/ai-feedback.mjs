@@ -1,7 +1,7 @@
 // AugustApka – funkcje AI (tylko zalogowani z rolą "ai": Netlify → Identity → użytkownik → Edit → Roles)
 // Tryby: recall (ocena „Zamknij i wyjaśnij”), exam-gen / exam-grade (próbny egzamin),
 //        ita-check / ita-chat (włoski: pisanie i rozmowa), ask (pytania do notatek),
-//        plan-day (realny plan dnia), week-review (przegląd tygodnia)
+//        plan-day (realny plan dnia), plan-week (realny plan tygodnia), week-review (przegląd tygodnia)
 // Zmienne środowiskowe (Netlify → Project configuration → Environment variables):
 //   ANTHROPIC_API_KEY  – klucz z console.anthropic.com (oznacz jako secret)
 //   AI_MODEL           – opcjonalnie, domyślnie "claude-haiku-5-5"
@@ -23,7 +23,7 @@ const STRS = (max) => ({ type: "array", maxItems: max, items: STR });
 const ERRS = { type: "array", maxItems: 8, items: { type: "object", properties: { twoje: { type: "string", description: "krótki cytat z odpowiedzi studenta" }, poprawnie: STR }, required: ["twoje", "poprawnie"] } };
 
 // ile „użyć” z dziennego limitu zużywa jedno wywołanie
-const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1, "plan-day": 1, "week-review": 1 };
+const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1, "plan-day": 1, "week-review": 1, "plan-week": 2 };
 
 /* ---------------- tryby ---------------- */
 const MODES = {
@@ -186,6 +186,9 @@ Zasady:
 - Łączny czas nowych bloków nie przekracza „limit_min” (to 75% wolnego czasu minus to, co już zaplanowane). Między blokami nauki zostaw 10 min przerwy. Lepiej mniej i zrealizowane niż dużo i porzucone.
 - Kolejność: najpilniejsze terminy (mało dni do kolokwium/egzaminu) i najtrudniejsze rzeczy w porze dnia, w której student ma najwyższe „tempo”. Jeśli tempo wieczorem jest niskie (<40%), nie planuj tam nic ważnego.
 - Długość bloku: 30–60 min; jeśli ogólne tempo < 65%, raczej 30–45 min. Przedmiot często przesuwany – krótszy blok z konkretnym pierwszym krokiem.
+- TERMINY MAJĄ GODZINĘ („godzina”). Nauka do kolokwium/egzaminu ma sens tylko PRZED nim: w dniu terminu każdy blok do tego przedmiotu musi się skończyć najpóźniej 15 min przed „godzina”; po tej godzinie NIE planuj już nauki do tego terminu (ani bloków tego przedmiotu „na kolokwium”). Jeśli termin jest dziś rano, a okna są dopiero po nim – nie dawaj bloku, wpisz to w „uwagi”.
+- Ostatnie godziny przed terminem: krótka powtórka (20–30 min) zamiast nowego materiału; dzień wcześniej – główna porcja i sprawdzenie się (fiszki, zadania).
+- Myśl o kolejności: najpierw termin najbliższy w czasie (z uwzględnieniem godziny), potem cele tygodnia. Nie rozdrabniaj dnia na więcej niż 4 bloki nauki.
 - Jeśli są fiszki do powtórki, daj 15–20 min w krótkim oknie.
 - „tytul” = konkretna czynność (np. „Logika: 10 zadań z relacji zakresowych”), nie sam przedmiot. „przedmiot” = id przedmiotu z listy albo "" (np. fiszki). „waznosc”: m = musi (termin ≤ 3 dni), s = powinno, c = jak starczy czasu.
 - „nie_zmiesci” – co sensownie nie wejdzie dziś i kiedy to zrobić. „uwagi” – 1–2 zdania: dlaczego tak, na co uważać.
@@ -200,6 +203,33 @@ ${STYLE}`,
       const p = b.plan; if (!p || typeof p !== "object") throw "Brak danych planu";
       const s = JSON.stringify(p); if (s.length > 20000) throw "Za dużo danych";
       return "DANE DNIA (JSON):\n" + s + "\n\nUłóż realny plan nauki na ten dzień.";
+    },
+  },
+
+  "plan-week": {
+    max: 4000,
+    system: `Jesteś trenerem organizacji czasu i nauki dla kleryka (seminarium, studia filozoficzno-teologiczne). Układasz REALNY plan nauki na pozostałe dni tygodnia.
+Zasady planu:
+- Bloki wstawiasz WYŁĄCZNIE w wolne okna danego dnia („dni[].okna”), bez nakładania na siebie i na „moje”. Godziny HH:MM co 5 min. Każdy blok ma „data” (RRRR-MM-DD) z listy dni.
+- Na dzień najwyżej „limit_min” minut nowych bloków (to 75% wolnego czasu minus to, co już zaplanowane) i najwyżej 4 bloki nauki. Między blokami 10 min przerwy. Zostaw luz – plan ma być wykonalny.
+- TERMINY MAJĄ GODZINĘ. Nauka do terminu tylko PRZED nim (w dniu terminu blok kończy się najpóźniej 15 min przed „godzina”). Po terminie nie planuj już nauki do niego. Rozłóż przygotowanie na kilka dni (powtórki w odstępach), największa porcja 1–2 dni przed, a tuż przed terminem tylko krótka powtórka (20–30 min).
+- „przygotowanie_min” mówi, ile już zrobiono i zaplanowano – nie dubluj, dopełnij do sensownej ilości (kolokwium ok. 3 h, egzamin ok. 6 h łącznie).
+- UTRWALANIE WYKŁADÓW („wyklady”): po każdym wykładzie krótka powtórka (10–15 min) tego samego dnia po wykładzie albo następnego dnia, druga (10 min) po ok. 3 dniach. Wstawiaj je w KRÓTKIE okna (do 30 min), tytuł zaczynaj od „🧠 Powtórka:”. Nie dubluj powtórek, które już są w „moje”.
+- Tempo studenta („tempo”): najważniejsze i najtrudniejsze rzeczy w porze o najwyższym procencie; gdy wieczorem < 40% – wieczorem tylko lekkie rzeczy albo nic. Gdy ogólne tempo < 65% – bloki 30–45 min.
+- Przedmioty z „cel_tygodnia_zostalo_min” > 0 – rozłóż ten czas na tydzień; „przesuwany” > 1 – krótsze bloki z konkretnym pierwszym krokiem.
+- „tytul” = konkretna czynność (np. „Logika: 10 zadań z relacji + definicje”), „przedmiot” = id z listy albo "" (np. fiszki), „waznosc”: m – termin ≤ 3 dni lub powtórka przed terminem, s – powinno, c – jak starczy czasu. „dlaczego” – krótko.
+- „nie_zmiesci” – co sensownie nie wejdzie i kiedy to zrobić. „uwagi” – 1–3 zdania o logice planu.
+${STYLE}`,
+    tool: {
+      bloki: { type: "array", maxItems: 30, items: { type: "object", properties: { data: STR, od: STR, do: STR, przedmiot: STR, tytul: STR, waznosc: { type: "string", enum: ["m", "s", "c"] }, dlaczego: STR }, required: ["data", "od", "do", "przedmiot", "tytul", "waznosc", "dlaczego"] } },
+      nie_zmiesci: { type: "array", maxItems: 8, items: { type: "object", properties: { co: STR, kiedy: STR }, required: ["co", "kiedy"] } },
+      uwagi: STR,
+    },
+    req: ["bloki", "nie_zmiesci", "uwagi"],
+    build(b) {
+      const w = b.week; if (!w || typeof w !== "object") throw "Brak danych tygodnia";
+      const s = JSON.stringify(w); if (s.length > 45000) throw "Za dużo danych";
+      return "DANE TYGODNIA (JSON):\n" + s + "\n\nUłóż realny plan nauki na te dni.";
     },
   },
 
