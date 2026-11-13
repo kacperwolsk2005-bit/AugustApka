@@ -1,6 +1,7 @@
 // AugustApka – funkcje AI (tylko zalogowani z rolą "ai": Netlify → Identity → użytkownik → Edit → Roles)
 // Tryby: recall (ocena „Zamknij i wyjaśnij”), exam-gen / exam-grade (próbny egzamin),
-//        ita-check / ita-chat (włoski: pisanie i rozmowa), ask (pytania do notatek)
+//        ita-check / ita-chat (włoski: pisanie i rozmowa), ask (pytania do notatek),
+//        plan-day (realny plan dnia), week-review (przegląd tygodnia)
 // Zmienne środowiskowe (Netlify → Project configuration → Environment variables):
 //   ANTHROPIC_API_KEY  – klucz z console.anthropic.com (oznacz jako secret)
 //   AI_MODEL           – opcjonalnie, domyślnie "claude-haiku-5-5"
@@ -22,7 +23,7 @@ const STRS = (max) => ({ type: "array", maxItems: max, items: STR });
 const ERRS = { type: "array", maxItems: 8, items: { type: "object", properties: { twoje: { type: "string", description: "krótki cytat z odpowiedzi studenta" }, poprawnie: STR }, required: ["twoje", "poprawnie"] } };
 
 // ile „użyć” z dziennego limitu zużywa jedno wywołanie
-const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1 };
+const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1, "plan-day": 1, "week-review": 1 };
 
 /* ---------------- tryby ---------------- */
 const MODES = {
@@ -174,6 +175,50 @@ Zasady:
       const h = arr(b.history, 16).map(m => (m.role === "me" ? "UCZEŃ: " : "TY: ") + cut(m.text, 600)).join("\n");
       if (!h) throw "Pusta rozmowa";
       return "UCZEŃ ZNA:\n" + cut(b.known, 6000) + "\n\nTEMAT: " + (cut(b.topic, 200) || "swobodna rozmowa") + "\n\nROZMOWA:\n" + h;
+    },
+  },
+
+  "plan-day": {
+    max: 1800,
+    system: `Jesteś trenerem organizacji czasu dla kleryka (seminarium duchowne, studia filozoficzno-teologiczne). Układasz REALNY plan nauki na jeden dzień.
+Zasady:
+- Stałych punktów (modlitwy, posiłki, zajęcia) nie ruszasz. Bloki wstawiasz WYŁĄCZNIE w podane wolne okna („okna”), bez nakładania na siebie i na istniejące bloki („moje”). Godziny w formacie HH:MM, pełne 5 minuty.
+- Łączny czas nowych bloków nie przekracza „limit_min” (to 75% wolnego czasu minus to, co już zaplanowane). Między blokami nauki zostaw 10 min przerwy. Lepiej mniej i zrealizowane niż dużo i porzucone.
+- Kolejność: najpilniejsze terminy (mało dni do kolokwium/egzaminu) i najtrudniejsze rzeczy w porze dnia, w której student ma najwyższe „tempo”. Jeśli tempo wieczorem jest niskie (<40%), nie planuj tam nic ważnego.
+- Długość bloku: 30–60 min; jeśli ogólne tempo < 65%, raczej 30–45 min. Przedmiot często przesuwany – krótszy blok z konkretnym pierwszym krokiem.
+- Jeśli są fiszki do powtórki, daj 15–20 min w krótkim oknie.
+- „tytul” = konkretna czynność (np. „Logika: 10 zadań z relacji zakresowych”), nie sam przedmiot. „przedmiot” = id przedmiotu z listy albo "" (np. fiszki). „waznosc”: m = musi (termin ≤ 3 dni), s = powinno, c = jak starczy czasu.
+- „nie_zmiesci” – co sensownie nie wejdzie dziś i kiedy to zrobić. „uwagi” – 1–2 zdania: dlaczego tak, na co uważać.
+${STYLE}`,
+    tool: {
+      bloki: { type: "array", maxItems: 8, items: { type: "object", properties: { od: STR, do: STR, przedmiot: STR, tytul: STR, waznosc: { type: "string", enum: ["m", "s", "c"] }, dlaczego: STR }, required: ["od", "do", "przedmiot", "tytul", "waznosc", "dlaczego"] } },
+      nie_zmiesci: { type: "array", maxItems: 6, items: { type: "object", properties: { co: STR, kiedy: STR }, required: ["co", "kiedy"] } },
+      uwagi: STR,
+    },
+    req: ["bloki", "nie_zmiesci", "uwagi"],
+    build(b) {
+      const p = b.plan; if (!p || typeof p !== "object") throw "Brak danych planu";
+      const s = JSON.stringify(p); if (s.length > 20000) throw "Za dużo danych";
+      return "DANE DNIA (JSON):\n" + s + "\n\nUłóż realny plan nauki na ten dzień.";
+    },
+  },
+
+  "week-review": {
+    max: 1400,
+    system: `Jesteś życzliwym, konkretnym trenerem organizacji czasu kleryka. Dostajesz statystyki minionego tygodnia: plan kontra wykonanie (minuty) według przedmiotów i pór dnia, przesunięcia, przeszkody, nastrój i energię, zapiski studenta.
+Zasady:
+- „dobrze” – 1–3 rzeczy, które realnie działają (z liczbami).
+- „problemy” – 1–3 wzory, co się powtarza i sypie (np. przedmiot przesuwany wiele razy, niskie wykonanie wieczorem, za duże bloki). Bez moralizowania.
+- „zmiana” – DOKŁADNIE JEDNA konkretna, mierzalna zmiana na kolejny tydzień (np. „Łacinę planuj po 35 min, 2× dziennie, przed obiadem”).
+- „na_tydzien” – 1–3 krótkie wskazówki do planowania z uwzględnieniem terminów z najbliższych 2 tygodni.
+- Nie wymyślaj danych, których nie ma. Gdy danych mało, powiedz to wprost i zaproponuj odhaczanie bloków.
+${STYLE}`,
+    tool: { dobrze: STRS(3), problemy: STRS(3), zmiana: STR, na_tydzien: STRS(3) },
+    req: ["dobrze", "problemy", "zmiana", "na_tydzien"],
+    build(b) {
+      const r = b.review; if (!r || typeof r !== "object") throw "Brak danych tygodnia";
+      const s = JSON.stringify(r); if (s.length > 15000) throw "Za dużo danych";
+      return "TYDZIEŃ (JSON):\n" + s;
     },
   },
 
