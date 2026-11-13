@@ -83,10 +83,77 @@ h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)
   .col .b .k{grid-row:1/3}
   .tmr{display:none}
 }
+/* ---- pory roku (paleta + efekty; silnik wstawiany przy budowaniu) ---- */
+/* ===== Pory roku – efekty i paleta (wspólne dla apki i tapety) ===== */
+.season-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict}
+.season-fx i{position:absolute;top:-40px;display:block;will-change:transform;animation-name:sf-fall,sf-sway;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-direction:normal,alternate}
+.season-fx.winter i{color:#9DB8CC}
+.season-fx.summer i{top:auto;bottom:-20px;animation-name:sf-rise,sf-sway}
+.season-fx .mote{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle,#FFF6C8 0%,#F4C95D 45%,rgba(244,201,93,0) 72%);box-shadow:0 0 8px 2px rgba(244,201,93,.35)}
+.season-fx.paused i{animation-play-state:paused}
+@keyframes sf-fall{from{transform:translate3d(0,-5vh,0) rotate(0)}to{transform:translate3d(var(--drift),110vh,0) rotate(var(--spin))}}
+@keyframes sf-rise{0%{transform:translate3d(0,0,0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translate3d(var(--drift),-108vh,0);opacity:0}}
+@keyframes sf-sway{from{margin-left:-14px}to{margin-left:14px}}
+@media (prefers-reduced-motion:reduce){.season-fx{display:none}}
+
+#app{position:relative;z-index:1}
+html[data-season="spring"]{--bg:#F3F7EF;--card:#FFFFFC;--line:#D8E4D1;--hi:#C2507A;--hiS:rgba(232,137,168,.16)}
+html[data-season="summer"]{--bg:#FAF5E6;--card:#FFFEF7;--line:#E9DDBB;--hi:#C9851B;--hiS:rgba(244,201,93,.22)}
+html[data-season="autumn"]{--bg:#F8F0E7;--card:#FFFBF6;--line:#E8D5C3;--hi:#B9532C;--hiS:rgba(217,138,43,.16)}
+html[data-season="winter"]{--bg:#EFF4F8;--card:#FCFEFF;--line:#D3DFE7;--hi:#3F6E8F;--hiS:rgba(120,165,200,.18)}
+@media (prefers-color-scheme:dark){
+ html[data-season="spring"]{--bg:#0F150E;--card:#161E15;--line:#283826;--hi:#E886A9;--hiS:rgba(232,134,169,.13)}
+ html[data-season="summer"]{--bg:#13130C;--card:#1B1B13;--line:#36331F;--hi:#F0C04E;--hiS:rgba(240,192,78,.14)}
+ html[data-season="autumn"]{--bg:#14110D;--card:#1C1813;--line:#372D22;--hi:#E2844F;--hiS:rgba(226,132,79,.14)}
+ html[data-season="winter"]{--bg:#0D1317;--card:#141D23;--line:#253641;--hi:#8FC1E3;--hiS:rgba(143,193,227,.12)}}
+.wall[data-season="spring"],.wall[data-season="spring"] body{background:radial-gradient(circle at 88% 0%,rgba(244,182,200,.28),transparent 45%),radial-gradient(circle at 0% 100%,rgba(111,163,90,.18),transparent 40%),var(--bg);background-attachment:fixed}
+.wall[data-season="summer"],.wall[data-season="summer"] body{background:radial-gradient(circle at 92% -6%,rgba(255,214,102,.42),transparent 42%),var(--bg);background-attachment:fixed}
+.wall[data-season="autumn"],.wall[data-season="autumn"] body{background:radial-gradient(circle at 88% 0%,rgba(217,138,43,.22),transparent 45%),radial-gradient(circle at 0% 100%,rgba(168,67,42,.14),transparent 40%),var(--bg);background-attachment:fixed}
+.wall[data-season="winter"],.wall[data-season="winter"] body{background:radial-gradient(circle at 85% 0%,rgba(157,184,204,.30),transparent 48%),linear-gradient(180deg,transparent 80%,rgba(220,232,240,.35)),var(--bg);background-attachment:fixed}
+@media (prefers-color-scheme:dark){.wall[data-season="winter"],.wall[data-season="winter"] body{background:radial-gradient(circle at 85% 0%,rgba(143,193,227,.16),transparent 48%),var(--bg)}}
 </style>
 </head>
 <body>
 <div id="app"><p class="note">Wczytuję plan…</p></div>
+<script>
+/* ===== Pory roku – wspólny silnik efektów (apka + tapeta) =====
+   wiosna 21.03–20.06 · lato 21.06–22.09 · jesień 23.09–20.12 · zima 21.12–20.03 */
+window.SEASONFX=(function(){
+function seasonOf(d){ const md=(d.getMonth()+1)*100+d.getDate();
+  if(md>=321&&md<=620) return "spring"; if(md>=621&&md<=922) return "summer";
+  if(md>=923&&md<=1220) return "autumn"; return "winter"; }
+const NAME={spring:"wiosenny",summer:"letni",autumn:"jesienny",winter:"zimowy"};
+const ICON={spring:"🌸",summer:"☀️",autumn:"🍂",winter:"❄️"};
+const LEAF=["#C0562F","#D98A2B","#A8432A","#C9A227","#8E5B2E","#B5652A"];
+const PETAL=["#F4B6C8","#F9D3DE","#FFFFFF","#E89AB3","#F7C6D4"];
+const leaf=c=>`<svg viewBox="0 0 24 24" width="100%" height="100%"><path fill="${c}" d="M12 2c3.2 3.1 6.6 5.3 8 9.3-1.6-.4-2.9-.2-3.9.6 1.3 1.4 1.8 3.1 1.6 4.9-1.8-1.3-3.5-1.6-5-1.1L12 22l-.7-6.3c-1.5-.5-3.2-.2-5 1.1-.2-1.8.3-3.5 1.6-4.9-1-.8-2.3-1-3.9-.6C5.4 7.3 8.8 5.1 12 2z"/><path d="M12 5v16" stroke="rgba(0,0,0,.25)" stroke-width=".8" fill="none"/></svg>`;
+const petal=c=>`<svg viewBox="0 0 24 24" width="100%" height="100%"><path fill="${c}" stroke="rgba(200,90,130,.35)" stroke-width=".6" d="M12 2C7 6 5.5 11 7.5 16c1.2 3 3 5 4.5 6 1.5-1 3.3-3 4.5-6 2-5 .5-10-4.5-14zm0 0l-1.2 3.2L12 4.6l1.2.6z"/></svg>`;
+const FLAKE=`<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M12 2l-2 2.2M12 2l2 2.2M12 22l-2-2.2M12 22l2-2.2"/></svg>`;
+const MOTE=`<span class="mote"></span>`;
+/* count: mnożnik liczby cząstek (tapeta ~0.6) */
+function build(s,opts){
+  opts=opts||{}; const k=opts.count||1, small=innerWidth<700;
+  const base={autumn:small?5:10,winter:small?16:32,spring:small?6:12,summer:small?8:16}[s];
+  const n=Math.max(3,Math.round(base*k));
+  const L=document.createElement("div"); L.className="season-fx "+s; L.setAttribute("aria-hidden","true");
+  const r=Math.random;
+  for(let i=0;i<n;i++){
+    const e=document.createElement("i");
+    const size=s==="autumn"?14+r()*14:s==="spring"?10+r()*9:s==="summer"?4+r()*7:5+r()*9;
+    const dur=s==="autumn"?14+r()*14:s==="spring"?16+r()*14:s==="summer"?18+r()*16:10+r()*14;
+    const op=s==="autumn"?.3+r()*.28:s==="spring"?.45+r()*.35:s==="summer"?.35+r()*.45:.35+r()*.4;
+    e.style.cssText=`left:${(r()*100).toFixed(2)}%;width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;`+
+      `animation-duration:${dur.toFixed(1)}s,${(3+r()*4).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s,-${(r()*5).toFixed(1)}s;`+
+      `--drift:${((r()-.5)*(s==="winter"?90:s==="summer"?120:220)).toFixed(0)}px;--spin:${((r()>.5?1:-1)*(180+r()*540)).toFixed(0)}deg;opacity:${op.toFixed(2)}`;
+    e.innerHTML=s==="autumn"?leaf(LEAF[i%LEAF.length]):s==="spring"?petal(PETAL[i%PETAL.length]):s==="summer"?MOTE:FLAKE;
+    L.append(e);
+  }
+  return L;
+}
+return {seasonOf,build,NAME,ICON};
+})();
+
+</script>
 <script>
 (function(){
 const API="/.netlify/functions/widget";
@@ -122,7 +189,20 @@ async function load(){
 }
 function row(b,m,isToday){ const s=toMin(b.s), e=toMin(b.e); const cls=["b"]; if(isToday&&e<=m) cls.push("past"); if(isToday&&s<=m&&e>m) cls.push("cur"); if(b.st==="done") cls.push("done"); if(b.dom) cls.push("dom");
   return `<div class="${cls.join(" ")}" style="--c:${esc(b.col||"#7A7A7A")}"><span class="k"></span><span class="h">${b.s}<i>–${b.e}</i></span><span class="x">${esc(b.t)}</span></div>`; }
-function draw(err){
+// pora roku: paleta zawsze (chyba że wyłączona w apce), spadające liście/płatki tylko na tapecie
+let sfxLayer=null, sfxKey="";
+function seasonFx(){
+  if(!window.SEASONFX) return;
+  const pref=(data&&data.snap&&data.snap.sfx)||"on", noAnim=/(^#|&)bezanimacji\b/.test(location.hash)||matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const s=SEASONFX.seasonOf(new Date()), r=document.documentElement;
+  if(pref==="off"){ r.removeAttribute("data-season"); } else r.setAttribute("data-season",s);
+  const want=WALL&&pref==="on"&&!noAnim?s:"";
+  if(want===sfxKey) return; sfxKey=want;
+  if(sfxLayer){ sfxLayer.remove(); sfxLayer=null; }
+  if(want){ sfxLayer=SEASONFX.build(want,{count:.6}); document.body.prepend(sfxLayer); }
+}
+document.addEventListener("visibilitychange",()=>{ if(sfxLayer) sfxLayer.classList.toggle("paused",document.hidden); });
+function draw(err){ try{ seasonFx(); }catch(e){}
   const now=new Date(), T=iso(now), m=now.getHours()*60+now.getMinutes();
   if(!k){ app.innerHTML=`<div class="warn"><b>Brak klucza.</b> Otwórz ten widget z linku w AugustApce: <b>Kalendarz → Ustawienia → Widget z planem dnia</b>.</div>`; return; }
   const days=(data&&data.snap&&data.snap.days)||[]; const D=days.find(x=>x.d===T);
