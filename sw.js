@@ -21,11 +21,14 @@ self.addEventListener("fetch", (e) => {
   }
   if (url.origin !== location.origin) return;
   // strona i pliki aplikacji: najpierw sieć (świeża wersja), bez internetu – kopia
+  // osobne strony (np. /muzyka.html) mają własną kopię – nie nadpisują głównej aplikacji
+  const app = req.mode === "navigate" && (url.pathname === "/" || url.pathname === "/index.html");
+  const key = app ? "/" : (req.mode === "navigate" ? url.pathname : req);
   e.respondWith(
     fetch(req).then((res) => {
-      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req.mode === "navigate" ? "/" : req, copy)); }
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(key, copy)); }
       return res;
-    }).catch(() => caches.match(req.mode === "navigate" ? "/" : req).then((hit) => hit || caches.match("/")))
+    }).catch(() => caches.match(key).then((hit) => hit || caches.match("/")))
   );
 });
 
