@@ -5524,7 +5524,8 @@ const CH=3000;
 function chunks(text){ const W=String(text).split(/\s+/).filter(Boolean); const out=[]; for(let i=0;i<W.length;i+=CH) out.push(W.slice(i,i+CH).join(" "));
   if(out.length>1&&words(out[out.length-1])<500){ const l=out.pop(); out[out.length-1]+=" "+l; } return out; }
 function costOf(n){ const k=chunks("x ".repeat(n)).length; return k<=1?1:k*0.5+1; }
-const PARTS={};   // wyniki części zachowane na wypadek błędu przy ostatnim kroku (żeby nie płacić drugi raz)
+const PARTS={};
+const SRC_BOOK={hk:"ks. B. Kumor, *Historia Kościoła*, cz. 1: *Starożytność chrześcijańska* (zob. mapa paragrafów w notatce „Egzaminy z Historii Kościoła”)"};   // podręczniki pomocnicze do weryfikacji   // wyniki części zachowane na wypadek błędu przy ostatnim kroku (żeby nie płacić drugi raz)
 const line=s=>String(s||"").replace(/\s*\n+\s*/g," ").replace(/^[#>\s]+/,"").trim();
 function toMd(res,r){
   const L=[]; const d=r.date||todayISO();
@@ -5534,7 +5535,7 @@ function toMd(res,r){
   if((res.pojecia||[]).length){ L.push("","## Pojęcia"); res.pojecia.forEach(p=>L.push("- **"+line(p.termin)+"** – "+line(p.definicja))); }
   if((res.organizacyjne||[]).length){ L.push("","## Organizacyjne"); res.organizacyjne.forEach(p=>L.push("- "+line(p))); }
   if(res.do_zapamietania) L.push("","> **Do zapamiętania:** "+line(res.do_zapamietania));
-  if((res.niepewne||[]).length){ L.push("","## Do sprawdzenia"); res.niepewne.forEach(p=>L.push("- "+line(p))); }
+  if((res.niepewne||[]).length){ L.push("","## Do sprawdzenia"+(SRC_BOOK[r.sid]?" – w: "+SRC_BOOK[r.sid]:"")); res.niepewne.forEach(p=>L.push("- "+line(p))); }
   if((res.pytania||[]).length){ L.push("","## Sprawdź się"); res.pytania.forEach((p,i)=>L.push((i+1)+". "+line(p))); }
   return L.join("\n");
 }
