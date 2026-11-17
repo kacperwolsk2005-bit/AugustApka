@@ -1,7 +1,8 @@
 // AugustApka – funkcje AI (tylko zalogowani z rolą "ai": Netlify → Identity → użytkownik → Edit → Roles)
 // Tryby: recall (ocena „Zamknij i wyjaśnij”), exam-gen / exam-grade (próbny egzamin),
 //        ita-check / ita-chat (włoski: pisanie i rozmowa), ask (pytania do notatek),
-//        plan-day (realny plan dnia), plan-week (realny plan tygodnia), week-review (przegląd tygodnia)
+//        plan-day (realny plan dnia), plan-week (realny plan tygodnia), week-review (przegląd tygodnia),
+//        lec-part / lec-note (notatka z transkrypcji wykładu – tylko konta z dodatkową rolą "nagrywanie")
 // Zmienne środowiskowe (Netlify → Project configuration → Environment variables):
 //   ANTHROPIC_API_KEY  – klucz z console.anthropic.com (oznacz jako secret)
 //   AI_MODEL           – opcjonalnie, domyślnie "claude-haiku-5-5"
@@ -23,7 +24,8 @@ const STRS = (max) => ({ type: "array", maxItems: max, items: STR });
 const ERRS = { type: "array", maxItems: 8, items: { type: "object", properties: { twoje: { type: "string", description: "krótki cytat z odpowiedzi studenta" }, poprawnie: STR }, required: ["twoje", "poprawnie"] } };
 
 // ile „użyć” z dziennego limitu zużywa jedno wywołanie
-const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1, "plan-day": 1, "week-review": 1, "plan-week": 2 };
+const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1, "plan-day": 1, "week-review": 1, "plan-week": 2, "lec-part": 0.5, "lec-note": 1 };
+const ROLE_FOR = { "lec-part": "nagrywanie", "lec-note": "nagrywanie" };   // tryby wymagające dodatkowej roli
 
 /* ---------------- tryby ---------------- */
 const MODES = {
@@ -252,6 +254,61 @@ ${STYLE}`,
     },
   },
 
+
+  "lec-part": {
+    max: 2000,
+    system: `Jesteś starannym notującym studentem. Dostajesz automatyczną transkrypcję wykładu (rozpoznawanie mowy po polsku: bez interpunkcji, z przekręconymi słowami, nazwiskami i terminami, czasem z powtórzeniami). Słuchacz to kleryk – student filozofii i teologii w seminarium duchownym. Znaczniki [mm:ss] to minuty nagrania.
+Zasady:
+- Bierzesz TYLKO treść, która pada na wykładzie. Nie dopisujesz wiedzy spoza niego – wyjątek: oczywiste poprawki przekręconych nazwisk, terminów i tytułów, gdy kontekst nie zostawia wątpliwości (np. „Zinger” w kontekście utylitaryzmu → Peter Singer, „lok” → Locke). Każdą poprawkę, która NIE jest pewna, wpisz do „niepewne” (np. „‘Trzeba skiego’ – prawdopodobnie Szawarski, sprawdź”).
+- Odtwarzasz sens wypowiedzi wykładowcy: tezy, definicje, rozróżnienia, argumenty i kontrargumenty, przykłady (krótko), nazwiska z dziełami i datami, cytaty (gdy wyraźnie czytane – jako parafrazę albo dosłownie, jeśli dobrze słychać).
+- Pomijasz: przerywniki, żarty bez treści, sprawy techniczne, wypowiedzi i imiona studentów, dane osobowe, prywatne opinie wykładowcy o konkretnych osobach. Treści organizacyjne (kolokwium, termin, lektura, zadanie, temat następnego wykładu) – osobno w „organizacyjne”.
+- Fragmenty zupełnie niezrozumiałe pomijasz; nie zgadujesz treści.
+- Pisz po polsku, rzeczowo, pełnymi zdaniami w punktach; kluczowe słowa możesz wyróżnić **pogrubieniem**.
+To jest JEDNA CZĘŚĆ dłuższego wykładu – wypisz z niej treść merytoryczną w kolejności wykładu (bez wstępów i podsumowań od siebie).`,
+    tool: { punkty: STRS(30), pojecia: { type: "array", maxItems: 14, items: { type: "object", properties: { termin: STR, definicja: STR }, required: ["termin", "definicja"] } }, organizacyjne: STRS(6), niepewne: STRS(10) },
+    req: ["punkty", "pojecia", "organizacyjne", "niepewne"],
+    build(b) {
+      const t = cut(b.text, 32000).trim(); if (t.length < 200) throw "Za mało tekstu";
+      return `PRZEDMIOT: ${cut(b.subject, 80)}\nTYTUŁ: ${cut(b.title, 160)}\nCZĘŚĆ ${Math.max(1, b.part | 0)} z ${Math.max(1, b.of | 0)}\n\nTRANSKRYPCJA:\n${t}`;
+    },
+  },
+
+  "lec-note": {
+    max: 3500,
+    system: `Jesteś starannym notującym studentem i robisz porządną notatkę z wykładu do nauki na egzamin. Dostajesz automatyczną transkrypcję wykładu (rozpoznawanie mowy po polsku: bez interpunkcji, z przekręconymi słowami, nazwiskami i terminami, czasem z powtórzeniami). Słuchacz to kleryk – student filozofii i teologii w seminarium duchownym. Znaczniki [mm:ss] to minuty nagrania.
+Zasady:
+- Bierzesz TYLKO treść, która pada na wykładzie. Nie dopisujesz wiedzy spoza niego – wyjątek: oczywiste poprawki przekręconych nazwisk, terminów i tytułów, gdy kontekst nie zostawia wątpliwości (np. „Zinger” w kontekście utylitaryzmu → Peter Singer, „lok” → Locke). Każdą poprawkę, która NIE jest pewna, wpisz do „niepewne” (np. „‘Trzeba skiego’ – prawdopodobnie Szawarski, sprawdź”).
+- Odtwarzasz sens wypowiedzi wykładowcy: tezy, definicje, rozróżnienia, argumenty i kontrargumenty, przykłady (krótko), nazwiska z dziełami i datami, cytaty (gdy wyraźnie czytane – jako parafrazę albo dosłownie, jeśli dobrze słychać).
+- Pomijasz: przerywniki, żarty bez treści, sprawy techniczne, wypowiedzi i imiona studentów, dane osobowe, prywatne opinie wykładowcy o konkretnych osobach. Treści organizacyjne (kolokwium, termin, lektura, zadanie, temat następnego wykładu) – osobno w „organizacyjne”.
+- Fragmenty zupełnie niezrozumiałe pomijasz; nie zgadujesz treści.
+- Pisz po polsku, rzeczowo, pełnymi zdaniami w punktach; kluczowe słowa możesz wyróżnić **pogrubieniem**.
+Dostajesz albo całą transkrypcję, albo uporządkowane punkty z kolejnych części wykładu (wtedy połącz je w jedną spójną notatkę, usuń powtórzenia, zachowaj kolejność wykładu).
+Notatka:
+- „tytul” – krótki, konkretny (np. „Wykład 17.11 – kto jest osobą? Singer, Locke, Hume”), z datą z danych, jeśli jest.
+- „temat” – 1–2 zdania: o czym był wykład.
+- „sekcje” – 3–8 sekcji z nagłówkami, w każdej 2–8 punktów; pełne, zrozumiałe zdania, nazwiska z kontekstem (kto, co twierdzi, dlaczego). Zachowaj kluczowe przykłady wykładowcy (krótko). Najważniejsze tezy i rozróżnienia mają być łatwe do wyuczenia.
+- „pojecia” – do 15 kluczowych pojęć z krótką definicją w sensie z wykładu.
+- „pytania” – 4–8 pytań „Sprawdź się”, jak na egzamin ustny.
+- „do_zapamietania” – 1–2 zdania: najważniejsza myśl wykładu.
+- „organizacyjne” – terminy, zadania, lektury (pusta lista, jeśli nie ma).
+- „niepewne” – miejsca do sprawdzenia (niepewne nazwiska, cytaty, liczby).`,
+    tool: {
+      tytul: STR, temat: STR,
+      sekcje: { type: "array", minItems: 1, maxItems: 8, items: { type: "object", properties: { naglowek: STR, punkty: STRS(8) }, required: ["naglowek", "punkty"] } },
+      pojecia: { type: "array", maxItems: 15, items: { type: "object", properties: { termin: STR, definicja: STR }, required: ["termin", "definicja"] } },
+      pytania: STRS(8), do_zapamietania: STR, organizacyjne: STRS(6), niepewne: STRS(10),
+    },
+    req: ["tytul", "temat", "sekcje", "pojecia", "pytania", "do_zapamietania", "organizacyjne", "niepewne"],
+    build(b) {
+      const head = `PRZEDMIOT: ${cut(b.subject, 80)}\nTYTUŁ ROBOCZY: ${cut(b.title, 160)}\nDATA: ${cut(b.date, 10)}\n\n`;
+      if (Array.isArray(b.parts) && b.parts.length) {
+        const s = JSON.stringify(arr(b.parts, 12)); if (s.length > 70000) throw "Za dużo danych";
+        return head + "PUNKTY Z KOLEJNYCH CZĘŚCI WYKŁADU (JSON):\n" + s + "\n\nUłóż z tego jedną notatkę.";
+      }
+      const t = cut(b.text, 32000).trim(); if (t.length < 200) throw "Za mało tekstu";
+      return head + "TRANSKRYPCJA:\n" + t + "\n\nZrób notatkę z tego wykładu.";
+    },
+  },
   ask: {
     max: 1500,
     system: `Odpowiadasz na pytania seminarzysty WYŁĄCZNIE na podstawie NOTATEK z wykładów, które dostajesz. Nie korzystasz z wiedzy spoza nich.
@@ -290,6 +347,7 @@ export const handler = async (event, context) => {
   } catch { return json(400, { error: "Zły format" }); }
   const mode = b.mode || "recall";
   const M = MODES[mode]; if (!M) return json(400, { error: "Nieznany tryb" });
+  if (ROLE_FOR[mode] && !roles.includes(ROLE_FOR[mode])) return json(403, { error: "Ta funkcja nie jest włączona dla Twojego konta" });
   let userMsg; try { userMsg = M.build(b); } catch (e) { return json(400, { error: String(e) }); }
 
   // wspólny dzienny limit na osobę

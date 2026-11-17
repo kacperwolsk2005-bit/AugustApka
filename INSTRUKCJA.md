@@ -63,6 +63,10 @@ Reszta nie ma po tych funkcjach żadnego śladu.
 4. **Dostęp:** Netlify → **Identity** → kliknij konto → **Edit** → w polu **Roles** wpisz `ai` → Save. Potem w aplikacji wyloguj się i zaloguj ponownie.
 5. Odebranie dostępu: usuń rolę. Wszyscy korzystają z Twojego klucza.
 
+### 🎙 Nagraj wykład (tylko konta z dodatkową rolą `nagrywanie`)
+Przycisk **🎙 Nagraj wykład** w zakładce Notatki: transkrypcja na żywo w Chrome (Android / komputer, potrzebny internet) i **✨ Zrób notatkę z AI** (tryby `lec-part` i `lec-note`, ok. 1–4 użyć AI na wykład). Notatka zapisuje się jako prywatna notatka konta.
+Włączenie: Netlify → **Identity** → konto → **Edit** → w **Roles** dopisz `nagrywanie` (obok `ai`) → Save, potem w apce wyloguj się i zaloguj. Bez tej roli przycisku nie widać, a serwer odrzuca te tryby.
+
 Zużycie (liczba użyć i tokenów na osobę w miesiącu, z podziałem na funkcje) zapisuje się w Netlify Blobs, w magazynie `augustapka-ai`.
 
 ## 8. Dostęp tylko po zalogowaniu i link do folderu OneDrive
