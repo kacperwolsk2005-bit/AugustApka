@@ -4852,7 +4852,7 @@ window.LEARN=function(el,decks,opts){
     else { S.wrong[id]=(S.wrong[id]||0)+1; if(was>=1) Leitner.move(S.deck,id,false); S.st[id]=S.mode==="listen"?1:0; S.q=S.q.filter(x=>x!==id); S.q.splice(Math.min(S.q.length,2),0,id); }
     save();
     const nx=h("button",{class:"btn pri"},"Dalej →"); nx.onclick=()=>qView();
-    box.append(h("div",{class:"lrn-fb "+(ok?"ok":"bad")},h("b",{},ok?(["Świetnie!","Dobrze!","Tak jest!","Brawo!"][S.n%4]):"Jeszcze nie."),note?h("div",{class:"small",html:note}):null,
+    box.append(h("div",{class:"lrn-fb "+(ok?"ok":"bad")},h("b",{},ok?(["Świetnie!","Dobrze!","Tak jest!","Brawo!"][S.n%4]):/^Prawie/.test(note||"")?"Prawie!":"Jeszcze nie."),note?h("div",{class:"small",html:note}):null,
       !ok?h("div",{},"Poprawnie: ",h("b",{},A)):null));
     if(opts.speak&&dirs[S.dir][1]==="front") say(A);
     const row=h("div",{class:"row lrn-next"},nx); box.append(row); setTimeout(()=>nx.focus(),30);
@@ -4893,7 +4893,7 @@ window.LEARN=function(el,decks,opts){
       const g=grade(inp.value,A,{needArt:S.needArt}); let note="";
       if(g.kind==="accent") note="Uwaga na akcent: <b>"+esc(g.best)+"</b>";
       else if(g.kind==="typo") note="Drobna literówka – poprawnie: <b>"+esc(g.best)+"</b>";
-      else if(g.kind==="article") note=g.ok?"Pamiętaj o rodzajniku: <b>"+esc(g.best)+"</b>":"Brakuje rodzajnika: <b>"+esc(g.art)+"</b> – całość: <b>"+esc(g.best)+"</b>";
+      else if(g.kind==="article") note=g.ok?"Pamiętaj o rodzajniku: <b>"+esc(g.best)+"</b>":"Prawie – brakuje tylko rodzajnika <b>"+esc(g.art)+"</b>.";
       const ok=g.ok&&hl<3;   // pełna podpowiedź = jeszcze raz później
       if(g.ok&&hl>=3) note=(note?note+"<br>":"")+"Z dużą podpowiedzią – słówko wróci jeszcze raz.";
       ctl.remove(); const row=result(id,ok,box,A,note);
