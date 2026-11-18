@@ -1,5 +1,8 @@
 [build]
   publish = "."
+  # Netlify (plan darmowy): każde wdrożenie produkcyjne kosztuje 15 z 300 kredytów miesięcznie.
+  # Wdrażamy tylko commity z „[deploy]” w opisie – pozostałe tylko aktualizują GitHub (koszt 0).
+  ignore = "git log -1 --pretty=%B | grep -qF '[deploy]' && exit 1 || exit 0"
   functions = "netlify/functions"
 
 [functions]
