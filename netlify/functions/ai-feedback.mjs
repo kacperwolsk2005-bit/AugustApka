@@ -262,7 +262,10 @@ Zasady:
 - Bierzesz TYLKO treść, która pada na wykładzie. Nie dopisujesz wiedzy spoza niego – wyjątek: oczywiste poprawki przekręconych nazwisk, terminów i tytułów, gdy kontekst nie zostawia wątpliwości (np. „Zinger” w kontekście utylitaryzmu → Peter Singer, „lok” → Locke). Każdą poprawkę, która NIE jest pewna, wpisz do „niepewne” (np. „‘Trzeba skiego’ – prawdopodobnie Szawarski, sprawdź”).
 - Odtwarzasz sens wypowiedzi wykładowcy: tezy, definicje, rozróżnienia, argumenty i kontrargumenty, przykłady (krótko), nazwiska z dziełami i datami, cytaty (gdy wyraźnie czytane – jako parafrazę albo dosłownie, jeśli dobrze słychać).
 - Pomijasz: przerywniki, żarty bez treści, sprawy techniczne, wypowiedzi i imiona studentów, dane osobowe, prywatne opinie wykładowcy o konkretnych osobach. Treści organizacyjne (kolokwium, termin, lektura, zadanie, temat następnego wykładu) – osobno w „organizacyjne”.
-- Fragmenty zupełnie niezrozumiałe pomijasz; nie zgadujesz treści.
+- Fragmenty zupełnie niezrozumiałe pomijasz; nie zgadujesz treści. Transkrypcja z nagrania na żywo bywa poszatkowana – nie składaj urywków w zmyślone zdania.
+- Przykłady z oceną (np. czy definicja jest za szeroka/za wąska, kto co twierdził) podajesz TYLKO, gdy ocena i powód jasno wynikają z transkrypcji albo z MATERIAŁU POMOCNICZEGO. W przeciwnym razie przenieś to do „niepewne”. W punktach notatki nie ma znaków zapytania ani wahania („(?)”, „chyba”).
+- MATERIAŁ POMOCNICZY (skrypt i notatki z tego przedmiotu, jeśli jest) służy wyłącznie do odczytania przekręconych terminów, nazwisk i przykładów oraz sprawdzenia, czy dobrze rozumiesz omawiane przykłady. Nie przepisujesz z niego treści, których nie było na zajęciach. Gdy transkrypcja przeczy materiałowi, idź za transkrypcją, a rozbieżność wpisz do „niepewne”.
+- Wszystko, co prowadzący mówi o sprawdzianie, kolokwium albo egzaminie (co będzie, za co są punkty, jak trzeba odpowiadać), umieść w PIERWSZEJ sekcji o nagłówku „Na sprawdzian” (gdy nic takiego nie padło – pomiń tę sekcję).
 - Pisz po polsku, rzeczowo, pełnymi zdaniami w punktach; kluczowe słowa możesz wyróżnić **pogrubieniem**.
 To jest JEDNA CZĘŚĆ dłuższego wykładu – wypisz z niej treść merytoryczną w kolejności wykładu (bez wstępów i podsumowań od siebie).`,
     tool: { punkty: STRS(30), pojecia: { type: "array", maxItems: 14, items: { type: "object", properties: { termin: STR, definicja: STR }, required: ["termin", "definicja"] } }, organizacyjne: STRS(6), niepewne: STRS(10) },
@@ -280,7 +283,10 @@ Zasady:
 - Bierzesz TYLKO treść, która pada na wykładzie. Nie dopisujesz wiedzy spoza niego – wyjątek: oczywiste poprawki przekręconych nazwisk, terminów i tytułów, gdy kontekst nie zostawia wątpliwości (np. „Zinger” w kontekście utylitaryzmu → Peter Singer, „lok” → Locke). Każdą poprawkę, która NIE jest pewna, wpisz do „niepewne” (np. „‘Trzeba skiego’ – prawdopodobnie Szawarski, sprawdź”).
 - Odtwarzasz sens wypowiedzi wykładowcy: tezy, definicje, rozróżnienia, argumenty i kontrargumenty, przykłady (krótko), nazwiska z dziełami i datami, cytaty (gdy wyraźnie czytane – jako parafrazę albo dosłownie, jeśli dobrze słychać).
 - Pomijasz: przerywniki, żarty bez treści, sprawy techniczne, wypowiedzi i imiona studentów, dane osobowe, prywatne opinie wykładowcy o konkretnych osobach. Treści organizacyjne (kolokwium, termin, lektura, zadanie, temat następnego wykładu) – osobno w „organizacyjne”.
-- Fragmenty zupełnie niezrozumiałe pomijasz; nie zgadujesz treści.
+- Fragmenty zupełnie niezrozumiałe pomijasz; nie zgadujesz treści. Transkrypcja z nagrania na żywo bywa poszatkowana – nie składaj urywków w zmyślone zdania.
+- Przykłady z oceną (np. czy definicja jest za szeroka/za wąska, kto co twierdził) podajesz TYLKO, gdy ocena i powód jasno wynikają z transkrypcji albo z MATERIAŁU POMOCNICZEGO. W przeciwnym razie przenieś to do „niepewne”. W punktach notatki nie ma znaków zapytania ani wahania („(?)”, „chyba”).
+- MATERIAŁ POMOCNICZY (skrypt i notatki z tego przedmiotu, jeśli jest) służy wyłącznie do odczytania przekręconych terminów, nazwisk i przykładów oraz sprawdzenia, czy dobrze rozumiesz omawiane przykłady. Nie przepisujesz z niego treści, których nie było na zajęciach. Gdy transkrypcja przeczy materiałowi, idź za transkrypcją, a rozbieżność wpisz do „niepewne”.
+- Wszystko, co prowadzący mówi o sprawdzianie, kolokwium albo egzaminie (co będzie, za co są punkty, jak trzeba odpowiadać), umieść w PIERWSZEJ sekcji o nagłówku „Na sprawdzian” (gdy nic takiego nie padło – pomiń tę sekcję).
 - Pisz po polsku, rzeczowo, pełnymi zdaniami w punktach; kluczowe słowa możesz wyróżnić **pogrubieniem**.
 Dostajesz albo całą transkrypcję, albo uporządkowane punkty z kolejnych części wykładu (wtedy połącz je w jedną spójną notatkę, usuń powtórzenia, zachowaj kolejność wykładu).
 Notatka:
@@ -300,7 +306,8 @@ Notatka:
     },
     req: ["tytul", "temat", "sekcje", "pojecia", "pytania", "do_zapamietania", "organizacyjne", "niepewne"],
     build(b) {
-      const head = `PRZEDMIOT: ${cut(b.subject, 80)}\nTYTUŁ ROBOCZY: ${cut(b.title, 160)}\nDATA: ${cut(b.date, 10)}\n\n`;
+      const ref = arr(b.ref, 3).map(r => `<material tytul="${cut(r.t, 160).replace(/"/g, "'")}">\n${cut(r.text, 9000)}\n</material>`).join("\n").slice(0, 20000);
+      const head = `PRZEDMIOT: ${cut(b.subject, 80)}\nTYTUŁ ROBOCZY: ${cut(b.title, 160)}\nDATA: ${cut(b.date, 10)}\n\n` + (ref ? "MATERIAŁ POMOCNICZY (tylko do poprawiania terminów i sprawdzania przykładów):\n" + ref + "\n\n" : "");
       if (Array.isArray(b.parts) && b.parts.length) {
         const s = JSON.stringify(arr(b.parts, 12)); if (s.length > 70000) throw "Za dużo danych";
         return head + "PUNKTY Z KOLEJNYCH CZĘŚCI WYKŁADU (JSON):\n" + s + "\n\nUłóż z tego jedną notatkę.";
