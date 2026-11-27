@@ -21,7 +21,7 @@ const STYLE = "Pisz po polsku, do studenta na „ty”, krótko i rzeczowo. Bez 
 const INT = (min, max) => ({ type: "integer", minimum: min, maximum: max });
 const STR = { type: "string" };
 const STRS = (max) => ({ type: "array", maxItems: max, items: STR });
-const ERRS = { type: "array", maxItems: 8, items: { type: "object", properties: { twoje: { type: "string", description: "krótki cytat z odpowiedzi studenta" }, poprawnie: STR }, required: ["twoje", "poprawnie"] } };
+const ERRS = { type: "array", maxItems: 8, items: { type: "object", properties: { twoje: { type: "string", description: "krótki cytat z odpowiedzi studenta" }, poprawnie: STR, sprzeczne: { type: "boolean", description: "true TYLKO gdy zdanie studenta jest fałszywe albo sprzeczne z notatką. Jeśli jest prawdziwe, a jedynie niepełne – false (wtedy to nie jest błąd, tylko brak)." } }, required: ["twoje", "poprawnie", "sprzeczne"] } };
 
 // ile „użyć” z dziennego limitu zużywa jedno wywołanie
 const UNITS = { recall: 1, "exam-gen": 1, "exam-grade": 0, "ita-check": 1, "ita-chat": 0.2, ask: 1, "plan-day": 1, "week-review": 1, "plan-week": 2, "lec-part": 0.5, "lec-note": 1 };
@@ -38,7 +38,8 @@ Zasady:
 - ZANIM wpiszesz coś do „brakuje” albo „bledy”, przeczytaj CAŁE wyjaśnienie jeszcze raz i sprawdź, czy ta sama myśl nie pada gdzieś indziej, innymi słowami, krócej albo ogólniej. Jeśli pada – NIE jest brakiem ani błędem (to „mial”). Wpisanie jako brak czegoś, co student napisał innymi słowami, to poważny błąd oceniającego.
 - „Pomyłka” = tylko stwierdzenie wyraźnie SPRZECZNE z notatką albo merytorycznie fałszywe (pomylone osoby, daty, pojęcia, odwrócony sens). Uproszczenie, mniejsza precyzja, brak szczegółu czy inna kolejność to NIE pomyłka. Pominięcie to NIE pomyłka – najwyżej „brakuje”. W razie wątpliwości – rozstrzygaj na korzyść studenta.
 - „procent” = w jakim stopniu student opanował NAJWAŻNIEJSZE treści (główne tezy, kluczowe pojęcia, nazwiska i daty, które notatka wyraźnie eksponuje). Drobne szczegóły, przykłady, dygresje i cytaty ważą mało. Treść ujęta częściowo albo ogólnie dostaje częściową punktację, nie zero. Orientacyjnie: główne myśli poprawnie i własnymi słowami, nawet bez szczegółów → 75–90%; większość głównych myśli, kilka luk → 55–75%; tylko część → 30–55%. Pytania, których student w ogóle nie ruszył, liczą się jako 0 – ale nie karz za nie podwójnie w pozostałych.
-- „pytania” = dla każdego pytania z listy (od 1, w podanej kolejności) procent opanowania według tych samych zasad; 0 tylko gdy student go nie ruszył.
+- „bledy” = WYŁĄCZNIE zdania fałszywe. Jeśli zdanie studenta jest prawdziwe, tylko czegoś w nim brakuje – NIE wpisuj go do „bledy” (brak idzie do „brakuje”). Jeśli w polu „poprawnie” miałbyś napisać „poprawnie”, „zgodnie z notatką”, „dobrze, ale…” – to nie jest błąd. Fakt prawdziwy podany ogólniej (np. „ponad 600 przepisów” wobec 613) jest poprawny.
+- „pytania” = dla KAŻDEGO pytania z listy (od 1, w podanej kolejności – zawsze tyle wpisów, ile pytań) procent opanowania według tych samych zasad; 0 tylko gdy student w ogóle nie napisał nic na ten temat.
 - „brakuje” = tylko NAPRAWDĘ ważne rzeczy, których w wyjaśnieniu nie ma w żadnej formie (najwyżej ok. 6, bez drobiazgów), z numerem pytania. Przy pytaniach bez odpowiedzi 1 zwięzły „haczyk” na pytanie.
 - „dobrze” = konkretnie, co student ujął dobrze (także te rzeczy, które ujął innymi słowami).
 - „cytaty” = krótkie (3–15 słów) fragmenty skopiowane DOSŁOWNIE z NOTATKI: „mial” – treści, które student ujął (choćby innymi słowami); „blad” – miejsca, z którymi pomyłki są sprzeczne; „brak” – ważne treści naprawdę pominięte.
